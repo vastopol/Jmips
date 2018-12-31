@@ -1,0 +1,30 @@
+MiniJava:
+
+MiniJava is a subset of java that includes the bare minimum of Java: integers, integer arrays, classes, subclasses, and printing integers to standard out.
+It does not permit any float types, strings, overloading and overriding methods, or any interfaces. It has a few other restrictions, but those are minor.
+Thus, the MiniJava statement System.out.println(...); can only print integers. The MiniJava expression e.length only applies to expressions of type int[].
+
+#----------------------------------------
+
+Phase 1:
+
+The goal of phase 1 is to write a type checker for MiniJava. Given a program, the type checker checks at compile time that type mismatch does not happen at run time.
+It either approves or rejects the program. The set of rules that the type checker checks are represented as a type system.
+
+We must first create a parser for the MiniJava language and generate a set of syntax tree classes and visitor classes.
+To do this, complete the following steps:
+   $ java -jar /path/to/jtb.jar /path/to/minijava.jj
+   $ javacc jtb.out.jj
+Once this is done, you will have a complete parser for MiniJava and a set of classes used for traversing the syntax tree.
+You will also have two different default visitors: DepthFirstVisitor and GJDepthFirst. You should extend these two visitors to type check a MiniJava program.
+
+Your main file should be called Typecheck.java, and if P.java contains a program to be type checked, then:
+    $ java Typecheck < P.java
+should print either Program type checked successfully or Type error.
+
+Untar the following Phase1Tester.tar.gz and read the instructions in the ReadMe.txt file.
+Your submission must work with the testing script when run on the department servers.
+Make sure you test your final tarball before submitting.
+
+#----------------------------------------
+
