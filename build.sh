@@ -13,38 +13,51 @@ MARS="../stuff/mars.jar"            # MIPS Interpreter
 
 #----------------------------------------
 
+PROJ="p1" # phase1
+
 # Driver for user subroutines, called at bottom
 function main()
 {
-    set -e
-
-    build_init
-
-    test_p1
+    # set -e
+    # init_cc
+    test_cc
+    clean_cc
 }
 
 #----------------------------------------
 
-# Create MiniJava parser and generate syntax tree classes and visitor classes
-function build_init()
+# Create skeleton MiniJava parser and generate syntax tree classes and visitor classes, etc...
+function init_cc()
 {
-    if ( test -d p1/ ) ; then
-        echo "Phase1 initial build exists"
+    if ( test -d $PROJ ) ; then
+        echo "Phase1 build exists"
         return
     fi
-    mkdir p1
-    cd p1
+    mkdir $PROJ
+    cd $PROJ
     java -jar $JTB_JAR $MINI_J
     javacc jtb.out.jj
+    touch Typecheck.java
     cd ..
 }
 
-function test_p1()
+# testing type checking
+function test_cc()
 {
-    cd p1
+    cd $PROJ
+    echo "Compiling"
+    javac Typecheck.java
+    echo "Testing"
+    java Typecheck ../stuff/Factorial.java
+    cd ..
+}
 
-    # java Typecheck.java ../tests/Factorial.java
-
+# remove class files
+function clean_cc()
+{
+    cd $PROJ;      rm *.class
+    cd visitor;    rm *.class; cd ..
+    cd syntaxtree; rm *.class; cd ..
     cd ..
 }
 

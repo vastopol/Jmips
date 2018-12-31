@@ -28,3 +28,12 @@ Make sure you test your final tarball before submitting.
 
 #----------------------------------------
 
+files: Typecheck.java, visitor/DepthFirstVisitor.java, visitor/GJDepthFirst.java
+
+build the initial parser skeleton and make Typecheck.java for main().
+there are multiple parser constructors in MiniJavaParser.java
+    public MiniJavaParser(java.io.InputStream stream)
+    public MiniJavaParser(java.io.InputStream stream, String encoding)
+    public MiniJavaParser(java.io.Reader stream)
+    public MiniJavaParser(MiniJavaParserTokenManager tm)
+need to construct a parser and read from an input file
