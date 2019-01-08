@@ -28,12 +28,48 @@ Make sure you test your final tarball before submitting.
 
 #----------------------------------------
 
-files: Typecheck.java, visitor/DepthFirstVisitor.java, visitor/GJDepthFirst.java
+side note:
+based on the classes contained in the syntaxtree folder, it looks like some operations are missing.
+divide, modulo, or, ...
 
-build the initial parser skeleton and make Typecheck.java for main().
-there are multiple parser constructors in MiniJavaParser.java
-    public MiniJavaParser(java.io.InputStream stream)
-    public MiniJavaParser(java.io.InputStream stream, String encoding)
+FILES:
+
+Typecheck.java
+visitor/DepthFirstVisitor.java
+visitor/GJDepthFirst.java
+
+STEPS:
+
+note: really trying to avoid heavily nested try/catch blocks by declaring the exceptions thrown upfront
+
+build the initial skeleton, make Typecheck.java class which has the main method.
+    public static void main(String[] args)
+
+need to construct a parser and read from a java input file, the file will be ascii characters.
+there are 4 different parser constructors in MiniJavaParser.java file, currently using the Reader based constructor
     public MiniJavaParser(java.io.Reader stream)
-    public MiniJavaParser(MiniJavaParserTokenManager tm)
-need to construct a parser and read from an input file
+
+for the type checking the parser has a function Goal() which returns a Goal object.
+Goal objects implement the Node class and has the accept() methods which take in visitors.
+    public void accept(visitor.Visitor v)
+The public data members of a Goal object are
+   public MainClass f0;
+   public NodeListOptional f1;
+   public NodeToken f2;
+
+if calling the Goal accept() method with a visitor as the argument, the Visitor visit() method is then called on a reference to the Goal object.
+    Goal goal = parser.Goal();
+    goal.accept(dfvisitor);
+
+    accept(visitor.Visitor v) // in goal
+    {
+       v.visit(this);
+    }
+
+    visit(Goal n) // in visitor
+    {
+       n.f0.accept(this);
+       n.f1.accept(this);
+       n.f2.accept(this);
+    }
+
