@@ -25,18 +25,24 @@ public class Typecheck
 
         for(String f : args) // process input files
         {
-            boolean pass_type_check = false;
+            // Parser components
             File file = new File(f);
             Reader reader = new FileReader(file); // THROWS: FileNotFoundException
             MiniJavaParser parser = new MiniJavaParser(reader);
-            DepthFirstVisitor dfvisitor = new DepthFirstVisitor();
-            GJDepthFirst gjvisitor = new GJDepthFirst();
+
+            // Default Visitors
+            GJDepthFirst gj_visitor = new GJDepthFirst();
+            DepthFirstVisitor df_visitor = new DepthFirstVisitor();
+
+            // Custom Visitors
+            DFPrintVisitor df_print_visitor = new DFPrintVisitor();
 
             // type check with visitors
+            boolean pass_check = false;
             Goal goal = parser.Goal(); // THROWS: ParseException
-            goal.accept(dfvisitor);
+            goal.accept(df_print_visitor);
 
-            if(pass_type_check)
+            if(pass_check)
             {
                 System.out.println("Program type checked successfully.");
             }

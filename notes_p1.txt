@@ -29,14 +29,13 @@ Make sure you test your final tarball before submitting.
 #----------------------------------------
 
 side note:
-based on the classes contained in the syntaxtree folder, it looks like some operations are missing.
-divide, modulo, or, ...
+based on the classes contained in the syntaxtree folder, it looks like some operations are missing: divide, modulo, or, ...
+create new visitors based on DepthFirstVisitor and GJDepthFirst that implement the other type checking rules
 
 FILES:
 
 Typecheck.java
-visitor/DepthFirstVisitor.java
-visitor/GJDepthFirst.java
+visitor/DFPrintVisitor.java
 
 STEPS:
 
@@ -59,7 +58,7 @@ The public data members of a Goal object are
 
 if calling the Goal accept() method with a visitor as the argument, the Visitor visit() method is then called on a reference to the Goal object.
     Goal goal = parser.Goal();
-    goal.accept(dfvisitor);
+    goal.accept(visitor);
 
     accept(visitor.Visitor v) // in goal
     {
