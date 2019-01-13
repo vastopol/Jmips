@@ -30,10 +30,6 @@ public class Typecheck
             Reader reader = new FileReader(file); // THROWS: FileNotFoundException
             MiniJavaParser parser = new MiniJavaParser(reader);
 
-            // Default Visitors
-            GJDepthFirst gj_visitor = new GJDepthFirst();
-            DepthFirstVisitor df_visitor = new DepthFirstVisitor();
-
             // Custom Visitors
             DFPrintVisitor df_print_visitor = new DFPrintVisitor();
 
@@ -41,6 +37,7 @@ public class Typecheck
             boolean pass_check = false;
             Goal goal = parser.Goal(); // THROWS: ParseException
             goal.accept(df_print_visitor);
+            pass_check = df_print_visitor.check_me;
 
             if(pass_check)
             {

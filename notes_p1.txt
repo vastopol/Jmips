@@ -72,3 +72,7 @@ if calling the Goal accept() method with a visitor as the argument, the Visitor 
        n.f2.accept(this);
     }
 
+In the NodeToken class the internal data member that holds the string representation of the token is "tokenImage"
+
+
+

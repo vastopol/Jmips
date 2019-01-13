@@ -11,6 +11,11 @@ import java.util.*;
  * order.  Your visitors may extend this class.
  */
 public class DFPrintVisitor implements Visitor {
+
+    // data members
+    public boolean check_me = false;
+
+
    //
    // Auto class visitors--probably don't need to be overridden.
    //
@@ -530,6 +535,7 @@ public class DFPrintVisitor implements Visitor {
    public void visit(IntegerLiteral n) {
        System.out.println("print_visitor visit(IntegerLiteral n)");
       n.f0.accept(this);
+      System.out.println("INT HERE: " + n.f0.toString());
    }
 
    /**
@@ -538,6 +544,7 @@ public class DFPrintVisitor implements Visitor {
    public void visit(TrueLiteral n) {
        System.out.println("print_visitor visit(TrueLiteral n)");
       n.f0.accept(this);
+      System.out.println("TRUE HERE: " + n.f0.toString());
    }
 
    /**
@@ -546,6 +553,7 @@ public class DFPrintVisitor implements Visitor {
    public void visit(FalseLiteral n) {
        System.out.println("print_visitor visit(FalseLiteral n)");
       n.f0.accept(this);
+      System.out.println("FALSE HERE: " + n.f0.toString());
    }
 
    /**
@@ -554,6 +562,7 @@ public class DFPrintVisitor implements Visitor {
    public void visit(Identifier n) {
        System.out.println("print_visitor visit(Identifier n)");
       n.f0.accept(this);
+      System.out.println("IDENT HERE: " + n.f0.toString());
    }
 
    /**
