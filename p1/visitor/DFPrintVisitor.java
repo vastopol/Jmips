@@ -13,9 +13,6 @@ import java.util.*;
 public class DFPrintVisitor implements Visitor {
 
     // data members
-    public boolean check_me = false;
-
-
    //
    // Auto class visitors--probably don't need to be overridden.
    //

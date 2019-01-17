@@ -10,11 +10,11 @@ import java.util.*;
  * Provides default methods which visit each node in the tree in depth-first
  * order.  Your visitors may extend this class.
  */
-public class RegularSymbol implements Visitor {
+public class DFSymbolVisitor implements Visitor {
 
     // data members
-    public boolean check_me = false;
-
+    //public boolean check_me = false;
+   public Vector<Map<THING>> Symtab;
 
    //
    // Auto class visitors--probably don't need to be overridden.

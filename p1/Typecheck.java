@@ -29,15 +29,28 @@ public class Typecheck
             File file = new File(f);
             Reader reader = new FileReader(file); // THROWS: FileNotFoundException
             MiniJavaParser parser = new MiniJavaParser(reader);
-            //sup
-            // Custom Visitors
-            DFPrintVisitor df_print_visitor = new DFPrintVisitor();
-
-            // type check with visitors
-            boolean pass_check = false;
             Goal goal = parser.Goal(); // THROWS: ParseException
+
+            // data members from visitor classes
+            boolean pass_check = false;
+            /*Vector<Map<THING>> context;*/
+
+            //TESTING
+            DFPrintVisitor df_print_visitor = new DFPrintVisitor();
             goal.accept(df_print_visitor);
-            pass_check = df_print_visitor.check_me;
+            
+            //builds symbol table using symbol visitor class
+            /*DFSymbolVisitor context_builder = new DFSymbolVisitor();
+            goal.accept(context_builder);
+            context = contex_builder.Symtab;*/
+
+            //builds type check class with symbol table
+            //type checks
+
+           /* GJTypeCheckVisitor<> type_checker = new GJTypeCheckVisitor<>(context);
+            goal.accept(type_checker);
+            pass_check = GJTypeCheckVisitor.check_me;*/
+
 
             if(pass_check)
             {
