@@ -17,27 +17,33 @@ public class DFPrintVisitor implements Visitor {
    // Auto class visitors--probably don't need to be overridden.
    //
    public void visit(NodeList n) {
+   System.out.println("NodeList");
       for ( Enumeration<Node> e = n.elements(); e.hasMoreElements(); )
          e.nextElement().accept(this);
    }
 
    public void visit(NodeListOptional n) {
+   System.out.println("NodeListOptional");
       if ( n.present() )
+         System.out.println("NLO present");
          for ( Enumeration<Node> e = n.elements(); e.hasMoreElements(); )
             e.nextElement().accept(this);
    }
 
    public void visit(NodeOptional n) {
+   System.out.println("NodeOptional");
       if ( n.present() )
+         System.out.println("NO present");
          n.node.accept(this);
    }
 
    public void visit(NodeSequence n) {
+      System.out.println("NodeSequence");
       for ( Enumeration<Node> e = n.elements(); e.hasMoreElements(); )
          e.nextElement().accept(this);
    }
 
-   public void visit(NodeToken n) { }
+   public void visit(NodeToken n) { System.out.println("NodeToken " + n.tokenImage);}
 
    //
    // User-generated visitor methods below
@@ -79,6 +85,7 @@ public class DFPrintVisitor implements Visitor {
        System.out.println("print_visitor visit(MainClass n)");
       n.f0.accept(this);
       n.f1.accept(this);
+      
       n.f2.accept(this);
       n.f3.accept(this);
       n.f4.accept(this);

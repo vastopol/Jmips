@@ -59,6 +59,7 @@ function clean_p1()
     cd p1;         rm *.class
     cd visitor;    rm *.class; cd ..
     cd syntaxtree; rm *.class; cd ..
+    cd struct;     rm *.class; cd ..
     cd ..
 }
 
