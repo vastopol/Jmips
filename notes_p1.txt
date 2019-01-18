@@ -28,9 +28,14 @@ Make sure you test your final tarball before submitting.
 
 #----------------------------------------
 
-side note:
-based on the classes contained in the syntaxtree folder, it looks like some operations are missing: divide, modulo, or, ...
-create new visitors based on DepthFirstVisitor and GJDepthFirst that implement the other type checking rules
+SIDE NOTES:
+
+based on the classes contained in the syntaxtree folder, it looks like:
+    some operations are missing: divide, modulo, or, ...
+based on the quoted strings inside certain terminals looks like:
+    no private or protected methods
+
+create new visitors based on DepthFirstVisitor and GJDepthFirst
 
 FILES:
 

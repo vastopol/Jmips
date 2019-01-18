@@ -17,7 +17,8 @@ MARS="../stuff/mars.jar"            # MIPS Interpreter
 function main()
 {
     init_p1
-    check_p1
+    # check_p1
+    stack_p1
     clean_p1
 }
 
@@ -50,6 +51,18 @@ function check_p1()
     javac Typecheck.java
     echo "Checking "$P1_FILE
     java Typecheck $P1_FILE
+    cd ..
+}
+
+# testing type checking
+function stack_p1()
+{
+    P1_FILE="../stuff/Factorial.java"
+    cd p1
+    echo "Compiling Phase1"
+    javac StackTest.java
+    echo "Checking "$P1_FILE
+    java StackTest $P1_FILE
     cd ..
 }
 
