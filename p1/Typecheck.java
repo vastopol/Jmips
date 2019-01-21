@@ -6,9 +6,10 @@
 
 // java modules
 import java.io.*;
-
+import java.util.*;
 // project folders
 import visitor.*;
+import struct.*;
 import syntaxtree.*;
 
 // main
@@ -34,10 +35,30 @@ public class Typecheck
             // data members from visitor classes
             boolean pass_check = false;
             /*Vector<Map<THING>> context;*/
+            Struct numSev = new IntStruct("x", 7);
+            System.out.println(numSev.getType() + " " + numSev.getName() + " " + numSev.getInt());
+            Struct boolFal = new BoolStruct("bool", false);
+            System.out.println(boolFal.getType() + " " + boolFal.getName() + " " + boolFal.getBool());
+            Struct numList = new ArrStruct("numl", new Vector<Integer>(3));
+            System.out.println(numList.getType() + " " + numList.getName() + " " + numList.getArr());
+            
+            Vector<Struct> params = new Vector<Struct>();
+            params.add(numSev);
+            params.add(boolFal);
+            params.add(numList);
+            FuncStruct facFunc = new FuncStruct("Fac", "Integer", params);
+            System.out.println(facFunc.getType() + " " + facFunc.getName() + " " + facFunc.getParams());
 
-            //TESTING
+            Vector<FuncStruct> meths = new Vector<FuncStruct>();
+            meths.add(facFunc);
+            ClassStruct factorialClass = new ClassStruct("factorial", params, meths);
+            System.out.println(factorialClass.getType() + " " + factorialClass.getName() + " " + factorialClass.getFields() + " " + factorialClass.getMethods());
+
+
+
+            DFSymbolVisitor simbol = new DFSymbolVisitor();
             DFPrintVisitor df_print_visitor = new DFPrintVisitor();
-            goal.accept(df_print_visitor);
+            goal.accept(simbol);
             
             //builds symbol table using symbol visitor class
             /*DFSymbolVisitor context_builder = new DFSymbolVisitor();
