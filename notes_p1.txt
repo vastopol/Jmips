@@ -1,11 +1,3 @@
-MiniJava:
-
-MiniJava is a subset of java that includes the bare minimum of Java: integers, integer arrays, classes, subclasses, and printing integers to standard out.
-It does not permit any float types, strings, overloading and overriding methods, or any interfaces. It has a few other restrictions, but those are minor.
-Thus, the MiniJava statement System.out.println(...); can only print integers. The MiniJava expression e.length only applies to expressions of type int[].
-
-#----------------------------------------
-
 Phase 1:
 
 The goal of phase 1 is to write a type checker for MiniJava. Given a program, the type checker checks at compile time that type mismatch does not happen at run time.
@@ -26,25 +18,40 @@ Untar the following Phase1Tester.tar.gz and read the instructions in the ReadMe.
 Your submission must work with the testing script when run on the department servers.
 Make sure you test your final tarball before submitting.
 
-#----------------------------------------
+========================================
+========================================
 
 SIDE NOTES:
 
-based on the classes contained in the syntaxtree folder, it looks like:
-    some operations are missing: divide, modulo, or, ...
-based on the quoted strings inside certain terminals looks like:
+MiniJava is a subset of java that includes the bare minimum of Java: integers, integer arrays, classes, subclasses, and printing integers to standard out.
+It does not permit any float types, strings, overloading and overriding methods, or any interfaces. It has a few other restrictions, but those are minor.
+Thus, the MiniJava statement System.out.println(...); can only print integers. The MiniJava expression e.length only applies to expressions of type int[].
+
+Missing Operations:
+    divide, modulo, or, ...
+
+Special cases:
     no private or protected methods
+    System.out.println is a special case
+    main(String a[]) is a special case, there are no strings
 
 create new visitors based on DepthFirstVisitor and GJDepthFirst
 
-FILES:
+note: really trying to avoid heavily nested try/catch blocks by declaring the exceptions thrown upfront
 
+OUR FILES:
+
+struct/*
 Typecheck.java
 visitor/DFPrintVisitor.java
+visitor/DFSymbolVisitor.java
+visitor/DFStackVisitor.java
+visitor/GJTypeCheckVisitor.java
 
-STEPS:
+========================================
+========================================
 
-note: really trying to avoid heavily nested try/catch blocks by declaring the exceptions thrown upfront
+1. INITIAL SETUP (build main class, using the parser, understanding visit and accept )
 
 build the initial skeleton, make Typecheck.java class which has the main method.
     public static void main(String[] args)
@@ -54,6 +61,7 @@ there are 4 different parser constructors in MiniJavaParser.java file, currently
     public MiniJavaParser(java.io.Reader stream)
 
 for the type checking the parser has a function Goal() which returns a Goal object.
+The goal is the starting place to begin the traversal.
 Goal objects implement the Node class and has the accept() methods which take in visitors.
     public void accept(visitor.Visitor v)
 The public data members of a Goal object are
@@ -77,7 +85,32 @@ if calling the Goal accept() method with a visitor as the argument, the Visitor 
        n.f2.accept(this);
     }
 
+First it visits MainClass, since that must exist.
+then it will visit any other classes that exist in the NodeListOptional.
+
 In the NodeToken class the internal data member that holds the string representation of the token is "tokenImage"
+TO get the String containing the token use the toString() method.
 
+----------------------------------------
 
+2. BUILDING THE SYMBOL TABLE
+
+Building the stack of symbol tables
+this will probably be a Vector<Map<Struct>> which represents the global context.
+each map is the table for a specific class, function, etc...
+
+which rules need to have the part to push on the stack?
+
+which things get a map?
+    classes
+    subclasses
+    functions
+
+----------------------------------------
+
+3. TYPECHECKING
+
+not started yet...
+
+need to build out all of the helper functions for the type checking
 

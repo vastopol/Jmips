@@ -56,7 +56,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(Goal n)
    {
-            System.out.println("print_visitor visit(Goal n)");
             context_stack.push("{ Global_Start");
         n.f0.accept(this);
         n.f1.accept(this); // this is a  NodeListOptional
@@ -86,7 +85,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(MainClass n)
    {
-            System.out.println("print_visitor visit(MainClass n)");
         n.f0.accept(this);
             context_stack.push("class");
         n.f1.accept(this);
@@ -128,7 +126,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(TypeDeclaration n)
    {
-        System.out.println("print_visitor visit(TypeDeclaration n)");
         n.f0.accept(this);
    }
 
@@ -142,7 +139,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(ClassDeclaration n)
    {
-            System.out.println("print_visitor visit(ClassDeclaration n)");
         n.f0.accept(this);
             context_stack.push("class");
         n.f1.accept(this);
@@ -169,7 +165,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(ClassExtendsDeclaration n)
    {
-        System.out.println("print_visitor visit(ClassExtendsDeclaration n)");
         n.f0.accept(this);
             context_stack.push("class");
         n.f1.accept(this);
@@ -196,7 +191,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(VarDeclaration n)
    {
-        System.out.println("print_visitor visit(VarDeclaration n)");
         n.f0.accept(this);
         n.f1.accept(this);
             String tmp1 = context_stack.pop();
@@ -222,9 +216,8 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(MethodDeclaration n)
    {
-            System.out.println("print_visitor visit(MethodDeclaration n)");
-            context_stack.push("public");
         n.f0.accept(this);
+            context_stack.push("public");
         n.f1.accept(this);
         n.f2.accept(this);
             String tmp1 = context_stack.pop();
@@ -251,7 +244,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(FormalParameterList n)
    {
-            System.out.println("print_visitor visit(FormalParameterList n)");
         n.f0.accept(this);
         n.f1.accept(this);
    }
@@ -262,7 +254,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(FormalParameter n)
    {
-            System.out.println("print_visitor visit(FormalParameter n)");
         n.f0.accept(this);
         n.f1.accept(this);
             String tmp1 = context_stack.pop();
@@ -276,7 +267,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(FormalParameterRest n)
    {
-            System.out.println("print_visitor visit(FormalParameterRest n)");
         n.f0.accept(this);
         n.f1.accept(this);
    }
@@ -289,7 +279,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(Type n)
    {
-            System.out.println("print_visitor visit(Type n)");
         n.f0.accept(this);
    }
 
@@ -298,12 +287,12 @@ public class DFStackVisitor implements Visitor {
     * f1 -> "["
     * f2 -> "]"
     */
-   public void visit(ArrayType n) {
-          System.out.println("print_visitor visit(ArrayType n)");
-          context_stack.push("int[]");
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
+   public void visit(ArrayType n)
+   {
+        n.f0.accept(this);
+        n.f1.accept(this);
+        n.f2.accept(this);
+            context_stack.push("int[]");
    }
 
    /**
@@ -311,9 +300,8 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(BooleanType n)
    {
-           System.out.println("print_visitor visit(BooleanType n)");
-           context_stack.push("boolean");
-       n.f0.accept(this);
+        n.f0.accept(this);
+            context_stack.push("boolean");
    }
 
    /**
@@ -321,9 +309,8 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(IntegerType n)
    {
-          System.out.println("print_visitor visit(IntegerType n)");
-          context_stack.push("int");
-      n.f0.accept(this);
+        n.f0.accept(this);
+            context_stack.push("int");
    }
 
    /**
@@ -336,7 +323,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(Statement n)
    {
-            System.out.println("print_visitor visit(Statement n)");
         n.f0.accept(this);
    }
 
@@ -347,7 +333,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(Block n)
    {
-            System.out.println("print_visitor visit(Block n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -361,7 +346,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(AssignmentStatement n)
    {
-            System.out.println("print_visitor visit(AssignmentStatement n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -379,7 +363,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(ArrayAssignmentStatement n)
    {
-            System.out.println("print_visitor visit(ArrayAssignmentStatement n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -400,7 +383,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(IfStatement n)
    {
-            System.out.println("print_visitor visit(IfStatement n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -419,7 +401,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(WhileStatement n)
    {
-        System.out.println("print_visitor visit(WhileStatement n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -436,7 +417,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(PrintStatement n)
    {
-            System.out.println("print_visitor visit(PrintStatement n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -457,7 +437,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(Expression n)
    {
-            System.out.println("print_visitor visit(Expression n)");
         n.f0.accept(this);
    }
 
@@ -468,7 +447,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(AndExpression n)
    {
-            System.out.println("print_visitor visit(AndExpression n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -481,7 +459,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(CompareExpression n)
    {
-            System.out.println("print_visitor visit(CompareExpression n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -494,7 +471,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(PlusExpression n)
    {
-            System.out.println("print_visitor visit(PlusExpression n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -507,7 +483,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(MinusExpression n)
    {
-            System.out.println("print_visitor visit(MinusExpression n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -520,7 +495,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(TimesExpression n)
    {
-            System.out.println("print_visitor visit(TimesExpression n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -534,7 +508,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(ArrayLookup n)
    {
-            System.out.println("print_visitor visit(ArrayLookup n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -548,7 +521,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(ArrayLength n)
    {
-            System.out.println("print_visitor visit(ArrayLength n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -564,7 +536,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(MessageSend n)
    {
-            System.out.println("print_visitor visit(MessageSend n)");
         n.f0.accept(this);
         n.f1.accept(this);
             context_stack.push(".");
@@ -584,7 +555,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(ExpressionList n)
    {
-            System.out.println("print_visitor visit(ExpressionList n)");
         n.f0.accept(this);
         n.f1.accept(this);
    }
@@ -595,7 +565,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(ExpressionRest n)
    {
-            System.out.println("print_visitor visit(ExpressionRest n)");
         n.f0.accept(this);
         n.f1.accept(this);
    }
@@ -613,7 +582,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(PrimaryExpression n)
    {
-            System.out.println("print_visitor visit(PrimaryExpression n)");
         n.f0.accept(this);
    }
 
@@ -622,8 +590,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(IntegerLiteral n)
    {
-            System.out.println("print_visitor visit(IntegerLiteral n)");
-            System.out.println("INT HERE: " + n.f0.toString());
         n.f0.accept(this);
    }
 
@@ -632,8 +598,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(TrueLiteral n)
    {
-            System.out.println("print_visitor visit(TrueLiteral n)");
-            System.out.println("TRUE HERE: " + n.f0.toString());
         n.f0.accept(this);
    }
 
@@ -642,8 +606,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(FalseLiteral n)
    {
-            System.out.println("print_visitor visit(FalseLiteral n)");
-            System.out.println("FALSE HERE: " + n.f0.toString());
         n.f0.accept(this);
    }
 
@@ -652,10 +614,8 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(Identifier n)
    {
-            System.out.println("print_visitor visit(Identifier n)");
-            System.out.println("IDENT HERE: " + n.f0.toString());
-            context_stack.push(n.f0.toString());
         n.f0.accept(this);
+            context_stack.push(n.f0.toString());
    }
 
    /**
@@ -663,7 +623,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(ThisExpression n)
    {
-            System.out.println("print_visitor visit(ThisExpression n)");
         n.f0.accept(this);
             context_stack.push("this");
    }
@@ -677,7 +636,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(ArrayAllocationExpression n)
    {
-            System.out.println("print_visitor visit(ArrayAllocationExpression n)");
         n.f0.accept(this);
             //context_stack.push("new");
         n.f1.accept(this);
@@ -695,7 +653,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(AllocationExpression n)
    {
-            System.out.println("print_visitor visit(AllocationExpression n)");
         n.f0.accept(this);
             //context_stack.push("new");
         n.f1.accept(this);
@@ -709,7 +666,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(NotExpression n)
    {
-            System.out.println("print_visitor visit(NotExpression n)");
         n.f0.accept(this);
         n.f1.accept(this);
    }
@@ -721,7 +677,6 @@ public class DFStackVisitor implements Visitor {
     */
    public void visit(BracketExpression n)
    {
-            System.out.println("print_visitor visit(BracketExpression n)");
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
