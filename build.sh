@@ -17,8 +17,7 @@ MARS="../stuff/mars.jar"            # MIPS Interpreter
 function main()
 {
     init_p1
-    # check_p1
-    stack_p1
+    check_p1
     clean_p1
 }
 
@@ -29,6 +28,7 @@ function main()
 # Create skeleton MiniJava parser and generate syntax tree classes and visitor classes, etc...
 function init_p1()
 {
+    echo
     if ( test -d p1 ) ; then
         echo "Phase1 build exists"
         return
@@ -49,20 +49,8 @@ function check_p1()
     cd p1
     echo "Compiling Phase1"
     javac Typecheck.java
-    echo "Checking "$P1_FILE
-    java Typecheck $P1_FILE
-    cd ..
-}
-
-# testing type checking
-function stack_p1()
-{
-    P1_FILE="../stuff/Factorial.java"
-    cd p1
-    echo "Compiling Phase1"
-    javac StackTest.java
-    echo "Checking "$P1_FILE
-    java StackTest $P1_FILE
+    echo "Checking "$P1_FILE; echo
+    java Typecheck $P1_FILE;  echo
     cd ..
 }
 

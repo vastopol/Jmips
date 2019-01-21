@@ -26,22 +26,25 @@ public class Typecheck
 
         for(String f : args) // process input files
         {
-            // Parser components
+            // Parser Components
             File file = new File(f);
-            Reader reader = new FileReader(file); // THROWS: FileNotFoundException
+            Reader reader = new FileReader(file);    // THROWS: FileNotFoundException
             MiniJavaParser parser = new MiniJavaParser(reader);
-            Goal goal = parser.Goal(); // THROWS: ParseException
+            Goal goal = parser.Goal();              // THROWS: ParseException
 
-            // data members from visitor classes
+            // Data Members from Visitors
             boolean pass_check = false;
             /*Vector<Map<THING>> context;*/
+
+
+            /* ---------- START TEST STRUCT ---------- */    // Krishna
             Struct numSev = new IntStruct("x", 7);
             System.out.println(numSev.getType() + " " + numSev.getName() + " " + numSev.getInt());
             Struct boolFal = new BoolStruct("bool", false);
             System.out.println(boolFal.getType() + " " + boolFal.getName() + " " + boolFal.getBool());
             Struct numList = new ArrStruct("numl", new Vector<Integer>(3));
             System.out.println(numList.getType() + " " + numList.getName() + " " + numList.getArr());
-            
+
             Vector<Struct> params = new Vector<Struct>();
             params.add(numSev);
             params.add(boolFal);
@@ -53,13 +56,30 @@ public class Typecheck
             meths.add(facFunc);
             ClassStruct factorialClass = new ClassStruct("factorial", params, meths);
             System.out.println(factorialClass.getType() + " " + factorialClass.getName() + " " + factorialClass.getFields() + " " + factorialClass.getMethods());
+            /* ---------- END TEST STRUCT ---------- */
 
 
-
+            /* ---------- START TEST PRINT && SYMBOL VISITOR ---------- */
             DFSymbolVisitor simbol = new DFSymbolVisitor();
             DFPrintVisitor df_print_visitor = new DFPrintVisitor();
             goal.accept(simbol);
-            
+            /* ---------- END TEST PRINT && SYMBOL VISITOR ---------- */
+
+
+            /* ---------- START TEST STACK VISITOR ---------- */    // Sean
+            DFStackVisitor df_stack_visitor = new DFStackVisitor();
+            goal.accept(df_stack_visitor);
+
+            Stack<String> vs = df_stack_visitor.context_stack;
+            System.out.println("\nPrint Stack\n--------------------");
+            for( String v : vs )
+            {
+                System.out.println(v);
+            }
+            System.out.println("--------------------\n");
+            /* ---------- END TEST STACK VISITOR ---------- */
+
+
             //builds symbol table using symbol visitor class
             /*DFSymbolVisitor context_builder = new DFSymbolVisitor();
             goal.accept(context_builder);
@@ -71,7 +91,6 @@ public class Typecheck
            /* GJTypeCheckVisitor<> type_checker = new GJTypeCheckVisitor<>(context);
             goal.accept(type_checker);
             pass_check = GJTypeCheckVisitor.check_me;*/
-
 
             if(pass_check)
             {
