@@ -15,14 +15,16 @@ public class DFStackVisitor implements Visitor {
 
     // data members
     public Stack<String> context_stack;
-    public Stack<Map<String,String>> map_stack;
+    public Stack<Map<String,String>> map_stack; 
     public Vector<Map<String,String>> map_vec;
+    public Map<String,Map<String,String>> map_map; // all of the labeled symbol tables
 
     public DFStackVisitor()
     {
         context_stack = new Stack<String>();
         map_stack = new Stack<Map<String,String>>();
         map_vec = new Vector<Map<String,String>>();
+        map_map = new HashMap<String,Map<String,String>>();
     }
 
    // Auto class visitors--probably don't need to be overridden.
@@ -72,6 +74,7 @@ public class DFStackVisitor implements Visitor {
             context_stack.push("} Global_End");
 
             map_vec.add(map_stack.peek());
+            map_map.put("Global",map_stack.peek());
             map_stack.pop();
    }
 
@@ -143,6 +146,7 @@ public class DFStackVisitor implements Visitor {
             context_stack.push("} main_end");
 
             map_vec.add(map_stack.peek());
+            map_map.put("main",map_stack.peek());
             map_stack.pop();
 
         n.f16.accept(this);
@@ -191,6 +195,7 @@ public class DFStackVisitor implements Visitor {
             context_stack.push("} class_end");
 
             map_vec.add(map_stack.peek());
+            map_map.put(tmp1,map_stack.peek());
             map_stack.pop();
    }
 
@@ -230,6 +235,7 @@ public class DFStackVisitor implements Visitor {
             context_stack.push("} class_end");
 
             map_vec.add(map_stack.peek());
+            map_map.put(tmp1,map_stack.peek());
             map_stack.pop();
    }
 
@@ -295,6 +301,7 @@ public class DFStackVisitor implements Visitor {
             context_stack.push("} method_end");
 
             map_vec.add(map_stack.peek());
+            map_map.put(tmp1,map_stack.peek());
             map_stack.pop();
    }
 

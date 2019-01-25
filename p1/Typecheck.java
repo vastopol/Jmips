@@ -34,64 +34,25 @@ public class Typecheck
 
             // Data Members from Visitors
             boolean pass_check = false;
-            /*Vector<Map<THING>> context;*/
+            Stack<String> str_stk ;
+            Map<String,Map<String,String>> symbol_table; // named symbol table for each context
 
-
-            /* ---------- START TEST STRUCT ---------- */    // Krishna
-            Struct numSev = new IntStruct("x", 7);
-            System.out.println(numSev.getType() + " " + numSev.getName() + " " + numSev.getInt());
-            Struct boolFal = new BoolStruct("bool", false);
-            System.out.println(boolFal.getType() + " " + boolFal.getName() + " " + boolFal.getBool());
-            Struct numList = new ArrStruct("numl", new Vector<Integer>(3));
-            System.out.println(numList.getType() + " " + numList.getName() + " " + numList.getArr());
-
-            Vector<Struct> params = new Vector<Struct>();
-            params.add(numSev);
-            params.add(boolFal);
-            params.add(numList);
-            FuncStruct facFunc = new FuncStruct("Fac", "Integer", params);
-            System.out.println(facFunc.getType() + " " + facFunc.getName() + " " + facFunc.getParams());
-
-            Vector<FuncStruct> meths = new Vector<FuncStruct>();
-            meths.add(facFunc);
-            ClassStruct factorialClass = new ClassStruct("factorial", params, meths);
-            System.out.println(factorialClass.getType() + " " + factorialClass.getName() + " " + factorialClass.getFields() + " " + factorialClass.getMethods());
-            /* ---------- END TEST STRUCT ---------- */
-
-
-            /* ---------- START TEST PRINT && SYMBOL VISITOR ---------- */
+            // Krishna
+            /* ---------- START TEST FOR : Struct, Print Visitor, Symbol Visitor ---------- */
+            test_struct();
             DFSymbolVisitor simbol = new DFSymbolVisitor();
             DFPrintVisitor df_print_visitor = new DFPrintVisitor();
             goal.accept(simbol);
-            /* ---------- END TEST PRINT && SYMBOL VISITOR ---------- */
+            /* ---------- END TEST FOR : Struct, Print Visitor, Symbol Visitor ---------- */
 
-
-            /* ---------- START TEST STACK VISITOR ---------- */    // Sean
-
+            // Sean
+            /* ---------- START TEST STACK VISITOR ---------- */
             DFStackVisitor df_stack_visitor = new DFStackVisitor();
             goal.accept(df_stack_visitor);
-
-            Vector<Map<String,String> >  ms = df_stack_visitor.map_vec;
-            System.out.println("\nPrint Map Stack\n--------------------");
-            Integer i = 1;
-            for( Map<String,String> m : ms)
-            {
-                System.out.println("Map"+i.toString());
-                m.forEach( (k,v) -> System.out.println("( "+ k + " : " + v+" )") );
-                i++;
-            }
-            System.out.println("--------------------\n");
-
-            Stack<String> ss = df_stack_visitor.context_stack;
-            System.out.println("\nPrint Stack\n--------------------");
-            for( String s : ss )
-            {
-                System.out.println(s);
-            }
-            System.out.println("--------------------\n");
-
+            str_stk = df_stack_visitor.context_stack;
+            symbol_table = df_stack_visitor.map_map;
+            test_stack(str_stk,symbol_table);
             /* ---------- END TEST STACK VISITOR ---------- */
-
 
             //builds symbol table using symbol visitor class
             /*DFSymbolVisitor context_builder = new DFSymbolVisitor();
@@ -118,6 +79,51 @@ public class Typecheck
         }
 
         return;
+    }
+
+    public static void test_struct()
+    {
+        Struct numSev = new IntStruct("x", 7);
+        System.out.println(numSev.getType() + " " + numSev.getName() + " " + numSev.getInt());
+        Struct boolFal = new BoolStruct("bool", false);
+        System.out.println(boolFal.getType() + " " + boolFal.getName() + " " + boolFal.getBool());
+        Struct numList = new ArrStruct("numl", new Vector<Integer>(3));
+        System.out.println(numList.getType() + " " + numList.getName() + " " + numList.getArr());
+
+        Vector<Struct> params = new Vector<Struct>();
+        params.add(numSev);
+        params.add(boolFal);
+        params.add(numList);
+        FuncStruct facFunc = new FuncStruct("Fac", "Integer", params);
+        System.out.println(facFunc.getType() + " " + facFunc.getName() + " " + facFunc.getParams());
+
+        Vector<FuncStruct> meths = new Vector<FuncStruct>();
+        meths.add(facFunc);
+        ClassStruct factorialClass = new ClassStruct("factorial", params, meths);
+        System.out.println(factorialClass.getType() + " " + factorialClass.getName() + " " + factorialClass.getFields() + " " + factorialClass.getMethods());
+
+        System.out.println(""); // end test with newline
+    }
+
+    public static void test_stack(Stack<String> ss, Map<String,Map<String,String>> mm)
+    {
+        System.out.println("\nPrint Stack\n--------------------");
+        for( String s : ss )
+        {
+            System.out.println(s);
+        }
+        System.out.println("--------------------\n");
+
+        System.out.println("Print Maps\n--------------------");
+        for(Map.Entry<String,Map<String,String>> entry : mm.entrySet())
+        {
+            String key = entry.getKey();
+            Map<String,String> val = entry.getValue();
+            System.out.println("Map: "+key);
+            val.forEach( (k,v) -> System.out.println("( "+ k + " : " + v+" )") );
+        }
+        System.out.println("--------------------\n");
+
     }
 };
 
