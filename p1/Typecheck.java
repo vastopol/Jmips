@@ -71,7 +71,7 @@ public class Typecheck
             DFStackVisitor df_stack_visitor = new DFStackVisitor();
             goal.accept(df_stack_visitor);
 
-            Stack<Map<String,String> >  ms = df_stack_visitor.map_stack;
+            Vector<Map<String,String> >  ms = df_stack_visitor.map_vec;
             System.out.println("\nPrint Map Stack\n--------------------");
             Integer i = 1;
             for( Map<String,String> m : ms)

@@ -16,11 +16,13 @@ public class DFStackVisitor implements Visitor {
     // data members
     public Stack<String> context_stack;
     public Stack<Map<String,String>> map_stack;
+    public Vector<Map<String,String>> map_vec;
 
     public DFStackVisitor()
     {
         context_stack = new Stack<String>();
         map_stack = new Stack<Map<String,String>>();
+        map_vec = new Vector<Map<String,String>>();
     }
 
    // Auto class visitors--probably don't need to be overridden.
@@ -68,6 +70,9 @@ public class DFStackVisitor implements Visitor {
         n.f1.accept(this); // this is a  NodeListOptional
         n.f2.accept(this);
             context_stack.push("} Global_End");
+
+            map_vec.add(map_stack.peek());
+            map_stack.pop();
    }
 
    /**
@@ -136,9 +141,16 @@ public class DFStackVisitor implements Visitor {
         n.f14.accept(this);
         n.f15.accept(this);
             context_stack.push("} main_end");
+
+            map_vec.add(map_stack.peek());
+            map_stack.pop();
+
         n.f16.accept(this);
         n.f17.accept(this);
             context_stack.push("} class_end");
+
+            map_vec.add(map_stack.peek());
+            map_stack.pop();
    }
 
    /**
@@ -177,6 +189,9 @@ public class DFStackVisitor implements Visitor {
         n.f4.accept(this);
         n.f5.accept(this);
             context_stack.push("} class_end");
+
+            map_vec.add(map_stack.peek());
+            map_stack.pop();
    }
 
    /**
@@ -213,6 +228,9 @@ public class DFStackVisitor implements Visitor {
         n.f6.accept(this);
         n.f7.accept(this);
             context_stack.push("} class_end");
+
+            map_vec.add(map_stack.peek());
+            map_stack.pop();
    }
 
    /**
@@ -228,7 +246,7 @@ public class DFStackVisitor implements Visitor {
             String tmp2 = context_stack.pop();
             context_stack.push(tmp2+" "+tmp1);
 
-            map_stack.peek().put(tmp1,"method"); // add this variable to map
+            map_stack.peek().put(tmp1,tmp2); // add this variable to map
 
         n.f2.accept(this);
    }
@@ -275,6 +293,9 @@ public class DFStackVisitor implements Visitor {
         n.f11.accept(this);
         n.f12.accept(this);
             context_stack.push("} method_end");
+
+            map_vec.add(map_stack.peek());
+            map_stack.pop();
    }
 
    /**
@@ -585,6 +606,10 @@ public class DFStackVisitor implements Visitor {
             String tmp2 = context_stack.pop();
             String tmp3 = context_stack.pop();
             context_stack.push(tmp3+" "+tmp2+" "+tmp1);
+
+            map_stack.peek().put(tmp3,"class");  // name of class that owns the function
+            map_stack.peek().put(tmp1,"method"); // add the name of the function that gets called
+
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
