@@ -67,16 +67,29 @@ public class Typecheck
 
 
             /* ---------- START TEST STACK VISITOR ---------- */    // Sean
+
             DFStackVisitor df_stack_visitor = new DFStackVisitor();
             goal.accept(df_stack_visitor);
 
-            Stack<String> vs = df_stack_visitor.context_stack;
-            System.out.println("\nPrint Stack\n--------------------");
-            for( String v : vs )
+            Stack<Map<String,String> >  ms = df_stack_visitor.map_stack;
+            System.out.println("\nPrint Map Stack\n--------------------");
+            Integer i = 1;
+            for( Map<String,String> m : ms)
             {
-                System.out.println(v);
+                System.out.println("Map"+i.toString());
+                m.forEach( (k,v) -> System.out.println("( "+ k + " : " + v+" )") );
+                i++;
             }
             System.out.println("--------------------\n");
+
+            Stack<String> ss = df_stack_visitor.context_stack;
+            System.out.println("\nPrint Stack\n--------------------");
+            for( String s : ss )
+            {
+                System.out.println(s);
+            }
+            System.out.println("--------------------\n");
+
             /* ---------- END TEST STACK VISITOR ---------- */
 
 
