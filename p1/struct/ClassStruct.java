@@ -5,6 +5,7 @@ public class ClassStruct extends Struct {
 
     public Vector<Struct> fields;
     public Vector<FuncStruct> methods;
+    ClassStruct parent;
 
     public ClassStruct (String n, Vector<Struct> f, Vector<FuncStruct> m)
     {
@@ -21,5 +22,15 @@ public class ClassStruct extends Struct {
     public Vector<FuncStruct> getMethods()
     {
         return methods;
+    }
+
+    public void setParent(ClassStruct p)
+    {
+        parent = p;
+    }
+
+    public ClassStruct getParent()
+    {
+        return parent;
     }
 }

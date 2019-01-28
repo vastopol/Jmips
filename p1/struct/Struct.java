@@ -30,8 +30,11 @@ public class Struct {
     public void setArr(Vector<Integer> l){}
 
     public Vector<Struct> getParams(){return new Vector<>();}
+    public String get_returnType(){return "";}
 
     public Vector<Struct> getFields(){return new Vector<>();}
     public Vector<FuncStruct> getMethods(){return new Vector<>();}
+    public void setParent(ClassStruct p){}
+    public Struct getParent(){return new Struct();}
 }
 //INT, BOOL, ARRAY, FUNC, CLASS
