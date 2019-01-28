@@ -8,7 +8,7 @@ public class ArrStruct extends Struct {
     public ArrStruct (String n, Vector<Integer> l)
     {
         name = n;
-        type = "Integer";
+        type = "int[]";
         literal = l;
     }
     public Vector<Integer> getArr()

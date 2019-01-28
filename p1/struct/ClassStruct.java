@@ -9,7 +9,7 @@ public class ClassStruct extends Struct {
     public ClassStruct (String n, Vector<Struct> f, Vector<FuncStruct> m)
     {
         name = n;
-        type = "Class";
+        type = "class";
         fields = f;
         methods = m;
     }

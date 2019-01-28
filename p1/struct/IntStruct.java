@@ -8,7 +8,7 @@ public class IntStruct extends Struct {
     public IntStruct (String n, int l)
     {
         name = n;
-        type = "Integer";
+        type = "int";
         literal = l;
     }
     public int getInt()

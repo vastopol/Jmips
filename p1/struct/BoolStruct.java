@@ -8,7 +8,7 @@ public class BoolStruct extends Struct {
     public BoolStruct (String n, Boolean l)
     {
         name = n;
-        type = "Boolean";
+        type = "boolean";
         literal = l;
     }
 
@@ -16,7 +16,7 @@ public class BoolStruct extends Struct {
     {
         return literal;
     }
-    
+
     public void setType(String t)
     {
         type = t;
