@@ -3,12 +3,14 @@ import java.util.*;
 
 public class ObjStruct extends Struct {
 
-    public Struct literal;
+    public ClassStruct literal;
+    public String objtype;
 
-    public ObjStruct (String n, Struct l)
+    public ObjStruct (String n, ClassStruct l)
     {
         name = n;
-        type = l.getName();
+        type = "object";
+        objtype = l.getName();
         literal = l;
     }
 

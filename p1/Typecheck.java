@@ -15,6 +15,8 @@ import syntaxtree.*;
 // our classes
 import struct.*;
 
+import toolbox.*;
+
 // main
 public class Typecheck
 {
@@ -94,28 +96,36 @@ public class Typecheck
     public static void test_struct()
     {
         Struct numSev = new IntStruct("x", 7);
-        System.out.println(numSev.getType() + " " + numSev.getName() + " " + numSev.getInt());
+        // System.out.println(numSev.getType() + " " + numSev.getName() + " " + numSev.getInt());
         Struct boolFal = new BoolStruct("bool", false);
-        System.out.println(boolFal.getType() + " " + boolFal.getName() + " " + boolFal.getBool());
+        // System.out.println(boolFal.getType() + " " + boolFal.getName() + " " + boolFal.getBool());
         Struct numList = new ArrStruct("numl", new Vector<Integer>(3));
-        System.out.println(numList.getType() + " " + numList.getName() + " " + numList.getArr());
+        // System.out.println(numList.getType() + " " + numList.getName() + " " + numList.getArr());
 
         Vector<Struct> params = new Vector<Struct>();
         params.add(numSev);
         params.add(boolFal);
         params.add(numList);
         FuncStruct facFunc = new FuncStruct("Fac", "Integer", params);
-        System.out.println(facFunc.getType() + " " + facFunc.getName() + " " + facFunc.getParams());
+        // System.out.println(facFunc.getType() + " " + facFunc.getName() + " " + facFunc.getParams());
 
         Vector<FuncStruct> meths = new Vector<FuncStruct>();
         meths.add(facFunc);
         ClassStruct factorialClass = new ClassStruct("factorial", params, meths);
-        System.out.println(factorialClass.getType() + " " + factorialClass.getName() + " " + factorialClass.getFields() + " " + factorialClass.getMethods());
+        // System.out.println(factorialClass.getType() + " " + factorialClass.getName() + " " + factorialClass.getFields() + " " + factorialClass.getMethods());
 
         ObjStruct facObject = new ObjStruct("facObject", new ClassStruct("facotrial", params, meths));
-        System.out.println(facObject.getType() + " " + facObject.getName() + " " + facObject.getFields() + " " + facObject.getMethods());
+        // System.out.println(facObject.getType() + " " + facObject.getName() + " " + facObject.getFields() + " " + facObject.getMethods());
 
         System.out.println(""); // end test with newline
+        toolbox.tools.print(numSev);
+        toolbox.tools.print(boolFal);
+        toolbox.tools.print(numList);
+        toolbox.tools.print(facFunc);
+        toolbox.tools.print(factorialClass);
+        toolbox.tools.print(facObject);
+
+
     }
 
     public static void print_stack_trace(Stack<String> ss)
