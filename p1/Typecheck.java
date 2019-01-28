@@ -41,28 +41,28 @@ public class Typecheck
 
             /* ---------- START TESTS ---------- */
 
-            // test_struct();
+            test_struct();
 
-            // DFPrintVisitor df_print_visitor = new DFPrintVisitor();
-            // goal.accept(df_print_visitor);
+            DFPrintVisitor df_print_visitor = new DFPrintVisitor();
+            goal.accept(df_print_visitor);
 
-            // DFStackTestVisitor df_stack_test_visitor = new DFStackTestVisitor();
-            // goal.accept(df_stack_test_visitor);
-            // print_stack_trace(df_stack_test_visitor.context_stack);
-            // print_vec_maps(df_stack_test_visitor.map_vec);
-            // print_map_maps(df_stack_test_visitor.map_map);
+            DFStackTestVisitor df_stack_test_visitor = new DFStackTestVisitor();
+            goal.accept(df_stack_test_visitor);
+            print_stack_trace(df_stack_test_visitor.context_stack);
+            print_vec_maps(df_stack_test_visitor.map_vec);
+            print_map_maps(df_stack_test_visitor.map_map);
 
             /* ---------- END TESTS ---------- */
 
 
             /* ---------- START VISITS ---------- */
-
-            /*DFStackVisitor df_stack_test_visitor = new DFStackVisitor();
+/*
+            DFStackVisitor df_stack_visitor = new DFStackVisitor();
             goal.accept(df_stack_test_visitor);
 
-            print_vec_structs(df_stack_visitor.struct_vec);*/
-
-            //print_map_structs(df_stack_visitor.map_map);
+            print_vec_structs(df_stack_visitor.struct_vec);
+*/
+            //print_map_structs(df_stack_visitor.struct_map);
 
             // HERE GET SYMBOL TABLE ONCE KNOWN CORRECT
             // sym_table = df_stack_visitor.struct_map;
@@ -112,11 +112,15 @@ public class Typecheck
         ClassStruct factorialClass = new ClassStruct("factorial", params, meths);
         System.out.println(factorialClass.getType() + " " + factorialClass.getName() + " " + factorialClass.getFields() + " " + factorialClass.getMethods());
 
+        ObjStruct facObject = new ObjStruct("facObject", new ClassStruct("facotrial", params, meths));
+        System.out.println(facObject.getType() + " " + facObject.getName() + " " + facObject.getFields() + " " + facObject.getMethods());
+
         System.out.println(""); // end test with newline
     }
 
     public static void print_stack_trace(Stack<String> ss)
     {
+        System.out.println(""); // end test with newline
         System.out.println("Print Stack Trace\n--------------------");
         for( String s : ss )
         {
