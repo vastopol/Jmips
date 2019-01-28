@@ -26,8 +26,8 @@ public class Struct {
     public Boolean getBool(){return false;}
     public void setBool(Boolean l){}
 
-    public Vector<int> getArr(){return new Vector<>();}
-    public void setArr(Vector<int> l){}
+    public Vector<Integer> getArr(){return new Vector<>();}
+    public void setArr(Vector<Integer> l){}
 
     public Vector<Struct> getParams(){return new Vector<>();}
     public String get_returnType(){return "";}
