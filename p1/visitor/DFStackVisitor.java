@@ -18,12 +18,14 @@ import struct.*;
 public class DFStackVisitor implements Visitor {
 
     // data members
+    public Stack<String> context_stack;               // contains the stack the stack trace
     public Stack<Map<String,Struct>> struct_stack;       // used to construct the maps, on enter context push new map to stack, on exit contex pop top map to vector
     public Vector<Map<String,Struct>> struct_vec;        // vector of unlabeled symbol tables appended in order cfeated from pops on stack
     public Map<String,Map<String,Struct>> struct_map;   // all of the labeled symbol tables but with structs for the individual table values
 
     public DFStackVisitor()
     {
+        context_stack = new Stack<String>();
         struct_stack = new Stack<Map<String,Struct>>();
         struct_vec = new Vector<Map<String,Struct>>();
         struct_map = new HashMap<String,Map<String,Struct>>();
@@ -67,17 +69,17 @@ public class DFStackVisitor implements Visitor {
    {
             context_stack.push("{ Global_Start");
 
-            Map<String,String> global_map = new HashMap<String,String>(); //global  map for everything in file
-            map_stack.push(global_map);                                   // put global map on stack
+            Map<String,Struct> global_map = new HashMap<String,Struct>(); //global  map for everything in file
+            struct_stack.push(global_map);                                   // put global map on stack
 
         n.f0.accept(this);
         n.f1.accept(this); // this is a  NodeListOptional
         n.f2.accept(this);
             context_stack.push("} Global_End");
 
-            map_vec.add(map_stack.peek());
-            map_map.put("Global",map_stack.peek());
-            map_stack.pop();
+            struct_vec.add(struct_stack.peek());
+            struct_map.put("Global",struct_stack.peek());
+            struct_stack.pop();
    }
 
    /**
@@ -109,9 +111,10 @@ public class DFStackVisitor implements Visitor {
             String tmp2 = context_stack.pop();
             context_stack.push(tmp2+" "+tmp1);
 
-            map_stack.peek().put(tmp1,tmp2);                             // add this class to global map
-            Map<String,String> class_map = new HashMap<String,String>(); // map for this class which has the main() method
-            map_stack.push(class_map);                                   // push this class's map onto stack
+            ClassStruct struct1 = new ClassStruct(tmp1, new Vector<Struct>(), new Vector<FuncStruct>() );
+            struct_stack.peek().put(tmp1,struct1);                         // add this class to global map
+            Map<String,Struct> class_map = new HashMap<String,Struct>();   // map for this class which has the main() method
+            struct_stack.push(class_map);                                  // push this class's map onto stack
 
         n.f2.accept(this);
             context_stack.push("{ class_start");
@@ -121,10 +124,10 @@ public class DFStackVisitor implements Visitor {
         n.f6.accept(this);
             context_stack.push("public static void main");
 
-
-            map_stack.peek().put("main","method");                      // add this method to class map
-            Map<String,String> main_map = new HashMap<String,String>(); // map for  the main() method
-            map_stack.push(main_map);                                   // push this method's map onto stack
+            FuncStruct struct2 = new FuncStruct("main", "void", new Vector<Struct>() );
+            struct_stack.peek().put("main",struct2);                      // add this method to class map
+            Map<String,Struct> main_map = new HashMap<String,Struct>();   // map for  the main() method
+            struct_stack.push(main_map);                                  // push this method's map onto stack
 
         n.f7.accept(this);
         n.f8.accept(this);
@@ -136,7 +139,8 @@ public class DFStackVisitor implements Visitor {
             String tmp4 = context_stack.pop();
             context_stack.push(tmp4+" "+tmp3);
 
-            map_stack.peek().put(tmp3,tmp4);                           // add String[] name class to global map
+            StringStruct struct3 = new StringStruct(tmp3,"argv");
+            struct_stack.peek().put(tmp3,struct3);                           // add String[] name class to global map
 
         n.f12.accept(this);
             String tmp5 = context_stack.pop();
@@ -147,17 +151,17 @@ public class DFStackVisitor implements Visitor {
         n.f15.accept(this);
             context_stack.push("} main_end");
 
-            map_vec.add(map_stack.peek());
-            map_map.put("main",map_stack.peek());
-            map_stack.pop();
+            struct_vec.add(struct_stack.peek());
+            struct_map.put("main",struct_stack.peek());
+            struct_stack.pop();
 
         n.f16.accept(this);
         n.f17.accept(this);
             context_stack.push("} class_end");
 
-            map_vec.add(map_stack.peek());
-            map_map.put(tmp1,map_stack.peek());
-            map_stack.pop();
+            struct_vec.add(struct_stack.peek());
+            struct_map.put(tmp1,struct_stack.peek());
+            struct_stack.pop();
    }
 
    /**
@@ -186,9 +190,10 @@ public class DFStackVisitor implements Visitor {
             String tmp2 = context_stack.pop();
             context_stack.push(tmp2+" "+tmp1);
 
-            map_stack.peek().put(tmp1,tmp2);                             // add this class to global map
-            Map<String,String> class_map = new HashMap<String,String>(); // map for this class which has the main() method
-            map_stack.push(class_map);                                   // push this class's map onto stack
+            ClassStruct struct1 = new ClassStruct(tmp1, new Vector<Struct>(), new Vector<FuncStruct>() );
+            struct_stack.peek().put(tmp1,struct1);                             // add this class to global map
+            Map<String,Struct> class_map = new HashMap<String,Struct>(); // map for this class
+            struct_stack.push(class_map);                                   // push this class's map onto stack
 
         n.f2.accept(this);
             context_stack.push("{ class_start");
@@ -197,9 +202,9 @@ public class DFStackVisitor implements Visitor {
         n.f5.accept(this);
             context_stack.push("} class_end");
 
-            map_vec.add(map_stack.peek());
-            map_map.put(tmp1,map_stack.peek());
-            map_stack.pop();
+            struct_vec.add(struct_stack.peek());
+            struct_map.put(tmp1,struct_stack.peek());
+            struct_stack.pop();
    }
 
    /**
@@ -226,9 +231,10 @@ public class DFStackVisitor implements Visitor {
             String tmp4 = context_stack.pop();
             context_stack.push(tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
 
-            map_stack.peek().put(tmp1,tmp2);                             // add this class to global map
-            Map<String,String> class_map = new HashMap<String,String>(); // map for this class which has the main() method
-            map_stack.push(class_map);                                   // push this class's map onto stack
+            ClassStruct struct1 = new ClassStruct(tmp1, new Vector<Struct>(), new Vector<FuncStruct>() );
+            struct_stack.peek().put(tmp1,struct1);                             // add this class to global map
+            Map<String,Struct> class_map = new HashMap<String,Struct>();      // map for this class
+            struct_stack.push(class_map);                                   // push this class's map onto stack
 
         n.f4.accept(this);
             context_stack.push("{ class_start");
@@ -237,9 +243,9 @@ public class DFStackVisitor implements Visitor {
         n.f7.accept(this);
             context_stack.push("} class_end");
 
-            map_vec.add(map_stack.peek());
-            map_map.put(tmp1,map_stack.peek());
-            map_stack.pop();
+            struct_vec.add(struct_stack.peek());
+            struct_map.put(tmp1,struct_stack.peek());
+            struct_stack.pop();
    }
 
    /**
@@ -255,7 +261,21 @@ public class DFStackVisitor implements Visitor {
             String tmp2 = context_stack.pop();
             context_stack.push(tmp2+" "+tmp1);
 
-            map_stack.peek().put(tmp1,tmp2); // add this variable to map
+            if(tmp2 == "int")
+            {
+                IntStruct struct1 = new IntStruct(tmp1, new Integer(0) );
+                struct_stack.peek().put(tmp1,struct1);                           // add this var to class map
+            }
+            else if(tmp2 == "int[]")
+            {
+                ArrStruct struct1 = new ArrStruct(tmp1, new Vector<Integer>() );
+                struct_stack.peek().put(tmp1,struct1);                           // add this var to class map
+            }
+            else
+            {
+                BoolStruct struct1 = new BoolStruct(tmp1, new Boolean(false) );
+                struct_stack.peek().put(tmp1,struct1);                           // add this var to class map
+            }
 
         n.f2.accept(this);
    }
@@ -287,9 +307,10 @@ public class DFStackVisitor implements Visitor {
             context_stack.push(tmp3+" "+tmp2+" "+tmp1);
             context_stack.push("{ method_start");
 
-            map_stack.peek().put(tmp1,"method");                          // add this method to  map
-            Map<String,String> method_map = new HashMap<String,String>(); // map for this method
-            map_stack.push(method_map);                                   // push this methods's map onto stack
+            FuncStruct struct1 = new FuncStruct(tmp1, tmp2, new Vector<Struct>() );
+            struct_stack.peek().put(tmp1,struct1);                             // add this method to class
+            Map<String,Struct> method_map = new HashMap<String,Struct>();    // map for this method
+            struct_stack.push(method_map);                                   // push method map onto stack
 
         n.f3.accept(this);
         n.f4.accept(this);
@@ -303,9 +324,9 @@ public class DFStackVisitor implements Visitor {
         n.f12.accept(this);
             context_stack.push("} method_end");
 
-            map_vec.add(map_stack.peek());
-            map_map.put(tmp1,map_stack.peek());
-            map_stack.pop();
+            struct_vec.add(struct_stack.peek());
+            struct_map.put(tmp1,struct_stack.peek());
+            struct_stack.pop();
    }
 
    /**
@@ -330,7 +351,21 @@ public class DFStackVisitor implements Visitor {
             String tmp2 = context_stack.pop();
             context_stack.push(tmp2+" "+tmp1);
 
-            map_stack.peek().put(tmp1,tmp2);  // add this parameter to the function's map
+            if(tmp2 == "int")
+            {
+                IntStruct struct1 = new IntStruct(tmp1, new Integer(0));
+                struct_stack.peek().put(tmp1,struct1);                           // add this var to method map
+            }
+            else if(tmp2 == "int[]")
+            {
+                ArrStruct struct1 = new ArrStruct(tmp1, new Vector<Integer>());
+                struct_stack.peek().put(tmp1,struct1);                           // add this var to method map
+            }
+            else
+            {
+                BoolStruct struct1 = new BoolStruct(tmp1, new Boolean(false));
+                struct_stack.peek().put(tmp1,struct1);                           // add this var to method map
+            }
    }
 
    /**
@@ -617,8 +652,11 @@ public class DFStackVisitor implements Visitor {
             String tmp3 = context_stack.pop();
             context_stack.push(tmp3+" "+tmp2+" "+tmp1);
 
-            map_stack.peek().put(tmp3,"class");  // name of class that owns the function
-            map_stack.peek().put(tmp1,"method"); // add the name of the function that gets called
+            ClassStruct struct1 = new ClassStruct(tmp3, new Vector<Struct>(), new Vector<FuncStruct>());
+            struct_stack.peek().put(tmp3,struct1);                             // add this class
+
+            FuncStruct struct2 = new FuncStruct(tmp1, "?", new Vector<Struct>());
+            struct_stack.peek().put(tmp1,struct2);                             // add this method
 
         n.f3.accept(this);
         n.f4.accept(this);

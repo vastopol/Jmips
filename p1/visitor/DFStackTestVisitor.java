@@ -189,7 +189,7 @@ public class DFStackTestVisitor implements Visitor {
             context_stack.push(tmp2+" "+tmp1);
 
             map_stack.peek().put(tmp1,tmp2);                             // add this class to global map
-            Map<String,String> class_map = new HashMap<String,String>(); // map for this class which has the main() method
+            Map<String,String> class_map = new HashMap<String,String>(); // map for this class
             map_stack.push(class_map);                                   // push this class's map onto stack
 
         n.f2.accept(this);
@@ -229,7 +229,7 @@ public class DFStackTestVisitor implements Visitor {
             context_stack.push(tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
 
             map_stack.peek().put(tmp1,tmp2);                             // add this class to global map
-            Map<String,String> class_map = new HashMap<String,String>(); // map for this class which has the main() method
+            Map<String,String> class_map = new HashMap<String,String>(); // map for this class 
             map_stack.push(class_map);                                   // push this class's map onto stack
 
         n.f4.accept(this);
