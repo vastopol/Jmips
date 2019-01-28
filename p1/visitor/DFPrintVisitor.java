@@ -13,37 +13,39 @@ import java.util.*;
 public class DFPrintVisitor implements Visitor {
 
     // data members
+    //public boolean check_me = false;
+   //public Vector<Map<THING>> symtab;
+   public Vector<String> stack;
+   public int ind;
    //
    // Auto class visitors--probably don't need to be overridden.
    //
+   public DFPrintVisitor () {
+      stack = new Vector<String>();
+      ind = 0;
+   }
    public void visit(NodeList n) {
-   System.out.println("NodeList");
       for ( Enumeration<Node> e = n.elements(); e.hasMoreElements(); )
          e.nextElement().accept(this);
    }
 
    public void visit(NodeListOptional n) {
-   System.out.println("NodeListOptional");
       if ( n.present() )
-         System.out.println("NLO present");
          for ( Enumeration<Node> e = n.elements(); e.hasMoreElements(); )
             e.nextElement().accept(this);
    }
 
    public void visit(NodeOptional n) {
-   System.out.println("NodeOptional");
       if ( n.present() )
-         System.out.println("NO present");
          n.node.accept(this);
    }
 
    public void visit(NodeSequence n) {
-      System.out.println("NodeSequence");
       for ( Enumeration<Node> e = n.elements(); e.hasMoreElements(); )
          e.nextElement().accept(this);
    }
 
-   public void visit(NodeToken n) { System.out.println("NodeToken " + n.tokenImage);}
+   public void visit(NodeToken n) { }
 
    //
    // User-generated visitor methods below
@@ -55,7 +57,8 @@ public class DFPrintVisitor implements Visitor {
     * f2 -> <EOF>
     */
    public void visit(Goal n) {
-       System.out.println("print_visitor visit(Goal n)");
+      stack.add("Goal");
+      System.out.println("print_visitor visit(Goal n)" + stack.get(ind));
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
@@ -85,7 +88,6 @@ public class DFPrintVisitor implements Visitor {
        System.out.println("print_visitor visit(MainClass n)");
       n.f0.accept(this);
       n.f1.accept(this);
-      
       n.f2.accept(this);
       n.f3.accept(this);
       n.f4.accept(this);
@@ -98,8 +100,15 @@ public class DFPrintVisitor implements Visitor {
       n.f11.accept(this);
       n.f12.accept(this);
       n.f13.accept(this);
+      ind++;
+      stack.add("Main");
+      System.out.println(stack.get(ind));
       n.f14.accept(this);
       n.f15.accept(this);
+      stack.removeElementAt(ind);
+      ind--;
+      stack.add("Leaving Main");
+      System.out.println(stack.get(ind));
       n.f16.accept(this);
       n.f17.accept(this);
    }

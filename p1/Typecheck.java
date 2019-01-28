@@ -7,10 +7,13 @@
 // java modules
 import java.io.*;
 import java.util.*;
-// project folders
+
+// builtin project folders
 import visitor.*;
-import struct.*;
 import syntaxtree.*;
+
+// our classes
+import struct.*;
 
 // main
 public class Typecheck
@@ -34,37 +37,44 @@ public class Typecheck
 
             // Data Members from Visitors
             boolean pass_check = false;
-            Stack<String> str_stk ;
-            Map<String,Map<String,String>> symbol_table; // named symbol table for each context
+            Map<String,Map<String,Struct>> sym_table; // named symbol table for each context
 
-            // Krishna
-            /* ---------- START TEST FOR : Struct, Print Visitor, Symbol Visitor ---------- */
-            test_struct();
-            DFSymbolVisitor simbol = new DFSymbolVisitor();
-            DFPrintVisitor df_print_visitor = new DFPrintVisitor();
-            goal.accept(simbol);
-            /* ---------- END TEST FOR : Struct, Print Visitor, Symbol Visitor ---------- */
+            /* ---------- START TESTS ---------- */
 
-            // Sean
-            /* ---------- START TEST STACK VISITOR ---------- */
-            DFStackVisitor df_stack_visitor = new DFStackVisitor();
-            goal.accept(df_stack_visitor);
-            str_stk = df_stack_visitor.context_stack;
-            symbol_table = df_stack_visitor.map_map;
-            test_stack(str_stk,symbol_table);
-            /* ---------- END TEST STACK VISITOR ---------- */
+            // test_struct();
 
-            //builds symbol table using symbol visitor class
-            /*DFSymbolVisitor context_builder = new DFSymbolVisitor();
-            goal.accept(context_builder);
-            context = contex_builder.Symtab;*/
+            // DFPrintVisitor df_print_visitor = new DFPrintVisitor();
+            // goal.accept(df_print_visitor);
 
-            //builds type check class with symbol table
-            //type checks
+            // DFStackTestVisitor df_stack_test_visitor = new DFStackTestVisitor();
+            // goal.accept(df_stack_test_visitor);
+            // print_stack_trace(df_stack_test_visitor.context_stack);
+            // print_vec_maps(df_stack_test_visitor.map_vec);
+            // print_map_maps(df_stack_test_visitor.map_map);
 
-           /* GJTypeCheckVisitor<> type_checker = new GJTypeCheckVisitor<>(context);
+            /* ---------- END TESTS ---------- */
+
+
+            /* ---------- START VISITS ---------- */
+
+            /*DFStackVisitor df_stack_test_visitor = new DFStackVisitor();
+            goal.accept(df_stack_test_visitor);
+
+            print_vec_structs(df_stack_visitor.struct_vec);*/
+
+            //print_map_structs(df_stack_visitor.map_map);
+
+            // HERE GET SYMBOL TABLE ONCE KNOWN CORRECT
+            // sym_table = df_stack_visitor.struct_map;
+
+            /*
+            // HERE DO TYPECHECK
+            GJTypeCheckVisitor<> type_checker = new GJTypeCheckVisitor<>(context);
             goal.accept(type_checker);
-            pass_check = GJTypeCheckVisitor.check_me;*/
+            pass_check = GJTypeCheckVisitor.check_me;
+            */
+
+            /* ---------- END VISITS ---------- */
 
             if(pass_check)
             {
@@ -105,22 +115,62 @@ public class Typecheck
         System.out.println(""); // end test with newline
     }
 
-    public static void test_stack(Stack<String> ss, Map<String,Map<String,String>> mm)
+    public static void print_stack_trace(Stack<String> ss)
     {
-        System.out.println("\nPrint Stack\n--------------------");
+        System.out.println("Print Stack Trace\n--------------------");
         for( String s : ss )
         {
             System.out.println(s);
         }
         System.out.println("--------------------\n");
+    }
 
-        System.out.println("Print Maps\n--------------------");
-        for(Map.Entry<String,Map<String,String>> entry : mm.entrySet())
+    public static void print_vec_maps(Vector<Map<String,String>> vm)
+    {
+        System.out.println("Print Vector of Maps (String,String) \n--------------------");
+        for( Map<String,String> entry : vm )
+        {
+            entry.forEach( (k,v) -> System.out.println("( "+ k + " : " + v + " )") );
+            System.out.println("");
+        }
+        System.out.println("--------------------\n");
+    }
+
+    public static void print_map_maps(Map<String,Map<String,String>> mm)
+    {
+        System.out.println("Print Map of Maps (String,String) \n--------------------");
+        for( Map.Entry<String,Map<String,String>> entry : mm.entrySet() )
         {
             String key = entry.getKey();
             Map<String,String> val = entry.getValue();
-            System.out.println("Map: "+key);
-            val.forEach( (k,v) -> System.out.println("( "+ k + " : " + v+" )") );
+            System.out.println("Map: " + key);
+            val.forEach( (k,v) -> System.out.println("( "+ k + " : " + v + " )") );
+            System.out.println("");
+        }
+        System.out.println("--------------------\n");
+
+    }
+
+    public static void print_vec_structs(Vector<Map<String,Struct>> vs)
+    {
+        System.out.println("Print Vector of Maps (String,Struct) \n--------------------");
+        for( Map<String,Struct> entry : vs )
+        {
+            entry.forEach( (k,v) -> System.out.println("( "+ k + " : " + v + " )") );
+            System.out.println("");
+        }
+        System.out.println("--------------------\n");
+    }
+
+    public static void print_map_structs(Map<String,Map<String,Struct>> ms)
+    {
+        System.out.println("Print Map of Maps (String,Struct) \n--------------------");
+        for( Map.Entry<String,Map<String,Struct>> entry : ms.entrySet() )
+        {
+            String key = entry.getKey();
+            Map<String,Struct> val = entry.getValue();
+            System.out.println("Map: " + key);
+            val.forEach( (k,v) -> System.out.println("( " + k + " : " + v + " )") );
         }
         System.out.println("--------------------\n");
 

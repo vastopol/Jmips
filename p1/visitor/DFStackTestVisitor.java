@@ -15,18 +15,20 @@ import struct.*;
  * Provides default methods which visit each node in the tree in depth-first
  * order.  Your visitors may extend this class.
  */
-public class DFStackVisitor implements Visitor {
+public class DFStackTestVisitor implements Visitor {
 
     // data members
-    public Stack<Map<String,Struct>> struct_stack;       // used to construct the maps, on enter context push new map to stack, on exit contex pop top map to vector
-    public Vector<Map<String,Struct>> struct_vec;        // vector of unlabeled symbol tables appended in order cfeated from pops on stack
-    public Map<String,Map<String,Struct>> struct_map;   // all of the labeled symbol tables but with structs for the individual table values
+    public Stack<String> context_stack;               // contains the stack the stack trace
+    public Stack<Map<String,String>> map_stack;       // used to construct the maps, on enter context push new map to stack, on exit contex pop top map to vector
+    public Vector<Map<String,String>> map_vec;        // vector of unlabeled symbol tables appended in order cfeated from pops on stack
+    public Map<String,Map<String,String>> map_map;    // the hashtable of all the individual maps, key contains a context name, value is the symbol table belonging to that context
 
-    public DFStackVisitor()
+    public DFStackTestVisitor()
     {
-        struct_stack = new Stack<Map<String,Struct>>();
-        struct_vec = new Vector<Map<String,Struct>>();
-        struct_map = new HashMap<String,Map<String,Struct>>();
+        context_stack = new Stack<String>();
+        map_stack = new Stack<Map<String,String>>();
+        map_vec = new Vector<Map<String,String>>();
+        map_map = new HashMap<String,Map<String,String>>();
     }
 
    // Auto class visitors--probably don't need to be overridden.

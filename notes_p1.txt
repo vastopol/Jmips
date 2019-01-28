@@ -44,7 +44,6 @@ OUR FILES:
 struct/*
 Typecheck.java
 visitor/DFPrintVisitor.java
-visitor/DFSymbolVisitor.java
 visitor/DFStackVisitor.java
 visitor/GJTypeCheckVisitor.java
 
@@ -113,4 +112,6 @@ which things get a map?
 not started yet...
 
 need to build out all of the helper functions for the type checking
+
+----------------------------------------
 
