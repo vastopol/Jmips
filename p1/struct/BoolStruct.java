@@ -3,9 +3,9 @@ import java.util.*;
 
 public class BoolStruct extends Struct {
 
-    public Boolean literal;
+    public boolean literal;
 
-    public BoolStruct (String n, Boolean l)
+    public BoolStruct (String n, boolean l)
     {
         name = n;
         type = "boolean";
@@ -22,7 +22,7 @@ public class BoolStruct extends Struct {
         type = t;
     }
 
-    public void setBool(Boolean l)
+    public void setBool(boolean l)
     {
         literal = l;
     }
