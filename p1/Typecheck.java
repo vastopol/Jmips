@@ -58,13 +58,13 @@ public class Typecheck
 
 
             /* ---------- START VISITS ---------- */
-/*
+
             DFStackVisitor df_stack_visitor = new DFStackVisitor();
             goal.accept(df_stack_test_visitor);
 
             print_vec_structs(df_stack_visitor.struct_vec);
-*/
-            //print_map_structs(df_stack_visitor.struct_map);
+            // System.out.println("sup");
+            print_map_structs(df_stack_visitor.struct_map);
 
             // HERE GET SYMBOL TABLE ONCE KNOWN CORRECT
             // sym_table = df_stack_visitor.struct_map;
@@ -124,6 +124,7 @@ public class Typecheck
         toolbox.tools.print(facFunc);
         toolbox.tools.print(factorialClass);
         toolbox.tools.print(facObject);
+        System.out.println("");
 
 
     }
@@ -168,23 +169,43 @@ public class Typecheck
     public static void print_vec_structs(Vector<Map<String,Struct>> vs)
     {
         System.out.println("Print Vector of Maps (String,Struct) \n--------------------");
-        for( Map<String,Struct> entry : vs )
-        {
-            entry.forEach( (k,v) -> System.out.println("( "+ k + " : " + v + " )") );
-            System.out.println("");
+        // for( Map<String,Struct> entry : vs )
+        // {
+        //     entry.forEach( (k,v) -> toolbox.tools.print(v) );
+        //     System.out.println("");
+        // }
+        System.out.println(vs.size());
+        for(Map<String,Struct> i: vs) {
+            System.out.println("Sup");
+            for(String k1: i.keySet()) {
+                Struct stc = i.get(k1);
+                toolbox.tools.print(stc);
+            }
         }
+        
         System.out.println("--------------------\n");
     }
 
     public static void print_map_structs(Map<String,Map<String,Struct>> ms)
     {
         System.out.println("Print Map of Maps (String,Struct) \n--------------------");
-        for( Map.Entry<String,Map<String,Struct>> entry : ms.entrySet() )
-        {
-            String key = entry.getKey();
-            Map<String,Struct> val = entry.getValue();
-            System.out.println("Map: " + key);
-            val.forEach( (k,v) -> System.out.println("( " + k + " : " + v + " )") );
+        // for( Map.Entry<String,Map<String,Struct>> entry : ms.entrySet() )
+        // {
+        //     String key = entry.getKey();
+        //     Map<String,Struct> val = entry.getValue();
+        //     System.out.println("Map: " + key);
+        //     val.forEach( (k,v) -> toolbox.tools.print(v) );
+
+        // }
+        System.out.println(ms.size());
+        for(String k : ms.keySet()) {
+            Map<String, Struct> m1 = ms.get(k);
+
+            for(String k1 : m1.keySet()) {
+                Struct stc = m1.get(k1);
+                toolbox.tools.print(stc);
+                System.out.println(k1);
+            }
         }
         System.out.println("--------------------\n");
 
