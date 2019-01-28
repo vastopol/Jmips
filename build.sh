@@ -61,6 +61,7 @@ function clean_p1()
     cd visitor;    rm *.class; cd ..
     cd syntaxtree; rm *.class; cd ..
     cd struct;     rm *.class; cd ..
+    cd toolbox;    rm *.class; cd ..
     cd ..
 }
 
