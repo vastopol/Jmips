@@ -20,7 +20,7 @@ public class Struct {
     public int getInt(){return 0;}
     public void setInt(int l){}
 
-    public int getString(){return "";}
+    public String getString(){return "";}
     public void setInt(String l){}
 
     public Boolean getBool(){return false;}

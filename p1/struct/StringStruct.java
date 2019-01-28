@@ -11,7 +11,7 @@ public class StringStruct extends Struct {
         type = "String[]";
         literal = l;
     }
-    public int getString()
+    public String getString()
     {
         return literal;
     }
