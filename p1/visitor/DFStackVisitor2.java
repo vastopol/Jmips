@@ -63,11 +63,9 @@ public class DFStackVisitor2 implements Visitor {
     */
    public void visit(Goal n)
    {
-            context_stack.push("{ Global_Start");
         n.f0.accept(this);
         n.f1.accept(this); // this is a  NodeListOptional
         n.f2.accept(this);
-            context_stack.push("} Global_End");
    }
 
    /**
@@ -93,38 +91,28 @@ public class DFStackVisitor2 implements Visitor {
    public void visit(MainClass n)
    {
         n.f0.accept(this);
-            context_stack.push("class");
         n.f1.accept(this);
-            String tmp1 = context_stack.pop();
-            String tmp2 = context_stack.pop();
-            context_stack.push(tmp2+" "+tmp1);
+            String tmp1 = context_stack.peek(); // name of class
         n.f2.accept(this);
-            context_stack.push("{ class_start");
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
         n.f6.accept(this);
-            context_stack.push("public static void main");
+            context_stack.push("main");
+            String tmp2 = context_stack.peek(); // name "main"
         n.f7.accept(this);
         n.f8.accept(this);
         n.f9.accept(this);
         n.f10.accept(this);
-            context_stack.push("String[]"); // special case
         n.f11.accept(this);
-            String tmp3 = context_stack.pop();
-            String tmp4 = context_stack.pop();
-            context_stack.push(tmp4+" "+tmp3);
+            String tmp3 = "String[]";
+            String tmp4 = context_stack.peek(); // name of the string arg
         n.f12.accept(this);
-            String tmp5 = context_stack.pop();
-            context_stack.push("{ main_start");
-            context_stack.push(tmp5);
         n.f13.accept(this);
         n.f14.accept(this);
         n.f15.accept(this);
-            context_stack.push("} main_end");
         n.f16.accept(this);
         n.f17.accept(this);
-            context_stack.push("} class_end");
    }
 
    /**
@@ -147,17 +135,12 @@ public class DFStackVisitor2 implements Visitor {
    public void visit(ClassDeclaration n)
    {
         n.f0.accept(this);
-            context_stack.push("class");
         n.f1.accept(this);
-            String tmp1 = context_stack.pop();
-            String tmp2 = context_stack.pop();
-            context_stack.push(tmp2+" "+tmp1);
+            String tmp1 = context_stack.peek(); // class name
         n.f2.accept(this);
-            context_stack.push("{ class_start");
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
-            context_stack.push("} class_end");
    }
 
    /**
@@ -173,22 +156,15 @@ public class DFStackVisitor2 implements Visitor {
    public void visit(ClassExtendsDeclaration n)
    {
         n.f0.accept(this);
-            context_stack.push("class");
         n.f1.accept(this);
+            String tmp1 = context_stack.peek(); // name of this class
         n.f2.accept(this);
-            context_stack.push("extends");
         n.f3.accept(this);
-            String tmp1 = context_stack.pop();
-            String tmp2 = context_stack.pop();
-            String tmp3 = context_stack.pop();
-            String tmp4 = context_stack.pop();
-            context_stack.push(tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
+            String tmp2 = context_stack.peek(); // name of the class it extends
         n.f4.accept(this);
-            context_stack.push("{ class_start");
         n.f5.accept(this);
         n.f6.accept(this);
         n.f7.accept(this);
-            context_stack.push("} class_end");
    }
 
    /**
@@ -199,10 +175,9 @@ public class DFStackVisitor2 implements Visitor {
    public void visit(VarDeclaration n)
    {
         n.f0.accept(this);
+            String tmp1 = context_stack.peek(); // type
         n.f1.accept(this);
-            String tmp1 = context_stack.pop();
-            String tmp2 = context_stack.pop();
-            context_stack.push(tmp2+" "+tmp1);
+            String tmp2 = context_stack.peek(); // name
 
             // if(tmp2 == "int")
             // {
@@ -241,14 +216,10 @@ public class DFStackVisitor2 implements Visitor {
    public void visit(MethodDeclaration n)
    {
         n.f0.accept(this);
-            context_stack.push("public");
         n.f1.accept(this);
+            String tmp1 = context_stack.pop(); // return type
         n.f2.accept(this);
-            String tmp1 = context_stack.pop();
-            String tmp2 = context_stack.pop();
-            String tmp3 = context_stack.pop();
-            context_stack.push(tmp3+" "+tmp2+" "+tmp1);
-            context_stack.push("{ method_start");
+            String tmp2 = context_stack.pop(); // method name
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
@@ -259,7 +230,6 @@ public class DFStackVisitor2 implements Visitor {
         n.f10.accept(this);
         n.f11.accept(this);
         n.f12.accept(this);
-            context_stack.push("} method_end");
    }
 
    /**
@@ -279,10 +249,9 @@ public class DFStackVisitor2 implements Visitor {
    public void visit(FormalParameter n)
    {
         n.f0.accept(this);
+            String tmp1 = context_stack.peek(); // type
         n.f1.accept(this);
-            String tmp1 = context_stack.pop();
-            String tmp2 = context_stack.pop();
-            context_stack.push(tmp2+" "+tmp1);
+            String tmp2 = context_stack.peek(); // name
 
             // if(tmp2 == "int")
             // {
@@ -578,12 +547,7 @@ public class DFStackVisitor2 implements Visitor {
    {
         n.f0.accept(this);
         n.f1.accept(this);
-            context_stack.push(".");
         n.f2.accept(this);
-            String tmp1 = context_stack.pop();
-            String tmp2 = context_stack.pop();
-            String tmp3 = context_stack.pop();
-            context_stack.push(tmp3+" "+tmp2+" "+tmp1);
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
@@ -664,7 +628,6 @@ public class DFStackVisitor2 implements Visitor {
    public void visit(ThisExpression n)
    {
         n.f0.accept(this);
-            context_stack.push("this");
    }
 
    /**
@@ -677,12 +640,10 @@ public class DFStackVisitor2 implements Visitor {
    public void visit(ArrayAllocationExpression n)
    {
         n.f0.accept(this);
-            //context_stack.push("new");
         n.f1.accept(this);
         n.f2.accept(this);
         n.f3.accept(this);
         n.f4.accept(this);
-            context_stack.push("int[]");
    }
 
    /**
@@ -694,7 +655,6 @@ public class DFStackVisitor2 implements Visitor {
    public void visit(AllocationExpression n)
    {
         n.f0.accept(this);
-            //context_stack.push("new");
         n.f1.accept(this);
         n.f2.accept(this);
         n.f3.accept(this);
