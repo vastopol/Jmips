@@ -22,7 +22,7 @@ public class tools {
                 break;
             
             case "function":
-                System.out.println(s.getType() + " " + s.getName() + " " + s.getParams());
+                System.out.println(s.get_returnType() + " " + s.getType() + " " + s.getName() + " " + s.getParams());
                 break;
             case "int":
                 System.out.println(s.getType() + " " + s.getName() + " " + s.getInt());
