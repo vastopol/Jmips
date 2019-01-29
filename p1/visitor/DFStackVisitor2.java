@@ -21,6 +21,8 @@ public class DFStackVisitor2 implements Visitor {
     public Stack<String> context_stack;               // contains the stack the stack trace
     public Map<String,Map<String,Struct>> struct_map; // all of the labeled symbol tables but with structs for the individual table values
 
+    Map<String,Struct> cur_map; // special variable, gets set in the class declarations to the current classes map
+
     public DFStackVisitor2(Map<String,Map<String,Struct>> symtab1)
     {
         context_stack = new Stack<String>();
@@ -136,7 +138,10 @@ public class DFStackVisitor2 implements Visitor {
    {
         n.f0.accept(this);
         n.f1.accept(this);
+
             String tmp1 = context_stack.peek(); // class name
+            Map<String,Struct> cur_map = struct_map.get(tmp1); // this classes map
+
         n.f2.accept(this);
         n.f3.accept(this);
         n.f4.accept(this);
