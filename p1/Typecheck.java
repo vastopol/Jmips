@@ -39,12 +39,12 @@ public class Typecheck
 
             // Data Members from Visitors
             boolean pass_check = false;
-            Map<String,Map<String,Struct>> sym_table; // named symbol table for each context
+            Map<String,Map<String,Struct>> symbol_table1; // named symbol table for each context
 
             /* ---------- START TESTS ---------- */
 
             // test_struct();
-            
+
             // DFPrintVisitor df_print_visitor = new DFPrintVisitor();
             // goal.accept(df_print_visitor);
 
@@ -54,18 +54,23 @@ public class Typecheck
             // print_vec_maps(df_stack_test_visitor.map_vec);
             // print_map_maps(df_stack_test_visitor.map_map);
 
+            // DFStackVisitor df_stack_visitor = new DFStackVisitor();
+            // goal.accept(df_stack_visitor);
+            // print_vec_structs(df_stack_visitor.struct_vec);
+            // print_map_structs(df_stack_visitor.struct_map);
+
             /* ---------- END TESTS ---------- */
 
 
             /* ---------- START VISITS ---------- */
 
-            DFStackVisitor df_stack_visitor = new DFStackVisitor();
-            goal.accept(df_stack_visitor);
-            print_vec_structs(df_stack_visitor.struct_vec);
-            print_map_structs(df_stack_visitor.struct_map);
+            DFStackVisitor df_stack_visitor1 = new DFStackVisitor();
+            goal.accept(df_stack_visitor1);
 
-            // HERE GET SYMBOL TABLE ONCE KNOWN CORRECT
-            // sym_table = df_stack_visitor.struct_map;
+            // HERE GET SYMBOL TABLE #1
+            symbol_table1 = df_stack_visitor1.struct_map;
+            System.out.println("SYMBOL TABLE #1");
+            print_map_structs(symbol_table1);
 
             /*
             // HERE DO TYPECHECK
