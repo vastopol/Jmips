@@ -116,12 +116,6 @@ public class DFStackVisitor implements Visitor {
         n.f4.accept(this);
         n.f5.accept(this);
         n.f6.accept(this);
-
-            FuncStruct struct2 = new FuncStruct("main", "void", new Vector<Struct>() );
-            struct_stack.peek().put("main",struct2);                      // add this method to class map
-            Map<String,Struct> main_map = new HashMap<String,Struct>();   // map for  the main() method
-            struct_stack.push(main_map);                                  // push this method's map onto stack
-
         n.f7.accept(this);
         n.f8.accept(this);
         n.f9.accept(this);
@@ -131,6 +125,16 @@ public class DFStackVisitor implements Visitor {
             String tmp3 = context_stack.pop();
 
             StringStruct struct3 = new StringStruct(tmp3,"argv");
+
+            Vector<Struct> vs = new Vector<Struct>();
+            vs.add(struct3);
+
+            FuncStruct struct2 = new FuncStruct( "main", "void", vs );
+            struct_stack.peek().put("main",struct2);                      // add this method to class map
+
+            Map<String,Struct> main_map = new HashMap<String,Struct>();   // map for  the main() method
+            struct_stack.push(main_map);                                  // push this method's map onto stack
+
             struct_stack.peek().put(tmp3,struct3);                           // add String[] name class to global map
 
         n.f12.accept(this);

@@ -44,7 +44,9 @@ OUR FILES:
 struct/*
 Typecheck.java
 visitor/DFPrintVisitor.java
+visitor/DFStackTestVisitor.java
 visitor/DFStackVisitor.java
+visitor/DFStackVisitor2.java
 visitor/GJTypeCheckVisitor.java
 
 ========================================
@@ -94,16 +96,12 @@ TO get the String containing the token use the toString() method.
 
 2. BUILDING THE SYMBOL TABLE
 
-Building the stack of symbol tables
-this will probably be a Vector<Map<Struct>> which represents the global context.
-each map is the table for a specific class, function, etc...
+Building the symbol tables
 
-which rules need to have the part to push on the stack?
+Type: Map<String,Map<String,Struct>>
 
-which things get a map?
-    classes
-    subclasses
-    functions
+DFStackVisitor builds initial table and handles the special case for the main
+
 
 ----------------------------------------
 
