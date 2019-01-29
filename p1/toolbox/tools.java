@@ -19,9 +19,11 @@ public class tools {
 
             case "class":
                 System.out.println(s.getType() + " " + s.getName());
+                System.outprintln("Fields: ");
                 for(Struct i: s.getFields()) {
                     tools.print(i);
                 }
+                System.outprintln("Methods: ");
                 for(FuncStruct i: s.getMethods()) {
                     tools.print(i);
                 }
@@ -29,6 +31,7 @@ public class tools {
             
             case "function":
                 System.out.println(s.get_returnType() + " " + s.getType() + " " + s.getName());
+                System.outprintln("Parameters: ");
                 for(Struct i: s.getParams()) {
                     tools.print(i);
                 }
@@ -40,7 +43,16 @@ public class tools {
                 System.out.println("String[]" + " " + s.getName());
                 break;
             case "object":
-                System.out.println(s.getType() + " " + s.getName() + " " + s.getFields() + " " + s.getMethods());
+                System.out.println(s.getType() + " " + s.getName() + " " + s.getFields());
+                System.outprintln("Fields: ");
+                for(Struct i: s.getFields()) {
+                    tools.print(i);
+                }
+                System.outprintln("Methods: ");
+                for(FuncStruct i: s.getMethods()) {
+                    tools.print(i);
+                }
+                break;
         }
     }
 }
