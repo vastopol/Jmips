@@ -1,9 +1,7 @@
 package toolbox;
-import java.sql.Struct;
 import java.util.*;
 
-import struct.ClassStruct;
-import struct.FuncStruct;
+import struct.*;
 
 public class helper{
 
@@ -30,8 +28,21 @@ public class helper{
 
     public static Vector<Struct> fields(ClassStruct c) {
         Vector<Struct> f = new Vector<Struct>();
-        f.addAll(c.getFields());
+        for(Struct i: c.getFields()) {
+            f.add(i);
+        }
+        if(c.getParent() != null) {
+            for(Struct j: c.getParent().getFields()) {
+                f.add(j);
+            }
+        }
         return f;
     }
+
+    // public static String methodtype(ClassStruct c, FuncStruct f) {
+
+    //     return ;
+    // }
+    
     
 }
