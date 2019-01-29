@@ -13,6 +13,7 @@ public class ClassStruct extends Struct {
         type = "class";
         fields = f;
         methods = m;
+        parent = null;
     }
     public Vector<Struct> getFields()
     {
@@ -31,6 +32,10 @@ public class ClassStruct extends Struct {
 
     public ClassStruct getParent()
     {
+        if (parent == null)
+        {
+            return null;
+        }
         return parent;
     }
 }

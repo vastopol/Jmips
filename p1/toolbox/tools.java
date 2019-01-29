@@ -18,11 +18,20 @@ public class tools {
                 break;
 
             case "class":
-                System.out.println(s.getType() + " " + s.getName() + " " + s.getFields() + " " + s.getMethods());
+                System.out.println(s.getType() + " " + s.getName());
+                for(Struct i: s.getFields()) {
+                    tools.print(i);
+                }
+                for(FuncStruct i: s.getMethods()) {
+                    tools.print(i);
+                }
                 break;
             
             case "function":
-                System.out.println(s.get_returnType() + " " + s.getType() + " " + s.getName() + " " + s.getParams());
+                System.out.println(s.get_returnType() + " " + s.getType() + " " + s.getName());
+                for(Struct i: s.getParams()) {
+                    tools.print(i);
+                }
                 break;
             case "int":
                 System.out.println(s.getType() + " " + s.getName() + " " + s.getInt());

@@ -31,6 +31,7 @@ public class Typecheck
 
         for(String f : args) // process input files
         {
+            test_struct();
             // Parser Components
             File file = new File(f);
             Reader reader = new FileReader(file);    // THROWS: FileNotFoundException
@@ -131,7 +132,6 @@ public class Typecheck
 
         ObjStruct facObject = new ObjStruct("facObject", new ClassStruct("facotrial", params, meths));
         // System.out.println(facObject.getType() + " " + facObject.getName() + " " + facObject.getFields() + " " + facObject.getMethods());
-
         System.out.println(""); // end test with newline
         toolbox.tools.print(numSev);
         toolbox.tools.print(boolFal);
@@ -139,6 +139,11 @@ public class Typecheck
         toolbox.tools.print(facFunc);
         toolbox.tools.print(factorialClass);
         toolbox.tools.print(facObject);
+        // Vector<Struct> f = helper.fields(factorialClass);
+        // for(Struct i: f)
+        // {
+        //     tools.print(i);
+        // }
         System.out.println("");
     }
 
