@@ -28,7 +28,7 @@ public class tools {
                 System.out.println(s.getType() + " " + s.getName() + " " + s.getInt());
                 break;
             case "String[]":
-                System.out.println("String[]");
+                System.out.println("String[]" + " " + s.getName());
                 break;
             case "object":
                 System.out.println(s.getType() + " " + s.getName() + " " + s.getFields() + " " + s.getMethods());
