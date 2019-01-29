@@ -229,7 +229,7 @@ public class DFStackTestVisitor implements Visitor {
             context_stack.push(tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
 
             map_stack.peek().put(tmp1,tmp2);                             // add this class to global map
-            Map<String,String> class_map = new HashMap<String,String>(); // map for this class 
+            Map<String,String> class_map = new HashMap<String,String>(); // map for this class
             map_stack.push(class_map);                                   // push this class's map onto stack
 
         n.f4.accept(this);
@@ -618,10 +618,10 @@ public class DFStackTestVisitor implements Visitor {
             String tmp2 = context_stack.pop();
             String tmp3 = context_stack.pop();
             context_stack.push(tmp3+" "+tmp2+" "+tmp1);
-
+            /*
             map_stack.peek().put(tmp3,"class");  // name of class that owns the function
             map_stack.peek().put(tmp1,"method"); // add the name of the function that gets called
-
+            */
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
