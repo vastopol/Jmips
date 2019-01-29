@@ -40,7 +40,14 @@ public class tools {
                 System.out.println("String[]" + " " + s.getName());
                 break;
             case "object":
-                System.out.println(s.getType() + " " + s.getName() + " " + s.getFields() + " " + s.getMethods());
+                System.out.println(s.getType() + " " + s.getName() + " " + s.getFields());
+                for(Struct i: s.getFields()) {
+                    tools.print(i);
+                }
+                for(FuncStruct i: s.getMethods()) {
+                    tools.print(i);
+                }
+                break;
         }
     }
 }
