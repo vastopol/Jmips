@@ -60,7 +60,7 @@ public class Typecheck
             /* ---------- START VISITS ---------- */
 
             DFStackVisitor df_stack_visitor = new DFStackVisitor();
-            goal.accept(df_stack_test_visitor);
+            goal.accept(df_stack_visitor);
 
             print_vec_structs(df_stack_visitor.struct_vec);
             // System.out.println("sup");
