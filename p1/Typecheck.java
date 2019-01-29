@@ -31,7 +31,6 @@ public class Typecheck
 
         for(String f : args) // process input files
         {
-            test_struct();
             // Parser Components
             File file = new File(f);
             Reader reader = new FileReader(file);    // THROWS: FileNotFoundException
