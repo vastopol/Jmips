@@ -39,31 +39,33 @@ public class Typecheck
 
             // Data Members from Visitors
             boolean pass_check = false;
-            Map<String,Map<String,Struct>> symbol_table1; // named symbol table for each context
+            Map<String,Map<String,Struct>> symbol_table1; // named symbol table for each context - partial
+            Map<String,Map<String,Struct>> symbol_table2; // named symbol table for each context - filled in
 
             /* ---------- START TESTS ---------- */
 
             // test_struct();
 
-            // DFPrintVisitor df_print_visitor = new DFPrintVisitor();
-            // goal.accept(df_print_visitor);
+            // DFPrintVisitor df_p_v = new DFPrintVisitor();
+            // goal.accept(df_p_v);
 
-            // DFStackTestVisitor df_stack_test_visitor = new DFStackTestVisitor();
-            // goal.accept(df_stack_test_visitor);
-            // print_stack_trace(df_stack_test_visitor.context_stack);
-            // print_vec_maps(df_stack_test_visitor.map_vec);
-            // print_map_maps(df_stack_test_visitor.map_map);
+            // DFStackTestVisitor df_s_t_v = new DFStackTestVisitor();
+            // goal.accept(df_s_t_v);
+            // print_stack_trace(df_s_t_v.context_stack);
+            // print_vec_maps(df_s_t_v.map_vec);
+            // print_map_maps(df_s_t_v.map_map);
 
-            // DFStackVisitor df_stack_visitor = new DFStackVisitor();
-            // goal.accept(df_stack_visitor);
-            // print_vec_structs(df_stack_visitor.struct_vec);
-            // print_map_structs(df_stack_visitor.struct_map);
+            // DFStackVisitor df_s_v = new DFStackVisitor();
+            // goal.accept(df_s_v);
+            // print_vec_structs(df_s_v.struct_vec);
+            // print_map_structs(df_s_v.struct_map);
 
             /* ---------- END TESTS ---------- */
 
 
             /* ---------- START VISITS ---------- */
 
+            // CREATES PARTIAL SYMBOL TABLE
             DFStackVisitor df_stack_visitor1 = new DFStackVisitor();
             goal.accept(df_stack_visitor1);
 
@@ -71,6 +73,15 @@ public class Typecheck
             symbol_table1 = df_stack_visitor1.struct_map;
             System.out.println("SYMBOL TABLE #1");
             print_map_structs(symbol_table1);
+
+            // FILLS IN THE PARTIAL TABLE
+            DFStackVisitor2 df_stack_visitor2 = new DFStackVisitor2(symbol_table1);
+            goal.accept(df_stack_visitor2);
+
+            // HERE GET SYMBOL TABLE #2
+            symbol_table2 = df_stack_visitor2.struct_map;
+            System.out.println("SYMBOL TABLE #2");
+            print_map_structs(symbol_table2);
 
             /*
             // HERE DO TYPECHECK
