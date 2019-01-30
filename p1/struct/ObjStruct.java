@@ -19,7 +19,7 @@ public class ObjStruct extends Struct {
         return literal.getFields();
     }
 
-    public Vector<FuncStruct> getMethods()
+    public Vector<Struct> getMethods()
     {
         return literal.getMethods();
     }

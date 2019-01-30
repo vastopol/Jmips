@@ -39,7 +39,7 @@ public class helper{
         return f;
     }
 
-    public static Vector<Vector<String>> methodtype(ClassStruct c, FuncStruct f) {
+    public static Vector<Vector<String>> methodtype(Struct c, Struct f) {
         Vector<String> typelist = new Vector<String>();
         Vector<String> retlist = new Vector<String>();
         retlist.add(f.get_returnType());
@@ -52,10 +52,10 @@ public class helper{
         return tuple;
     }
 
-    public static boolean noOverloading(ClassStruct id, ClassStruct idp, FuncStruct idM) {
+    public static boolean noOverloading(Struct id, Struct idp, Struct idM) {
         boolean overloading = false;
-        for(FuncStruct i: id.getMethods()) {
-            for(FuncStruct j: idp.getMethods()) {
+        for(Struct i: id.getMethods()) {
+            for(Struct j: idp.getMethods()) {
                 Vector<Vector<String>> idn = methodtype(id, i);
                 Vector<Vector<String>> idpn = methodtype(idp, j);
                 if(idn.equals(idpn)) {
