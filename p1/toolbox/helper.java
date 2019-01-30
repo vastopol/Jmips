@@ -52,6 +52,21 @@ public class helper{
         return tuple;
     }
 
+    public static boolean noOverloading(ClassStruct id, ClassStruct idp, FuncStruct idM) {
+        boolean overloading = false;
+        for(FuncStruct i: id.getMethods()) {
+            for(FuncStruct j: idp.getMethods()) {
+                Vector<Vector<String>> idn = methodtype(id, i);
+                Vector<Vector<String>> idpn = methodtype(idp, j);
+                if(idn.equals(idpn)) {
+                    overloading = true;
+                    break;
+                }
+            }
+        }
+        return overloading;
+    }
+
     
     
     
