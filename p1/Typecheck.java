@@ -44,7 +44,7 @@ public class Typecheck
 
             /* ---------- START TESTS ---------- */
 
-            // test_struct();
+            test_struct();
 
             // DFPrintVisitor df_p_v = new DFPrintVisitor();
             // goal.accept(df_p_v);
@@ -143,6 +143,11 @@ public class Typecheck
         // {
         //     tools.print(i);
         // }
+        Vector<Vector<String>> tester = helper.methodtype(factorialClass, facFunc);
+        for(String n: tester.elementAt(0)){
+            System.out.println("tester " + n);
+        }
+        System.out.println(tester);
         System.out.println("");
     }
 

@@ -19,20 +19,23 @@ public class tools {
 
             case "class":
                 System.out.println(s.getType() + " " + s.getName());
-                System.out.println(s.getName() + " fields: ");
+                // System.out.println(s.getName() + " fields: ");
                 for(Struct i: s.getFields()) {
+                    System.out.println(s.getName() + " fields: ");
                     tools.print(i);
                 }
-                System.out.println(s.getName() + " methods: ");
+                // System.out.println(s.getName() + " methods: ");
                 for(FuncStruct i: s.getMethods()) {
+                    System.out.println(s.getName() + " methods: ");
                     tools.print(i);
                 }
                 break;
             
             case "function":
                 System.out.println(s.get_returnType() + " " + s.getType() + " " + s.getName());
-                System.out.println(s.getName() + " parameters: ");
+                // System.out.println(s.getName() + " parameters: ");
                 for(Struct i: s.getParams()) {
+                    System.out.println(s.getName() + " parameters: ");
                     tools.print(i);
                 }
                 break;
@@ -44,12 +47,14 @@ public class tools {
                 break;
             case "object":
                 System.out.println(s.getType() + " " + s.getName() + " " + s.getFields());
-                System.out.println(s.getName() + " fields: ");
+                // System.out.println(s.getName() + " fields: ");
                 for(Struct i: s.getFields()) {
+                    System.out.println(s.getName() + " fields: ");
                     tools.print(i);
                 }
-                System.out.println(s.getName() + " methods: ");
+                // System.out.println(s.getName() + " methods: ");
                 for(FuncStruct i: s.getMethods()) {
+                    System.out.println(s.getName() + " methods: ");
                     tools.print(i);
                 }
                 break;
