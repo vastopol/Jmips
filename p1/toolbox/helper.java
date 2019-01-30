@@ -26,7 +26,7 @@ public class helper{
         return duplicates;
     }
 
-    public static Vector<Struct> fields(ClassStruct c) {
+    public static Vector<Struct> fields(Struct c) {
         Vector<Struct> f = new Vector<Struct>();
         for(Struct i: c.getFields()) {
             f.add(i);
