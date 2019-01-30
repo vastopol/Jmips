@@ -39,10 +39,18 @@ public class helper{
         return f;
     }
 
-    // public static String methodtype(ClassStruct c, FuncStruct f) {
-
-    //     return ;
-    // }
+    public static Vector<Vector<String>> methodtype(ClassStruct c, FuncStruct f) {
+        Vector<String> typelist = new Vector<String>();
+        Vector<String> retlist = new Vector<String>();
+        
+        for(Struct i: f.getParams()) {
+            typelist.add(i.getType());
+        }
+        Vector<Vector<String>> tuple = new Vector<Vector<String>>();
+        tuple.add(typelist);
+        tuple.add(retlist);
+        return tuple;
+    }
     
     
 }
