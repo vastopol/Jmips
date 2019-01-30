@@ -97,27 +97,45 @@ public class DFStackVisitor2 implements Visitor {
    {
         n.f0.accept(this);
         n.f1.accept(this);
-            String tmp1 = context_stack.peek(); // name of this class (the class that has main)
+
+            cur_class = context_stack.pop(); // name of this class (the class that has main)
+
         n.f2.accept(this);
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
         n.f6.accept(this);
-            context_stack.push("main");
-            String tmp2 = context_stack.peek(); // name "main"
+
+            cur_function = "main"; // name "main"
+
         n.f7.accept(this);
         n.f8.accept(this);
         n.f9.accept(this);
         n.f10.accept(this);
         n.f11.accept(this);
-            String tmp3 = "String[]";
-            String tmp4 = context_stack.peek(); // name of the string[] arg to main
+
+            String tmp1 = context_stack.pop(); // name of the string[] arg to main
+
+            cur_map = struct_map.get(cur_class); // this classes map
+
+            cur_struct = cur_map.get(cur_function);
+
+            StringStruct struct1 = new StringStruct(tmp1, "argument vector");
+
+            cur_struct.getParams().add(struct1);
+
+            struct_map.replace(cur_class,cur_map);
+
         n.f12.accept(this);
         n.f13.accept(this);
         n.f14.accept(this);
         n.f15.accept(this);
         n.f16.accept(this);
         n.f17.accept(this);
+
+
+        cur_class = "";
+        cur_function = "";
    }
 
    /**
@@ -144,8 +162,6 @@ public class DFStackVisitor2 implements Visitor {
 
             cur_class = context_stack.peek(); // class name
             cur_map = struct_map.get(cur_class); // this classes map
-
-            System.out.println(cur_class);
 
         n.f2.accept(this);
         n.f3.accept(this);
@@ -241,8 +257,6 @@ public class DFStackVisitor2 implements Visitor {
 
             cur_struct = cur_map.get(cur_function);
 
-            System.out.println(cur_function);
-
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
@@ -280,8 +294,6 @@ public class DFStackVisitor2 implements Visitor {
         n.f1.accept(this);
             String tmp2 = context_stack.peek(); // name
 
-            // Vector<Struct> params = cur_struct.getParams();
-
             if(tmp1 == "int")
             {
                 IntStruct struct1 = new IntStruct(tmp2, new Integer(0));
@@ -303,8 +315,6 @@ public class DFStackVisitor2 implements Visitor {
                 System.out.println(tmp1+"\n"+tmp2);
                 System.exit(1);
             }
-
-            // cur_struct.literal = params;
    }
 
    /**

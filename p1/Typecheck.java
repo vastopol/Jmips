@@ -44,7 +44,7 @@ public class Typecheck
 
             /* ---------- START TESTS ---------- */
 
-            test_struct();
+            // test_struct();
 
             // DFPrintVisitor df_p_v = new DFPrintVisitor();
             // goal.accept(df_p_v);
