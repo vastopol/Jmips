@@ -71,8 +71,8 @@ public class Typecheck
 
             // HERE GET SYMBOL TABLE #1
             symbol_table1 = df_stack_visitor1.struct_map;
-            //System.out.println("SYMBOL TABLE #1");
-            //print_map_structs(symbol_table1);
+            System.out.println("SYMBOL TABLE #1");
+            print_map_structs(symbol_table1);
 
             // FILLS IN THE PARTIAL TABLE
             DFStackVisitor2 df_stack_visitor2 = new DFStackVisitor2(symbol_table1);
@@ -82,7 +82,6 @@ public class Typecheck
             symbol_table2 = df_stack_visitor2.struct_map;
             System.out.println("SYMBOL TABLE #2");
             print_map_structs(symbol_table2);
-            print_stack_trace(df_stack_visitor2.context_stack);
 
             /*
             // HERE DO TYPECHECK

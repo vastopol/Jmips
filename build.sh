@@ -45,7 +45,7 @@ function init_p1()
 # testing type checking
 function check_p1()
 {
-    P1_FILE="../stuff/Factorial.java"
+    P1_FILE="../stuff/tester.java"
     cd p1
     echo "Compiling Phase1"
     javac Typecheck.java

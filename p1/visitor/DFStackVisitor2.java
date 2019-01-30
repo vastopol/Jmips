@@ -21,6 +21,9 @@ public class DFStackVisitor2 implements Visitor {
     public Stack<String> context_stack;               // contains the stack the stack trace
     public Map<String,Map<String,Struct>> struct_map; // all of the labeled symbol tables but with structs for the individual table values
 
+    String cur_class;           // cur class
+    String cur_function;        // cur classes function
+    Struct cur_struct;      // struct for the current function
     Map<String,Struct> cur_map; // special variable, gets set in the class declarations to the current classes map
 
     public DFStackVisitor2(Map<String,Map<String,Struct>> symtab1)
@@ -94,7 +97,7 @@ public class DFStackVisitor2 implements Visitor {
    {
         n.f0.accept(this);
         n.f1.accept(this);
-            String tmp1 = context_stack.peek(); // name of class
+            String tmp1 = context_stack.peek(); // name of this class (the class that has main)
         n.f2.accept(this);
         n.f3.accept(this);
         n.f4.accept(this);
@@ -108,7 +111,7 @@ public class DFStackVisitor2 implements Visitor {
         n.f10.accept(this);
         n.f11.accept(this);
             String tmp3 = "String[]";
-            String tmp4 = context_stack.peek(); // name of the string arg
+            String tmp4 = context_stack.peek(); // name of the string[] arg to main
         n.f12.accept(this);
         n.f13.accept(this);
         n.f14.accept(this);
@@ -139,13 +142,20 @@ public class DFStackVisitor2 implements Visitor {
         n.f0.accept(this);
         n.f1.accept(this);
 
-            String tmp1 = context_stack.peek(); // class name
-            Map<String,Struct> cur_map = struct_map.get(tmp1); // this classes map
+            cur_class = context_stack.peek(); // class name
+            cur_map = struct_map.get(cur_class); // this classes map
+
+            System.out.println(cur_class);
 
         n.f2.accept(this);
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
+
+        // replace(K key, V value) -> overwrite old entry with new one that has filled in data
+        struct_map.replace(cur_class,cur_map);
+
+        cur_class = "";
    }
 
    /**
@@ -222,9 +232,17 @@ public class DFStackVisitor2 implements Visitor {
    {
         n.f0.accept(this);
         n.f1.accept(this);
+
             String tmp1 = context_stack.pop(); // return type
+
         n.f2.accept(this);
-            String tmp2 = context_stack.pop(); // method name
+
+            cur_function = context_stack.pop(); // method name
+
+            cur_struct = cur_map.get(cur_function);
+
+            System.out.println(cur_function);
+
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
@@ -235,6 +253,10 @@ public class DFStackVisitor2 implements Visitor {
         n.f10.accept(this);
         n.f11.accept(this);
         n.f12.accept(this);
+
+        cur_map.replace(cur_function,cur_struct);
+
+        cur_function = "";
    }
 
    /**
@@ -258,21 +280,31 @@ public class DFStackVisitor2 implements Visitor {
         n.f1.accept(this);
             String tmp2 = context_stack.peek(); // name
 
-            // if(tmp2 == "int")
-            // {
-            //     IntStruct struct1 = new IntStruct(tmp1, new Integer(0));
-            //     struct_stack.peek().put(tmp1,struct1);                           // add this var to method map
-            // }
-            // else if(tmp2 == "int[]")
-            // {
-            //     ArrStruct struct1 = new ArrStruct(tmp1, new Vector<Integer>());
-            //     struct_stack.peek().put(tmp1,struct1);                           // add this var to method map
-            // }
-            // else
-            // {
-            //     BoolStruct struct1 = new BoolStruct(tmp1, new Boolean(false));
-            //     struct_stack.peek().put(tmp1,struct1);                           // add this var to method map
-            // }
+            // Vector<Struct> params = cur_struct.getParams();
+
+            if(tmp1 == "int")
+            {
+                IntStruct struct1 = new IntStruct(tmp2, new Integer(0));
+                cur_struct.getParams().add(struct1);
+            }
+            else if(tmp1 == "int[]")
+            {
+                ArrStruct struct1 = new ArrStruct(tmp2, new Vector<Integer>());
+                cur_struct.getParams().add(struct1);
+            }
+            else if (tmp1 == "boolean")
+            {
+                BoolStruct struct1 = new BoolStruct(tmp2, new Boolean(false));
+                cur_struct.getParams().add(struct1);
+            }
+            else
+            {
+                System.out.println("ERROR");
+                System.out.println(tmp1+"\n"+tmp2);
+                System.exit(1);
+            }
+
+            // cur_struct.literal = params;
    }
 
    /**
