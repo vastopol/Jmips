@@ -88,8 +88,8 @@ public class DFTypeCheckVisitor implements Visitor {
    public void visit(MainClass n) {
 
       Vector<String> inames = new Vector<String>();
-      Map<String, Struct> globaltable = symbol_table.get("main");
-      for(String i: globaltable.keySet()) {
+      Map<String, Struct> maintable = symbol_table.get("main");
+      for(String i: maintable.keySet()) {
          inames.add(i);
       }
       if(!helper.distinct(inames)) {
@@ -138,7 +138,7 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f1.accept(this);
       Struct currClass = symbol_table.get("Global").get(n.f1.toString());
       Vector<Struct> fstr = helper.fields(currClass);
-      Vector<FuncStruct> mstr = currClass.getMethods();
+      Vector<Struct> mstr = currClass.getMethods();
       Vector<String> fnames = new Vector<String>();
       Vector<String> mnames = new Vector<String>();
       for(Struct i: fstr) {
@@ -177,21 +177,22 @@ public class DFTypeCheckVisitor implements Visitor {
       Struct currClass = symbol_table.get("Global").get(n.f1.toString());
       Struct extClass = symbol_table.get("Global").get(n.f3.toString());
       Vector<Struct> fstr = helper.fields(currClass);
-      Vector<FuncStruct> mstr = currClass.getMethods();
+      Vector<Struct> mstr = currClass.getMethods();
       Vector<String> fnames = new Vector<String>();
       Vector<String> mnames = new Vector<String>();
       for(Struct i: fstr) {
          fnames.add(i.getName());
       }
 
+      boolean overld = false;
       for(Struct i: mstr) {
          mnames.add(i.getName());
-         boolean overld = helper.noOverloading(currClass, extClass, idM)
+         overld = helper.noOverloading(currClass, extClass, i);
       }
       boolean dfnames = helper.distinct(fnames);
       boolean dmnames = helper.distinct(mnames);
 
-      if(!dfnames) || !mnames || ) {
+      if(!dfnames || !dmnames || overld) {
          typechecks = false;
       }
       n.f5.accept(this);
