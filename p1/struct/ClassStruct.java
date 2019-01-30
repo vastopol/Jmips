@@ -4,10 +4,10 @@ import java.util.*;
 public class ClassStruct extends Struct {
 
     public Vector<Struct> fields;
-    public Vector<FuncStruct> methods;
+    public Vector<Struct> methods;
     ClassStruct parent;
 
-    public ClassStruct (String n, Vector<Struct> f, Vector<FuncStruct> m)
+    public ClassStruct (String n, Vector<Struct> f, Vector<Struct> m)
     {
         name = n;
         type = "class";
@@ -20,7 +20,7 @@ public class ClassStruct extends Struct {
         return fields;
     }
 
-    public Vector<FuncStruct> getMethods()
+    public Vector<Struct> getMethods()
     {
         return methods;
     }

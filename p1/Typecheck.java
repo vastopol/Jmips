@@ -123,7 +123,7 @@ public class Typecheck
         FuncStruct facFunc = new FuncStruct("Fac", "Integer", params);
         // System.out.println(facFunc.getType() + " " + facFunc.getName() + " " + facFunc.getParams());
 
-        Vector<FuncStruct> meths = new Vector<FuncStruct>();
+        Vector<Struct> meths = new Vector<Struct>();
         meths.add(facFunc);
         ClassStruct factorialClass = new ClassStruct("factorial", params, meths);
         // System.out.println(factorialClass.getType() + " " + factorialClass.getName() + " " + factorialClass.getFields() + " " + factorialClass.getMethods());

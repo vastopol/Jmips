@@ -26,7 +26,7 @@ public class tools {
                     System.out.println("");
                 }
                 // System.out.println(s.getName() + " methods: ");
-                for(FuncStruct i: s.getMethods()) {
+                for(Struct i: s.getMethods()) {
                     System.out.println(s.getName() + " methods: ");
                     tools.print(i);
                     System.out.println("");
@@ -57,7 +57,7 @@ public class tools {
                     System.out.println("");
                 }
                 // System.out.println(s.getName() + " methods: ");
-                for(FuncStruct i: s.getMethods()) {
+                for(Struct i: s.getMethods()) {
                     System.out.println(s.getName() + " methods: ");
                     tools.print(i);
                     System.out.println("");

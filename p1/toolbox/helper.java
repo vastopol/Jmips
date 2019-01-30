@@ -26,7 +26,7 @@ public class helper{
         return duplicates;
     }
 
-    public static Vector<Struct> fields(ClassStruct c) {
+    public static Vector<Struct> fields(Struct c) {
         Vector<Struct> f = new Vector<Struct>();
         for(Struct i: c.getFields()) {
             f.add(i);
@@ -39,7 +39,7 @@ public class helper{
         return f;
     }
 
-    public static Vector<Vector<String>> methodtype(ClassStruct c, FuncStruct f) {
+    public static Vector<Vector<String>> methodtype(Struct c, Struct f) {
         Vector<String> typelist = new Vector<String>();
         Vector<String> retlist = new Vector<String>();
         retlist.add(f.get_returnType());
@@ -50,6 +50,21 @@ public class helper{
         tuple.add(typelist);
         tuple.add(retlist);
         return tuple;
+    }
+
+    public static boolean noOverloading(Struct id, Struct idp, Struct idM) {
+        boolean overloading = false;
+        for(Struct i: id.getMethods()) {
+            for(Struct j: idp.getMethods()) {
+                Vector<Vector<String>> idn = methodtype(id, i);
+                Vector<Vector<String>> idpn = methodtype(idp, j);
+                if(idn.equals(idpn)) {
+                    overloading = true;
+                    break;
+                }
+            }
+        }
+        return overloading;
     }
 
     
