@@ -42,7 +42,7 @@ public class helper{
     public static Vector<Vector<String>> methodtype(ClassStruct c, FuncStruct f) {
         Vector<String> typelist = new Vector<String>();
         Vector<String> retlist = new Vector<String>();
-        
+        retlist.add(f.get_returnType());
         for(Struct i: f.getParams()) {
             typelist.add(i.getType());
         }
@@ -51,6 +51,8 @@ public class helper{
         tuple.add(retlist);
         return tuple;
     }
+
+    
     
     
 }

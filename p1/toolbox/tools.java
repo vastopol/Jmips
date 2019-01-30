@@ -23,11 +23,13 @@ public class tools {
                 for(Struct i: s.getFields()) {
                     System.out.println(s.getName() + " fields: ");
                     tools.print(i);
+                    System.out.println("");
                 }
                 // System.out.println(s.getName() + " methods: ");
                 for(FuncStruct i: s.getMethods()) {
                     System.out.println(s.getName() + " methods: ");
                     tools.print(i);
+                    System.out.println("");
                 }
                 break;
             
@@ -37,6 +39,7 @@ public class tools {
                 for(Struct i: s.getParams()) {
                     System.out.println(s.getName() + " parameters: ");
                     tools.print(i);
+                    System.out.println("");
                 }
                 break;
             case "int":
@@ -51,11 +54,13 @@ public class tools {
                 for(Struct i: s.getFields()) {
                     System.out.println(s.getName() + " fields: ");
                     tools.print(i);
+                    System.out.println("");
                 }
                 // System.out.println(s.getName() + " methods: ");
                 for(FuncStruct i: s.getMethods()) {
                     System.out.println(s.getName() + " methods: ");
                     tools.print(i);
+                    System.out.println("");
                 }
                 break;
         }
