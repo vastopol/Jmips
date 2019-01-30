@@ -71,6 +71,31 @@ public class DFStackVisitor2 implements Visitor {
         n.f0.accept(this);
         n.f1.accept(this); // this is a  NodeListOptional
         n.f2.accept(this);
+
+        // probably fill the global map here
+
+        Map<String,Struct> global_map = struct_map.get("Global");
+
+        for( String name : global_map.keySet() )
+        {
+            cur_map = struct_map.get(name);     // this classes map from total symbol table
+            cur_struct = global_map.get(name);  // global struct of the class from global map
+
+            for( String k : cur_map.keySet() ) // each field and method in the class map
+            {
+                if( cur_map.get(k).getType() == "function" ) // is a method
+                {
+                    cur_struct.getMethods().add((FuncStruct)cur_map.get(k));
+                }
+                else // is a field
+                {
+                    cur_struct.getFields().add(cur_map.get(k));
+                }
+            }
+
+            // replace this struct in the global map
+            global_map.replace(name,cur_struct);
+        }
    }
 
    /**
