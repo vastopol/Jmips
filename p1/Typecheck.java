@@ -21,76 +21,63 @@ import toolbox.*;
 public class Typecheck
 {
     public static void main(String[] args)  // could use try/catch block instead of exception
-        throws FileNotFoundException, ParseException
+        throws ParseException
     {
-        /*if(args.length == 0) // exit if no input
+        MiniJavaParser parser = new MiniJavaParser(System.in);
+        Goal goal = parser.Goal();              // THROWS: ParseException
+
+        // Data Members from Visitors
+        boolean pass_check = false;
+        Map<String,Map<String,Struct>> symbol_table1; // named symbol table for each context - partial
+        Map<String,Map<String,Struct>> symbol_table2; // named symbol table for each context - filled in
+
+        /* ---------- START TESTS ---------- */
+
+        // test_struct();
+
+        // DFPrintVisitor df_p_v = new DFPrintVisitor();
+        // goal.accept(df_p_v);
+
+        // DFStackTestVisitor df_s_t_v = new DFStackTestVisitor();
+        // goal.accept(df_s_t_v);
+        // print_stack_trace(df_s_t_v.context_stack);
+        // print_vec_maps(df_s_t_v.map_vec);
+        // print_map_maps(df_s_t_v.map_map);
+
+        /* ---------- END TESTS ---------- */
+
+        /* ---------- START VISITS ---------- */
+
+        // CREATES PARTIAL SYMBOL TABLE
+        DFStackVisitor df_stack_visitor1 = new DFStackVisitor();
+        goal.accept(df_stack_visitor1);
+
+        // HERE GET SYMBOL TABLE #1
+        symbol_table1 = df_stack_visitor1.struct_map;
+        // System.out.println("SYMBOL TABLE #1");
+        // print_map_structs(symbol_table1);
+
+        // FILLS IN THE PARTIAL TABLE
+        DFStackVisitor2 df_stack_visitor2 = new DFStackVisitor2(symbol_table1);
+        goal.accept(df_stack_visitor2);
+
+        // HERE GET SYMBOL TABLE #2
+        symbol_table2 = df_stack_visitor2.struct_map;
+        // System.out.println("SYMBOL TABLE #2");
+        // print_map_structs(symbol_table2);
+
+        // HERE DO TYPECHECK
+
+        /* ---------- END VISITS ---------- */
+
+        if(pass_check)
         {
-            System.out.println("Error: Need input file.");
+            System.out.println("Program type checked successfully");
+        }
+        else
+        {
+            System.out.println("Type error");
             System.exit(1);
-        }*/
-
-        for(String f : args) // process input files
-        {
-            // Parser Components
-            File file = new File(f);
-            Reader reader = new FileReader(file);    // THROWS: FileNotFoundException
-            MiniJavaParser parser = new MiniJavaParser(reader);
-            Goal goal = parser.Goal();              // THROWS: ParseException
-
-            // Data Members from Visitors
-            boolean pass_check = false;
-            Map<String,Map<String,Struct>> symbol_table1; // named symbol table for each context - partial
-            Map<String,Map<String,Struct>> symbol_table2; // named symbol table for each context - filled in
-
-            /* ---------- START TESTS ---------- */
-
-            // test_struct();
-
-            // DFPrintVisitor df_p_v = new DFPrintVisitor();
-            // goal.accept(df_p_v);
-
-            // DFStackTestVisitor df_s_t_v = new DFStackTestVisitor();
-            // goal.accept(df_s_t_v);
-            // print_stack_trace(df_s_t_v.context_stack);
-            // print_vec_maps(df_s_t_v.map_vec);
-            // print_map_maps(df_s_t_v.map_map);
-
-            /* ---------- END TESTS ---------- */
-
-
-            /* ---------- START VISITS ---------- */
-
-            // CREATES PARTIAL SYMBOL TABLE
-            DFStackVisitor df_stack_visitor1 = new DFStackVisitor();
-            goal.accept(df_stack_visitor1);
-
-            // HERE GET SYMBOL TABLE #1
-            symbol_table1 = df_stack_visitor1.struct_map;
-            // System.out.println("SYMBOL TABLE #1");
-            // print_map_structs(symbol_table1);
-
-            // FILLS IN THE PARTIAL TABLE
-            DFStackVisitor2 df_stack_visitor2 = new DFStackVisitor2(symbol_table1);
-            goal.accept(df_stack_visitor2);
-
-            // HERE GET SYMBOL TABLE #2
-            symbol_table2 = df_stack_visitor2.struct_map;
-            // System.out.println("SYMBOL TABLE #2");
-            // print_map_structs(symbol_table2);
-
-            // HERE DO TYPECHECK
-
-            /* ---------- END VISITS ---------- */
-
-            if(pass_check)
-            {
-                System.out.println("Program type checked successfully.");
-            }
-            else
-            {
-                System.out.println("Type error.");
-                System.exit(1);
-            }
         }
 
         return;

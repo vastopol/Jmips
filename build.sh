@@ -66,7 +66,7 @@ function check_p1()
     javac Typecheck.java
     echo "2. Checking "$P1_FILE; echo
     echo "See p1_logfile for trace"; echo
-    java Typecheck $P1_FILE > ../p1_logfile.txt
+    java Typecheck < $P1_FILE > ../p1_logfile.txt
     cd ..
 }
 
@@ -81,7 +81,7 @@ function manual_test_p1()
     for FILE in ../tests/Phase1Tester/SelfTestCases/* ;
     do
         echo "CHECKING: "$FILE >>../p1_manual_logfile.txt
-        if ! java Typecheck $FILE >> ../p1_manual_logfile.txt; then
+        if ! java Typecheck < $FILE >> ../p1_manual_logfile.txt; then
             continue
         fi
         echo "" >> ../p1_manual_logfile.txt
