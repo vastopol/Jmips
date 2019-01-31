@@ -31,9 +31,10 @@ function main()
 # phase1 test harness
 function do_p1()
 {
-    init_p1
-    check_p1
-    clean_p1
+    init_p1   # if no build exists make one
+    check_p1  # custom type check
+    clean_p1  # rm .class files
+    test_p1   # make the .tgz file and use run script
 }
 
 # Create skeleton MiniJava parser and generate syntax tree classes and visitor classes, etc...
@@ -53,19 +54,21 @@ function init_p1()
     cd ..
 }
 
-# testing type checking
+# testing type checking on a custom file
 function check_p1()
 {
     P1_FILE="../tests/tester.java"
     cd p1
-    echo "Compiling Phase1"
+    echo "Compiling Phase1"; echo
     javac Typecheck.java
     echo "Checking "$P1_FILE; echo
-    java Typecheck $P1_FILE;  echo
+    echo "See p1_logfile for trace"; echo
+    java Typecheck $P1_FILE > ../p1_logfile.txt
+    echo
     cd ..
 }
 
-# remove class files
+# remove class files form the build
 function clean_p1()
 {
     cd p1;         rm *.class
@@ -74,6 +77,41 @@ function clean_p1()
     cd struct;     rm *.class; cd ..
     cd toolbox;    rm *.class; cd ..
     cd ..
+}
+
+# run the grading script with all the included test cases
+# it expects a tar file named "hw1.tgz" to be used with the "run" script
+function test_p1()
+{
+    if [ -e hw1  ] ; then
+        echo "Deleteing old hw1 folder"
+        rm -rf hw1
+    fi
+
+    if [ -e hw1.tgz  ] ; then
+        echo "Deleteing old hw1 tarball"
+        rm -rf hw1.tgz
+    fi
+
+    mkdir hw1
+
+    cp -r p1/struct/  hw1
+    cp -r p1/toolbox/ hw1
+    cp p1/Typecheck.java hw1
+
+    cp p1/visitor/DFStackVisitor.java hw1
+    cp p1/visitor/DFStackVisitor2.java hw1
+    cp p1/visitor/DFTypeCheckVisitor.java hw1
+
+    tar zcvf hw1.tgz hw1
+
+    cd tests/Phase1Tester
+
+    # source run SelfTestCases ../../hw1.tgz
+
+    echo "Delete the hw1/ && hw1.tgz && tests/Phase1Tester/Output/ if not needed"
+
+
 }
 
 #========================================
