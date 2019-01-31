@@ -336,12 +336,12 @@ public class DFStackVisitor2 implements Visitor {
                 BoolStruct struct1 = new BoolStruct(tmp2, new Boolean(false));
                 cur_struct.getParams().add(struct1);
             }
-            else
+            /*else
             {
                 System.out.println("ERROR");
                 System.out.println(tmp1+"\n"+tmp2);
                 System.exit(1);
-            }
+            }*/
    }
 
    /**

@@ -23,11 +23,11 @@ public class Typecheck
     public static void main(String[] args)  // could use try/catch block instead of exception
         throws FileNotFoundException, ParseException
     {
-        if(args.length == 0) // exit if no input
+        /*if(args.length == 0) // exit if no input
         {
             System.out.println("Error: Need input file.");
             System.exit(1);
-        }
+        }*/
 
         for(String f : args) // process input files
         {
@@ -55,11 +55,6 @@ public class Typecheck
             // print_vec_maps(df_s_t_v.map_vec);
             // print_map_maps(df_s_t_v.map_map);
 
-            // DFStackVisitor df_s_v = new DFStackVisitor();
-            // goal.accept(df_s_v);
-            // print_vec_structs(df_s_v.struct_vec);
-            // print_map_structs(df_s_v.struct_map);
-
             /* ---------- END TESTS ---------- */
 
 
@@ -71,8 +66,8 @@ public class Typecheck
 
             // HERE GET SYMBOL TABLE #1
             symbol_table1 = df_stack_visitor1.struct_map;
-            System.out.println("SYMBOL TABLE #1");
-            print_map_structs(symbol_table1);
+            // System.out.println("SYMBOL TABLE #1");
+            // print_map_structs(symbol_table1);
 
             // FILLS IN THE PARTIAL TABLE
             DFStackVisitor2 df_stack_visitor2 = new DFStackVisitor2(symbol_table1);
@@ -80,15 +75,10 @@ public class Typecheck
 
             // HERE GET SYMBOL TABLE #2
             symbol_table2 = df_stack_visitor2.struct_map;
-            System.out.println("SYMBOL TABLE #2");
-            print_map_structs(symbol_table2);
+            // System.out.println("SYMBOL TABLE #2");
+            // print_map_structs(symbol_table2);
 
-            /*
             // HERE DO TYPECHECK
-            GJTypeCheckVisitor<> type_checker = new GJTypeCheckVisitor<>(context);
-            goal.accept(type_checker);
-            pass_check = GJTypeCheckVisitor.check_me;
-            */
 
             /* ---------- END VISITS ---------- */
 
@@ -99,7 +89,6 @@ public class Typecheck
             else
             {
                 System.out.println("Type error.");
-                //System.out.println("File: " + f);
                 System.exit(1);
             }
         }
