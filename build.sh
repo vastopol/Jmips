@@ -104,6 +104,7 @@ function clean_p1()
 
 # run the grading script with all the included test cases
 # it expects a tar file named "hw1.tgz" to be used with the "run" script
+# also it will reject tar files that are too big so must be less than 65kB in size
 function test_p1()
 {
     if [ -e hw1  ] ; then
@@ -119,11 +120,14 @@ function test_p1()
     echo "Making new tar file for submission"; echo
 
     mkdir hw1
+    mkdir hw1/visitor2 # only want some of the files so no recurse copy (see below)
 
     cp -r p1/struct/  hw1
     cp -r p1/toolbox/ hw1
-    cp -r p1/visitor2 hw1
     cp p1/Typecheck.java hw1
+    cp p1/visitor2/DFStackVisitor.java hw1/visitor2
+    cp p1/visitor2/DFStackVisitor2.java hw1/visitor2
+    cp p1/visitor2/DFTypeCheckVisitor.java hw1/visitor2
 
     tar zcvf hw1.tgz hw1 > /dev/null
 
