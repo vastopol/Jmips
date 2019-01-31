@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.*;
 
 // builtin project folders
-import visitor.*;
+import visitor2.*;    // <------------- CHANGED THIS FOR OUR VISITORS
 import syntaxtree.*;
 
 // our classes

@@ -3,9 +3,9 @@
 # Mini Java Compiler build and test script
 # Modular procedural shell script with each phase separated
 
-#========================================
-# MAIN
-#========================================
+#============================================================
+# MAIN DRIVER PROCEDURE
+#============================================================
 
 # Global Variables
 JTB_JAR="../stuff/jtb.jar"          # Tree Builder
@@ -24,9 +24,9 @@ function main()
     # do_p4
 }
 
-#========================================
+#============================================================
 # PHASE 1 - Type Checking
-#========================================
+#============================================================
 
 # phase1 test harness
 function do_p1()
@@ -64,7 +64,6 @@ function check_p1()
     echo "Checking "$P1_FILE; echo
     echo "See p1_logfile for trace"; echo
     java Typecheck $P1_FILE > ../p1_logfile.txt
-    echo
     cd ..
 }
 
@@ -73,6 +72,7 @@ function clean_p1()
 {
     cd p1;         rm *.class
     cd visitor;    rm *.class; cd ..
+    cd visitor2;    rm *.class; cd ..
     cd syntaxtree; rm *.class; cd ..
     cd struct;     rm *.class; cd ..
     cd toolbox;    rm *.class; cd ..
@@ -93,30 +93,29 @@ function test_p1()
         rm -rf hw1.tgz
     fi
 
+    echo "Making new tar file for submission"; echo
+
     mkdir hw1
 
     cp -r p1/struct/  hw1
     cp -r p1/toolbox/ hw1
+    cp -r p1/visitor2 hw1
     cp p1/Typecheck.java hw1
 
-    cp p1/visitor/DFStackVisitor.java hw1
-    cp p1/visitor/DFStackVisitor2.java hw1
-    cp p1/visitor/DFTypeCheckVisitor.java hw1
+    tar zcvf hw1.tgz hw1 > /dev/null
 
-    tar zcvf hw1.tgz hw1
+    echo "Running Phase1Tester Script"; echo
 
     cd tests/Phase1Tester
 
-    # source run SelfTestCases ../../hw1.tgz
+    source run SelfTestCases ../../hw1.tgz
 
-    echo "Delete the hw1/ && hw1.tgz && tests/Phase1Tester/Output/ if not needed"
-
-
+    echo; echo "Delete the hw1/ && hw1.tgz && tests/Phase1Tester/Output/ if not needed"; echo
 }
 
-#========================================
-# PHASE 2 -
-#========================================
+#============================================================
+# PHASE 2 - Intermediate Code Generation
+#============================================================
 
 # phase1 test harness
 function do_p2()
@@ -124,9 +123,9 @@ function do_p2()
     echo "Phase 2"
 }
 
-#========================================
-# PHASE 3 - xxx
-#========================================
+#============================================================
+# PHASE 3 - Register Allocation
+#============================================================
 
 # phase1 test harness
 function do_p3()
@@ -134,9 +133,9 @@ function do_p3()
     echo "Phase 3"
 }
 
-#========================================
-# PHASE 4 - xxx
-#========================================
+#============================================================
+# PHASE 4 - Activation Records and Instruction Selection
+#============================================================
 
 # phase1 test harness
 function do_p4()
@@ -144,8 +143,8 @@ function do_p4()
     echo "Phase 4"
 }
 
-#========================================
-# RUN DRIVER
-#========================================
+#============================================================
+# DRIVER - Run the main driver routine for the harnesses
+#============================================================
 
 main
