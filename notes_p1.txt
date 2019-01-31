@@ -42,12 +42,13 @@ note: really trying to avoid heavily nested try/catch blocks by declaring the ex
 OUR FILES:
 
 struct/*
+toolbox/*
 Typecheck.java
 visitor/DFPrintVisitor.java
 visitor/DFStackTestVisitor.java
 visitor/DFStackVisitor.java
 visitor/DFStackVisitor2.java
-visitor/GJTypeCheckVisitor.java
+visitor/DFTypeCheckVisitor.java
 
 ========================================
 ========================================
@@ -100,16 +101,18 @@ Building the symbol tables
 
 Type: Map<String,Map<String,Struct>>
 
-DFStackVisitor builds initial table and handles the special case for the main
+DFStackVisitor builds initial table with some of the fields left empty
+
+DFStackVisitor2 fills in the missing information and completes the symbol table
 
 
 ----------------------------------------
 
 3. TYPECHECKING
 
-not started yet...
 
-need to build out all of the helper functions for the type checking
+DFTypeCheckVisitor will complete the type checking using the completed symbol table and the helper functions in the toolbox.
+
 
 ----------------------------------------
 

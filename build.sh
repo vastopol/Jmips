@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Compiler build and test script
+# Mini Java Compiler build and test script
+# Modular procedural shell script with each phase separated
 
 #========================================
 # MAIN
@@ -13,17 +14,27 @@ VAPOR_I="../stuff/vapor.jar"        # Vapor Interpreter
 VAPOR_P="../stuff/vapor-parser.jar" # Vapor Parser
 MARS="../stuff/mars.jar"            # MIPS Interpreter
 
-# Driver for user subroutines, called at bottom
+# Driver for all the test harnesses, main is called at bottom
+# each phase has a specific test harness procedure, test harnesses are commented out as needed
 function main()
 {
-    init_p1
-    check_p1
-    clean_p1
+    do_p1
+    # do_p2
+    # do_p3
+    # do_p4
 }
 
 #========================================
 # PHASE 1 - Type Checking
 #========================================
+
+# phase1 test harness
+function do_p1()
+{
+    init_p1
+    check_p1
+    clean_p1
+}
 
 # Create skeleton MiniJava parser and generate syntax tree classes and visitor classes, etc...
 function init_p1()
@@ -45,7 +56,7 @@ function init_p1()
 # testing type checking
 function check_p1()
 {
-    P1_FILE="../stuff/tester.java"
+    P1_FILE="../tests/tester.java"
     cd p1
     echo "Compiling Phase1"
     javac Typecheck.java
@@ -66,6 +77,37 @@ function clean_p1()
 }
 
 #========================================
+# PHASE 2 -
+#========================================
 
-# Call main driver function
+# phase1 test harness
+function do_p2()
+{
+    echo "Phase 2"
+}
+
+#========================================
+# PHASE 3 - xxx
+#========================================
+
+# phase1 test harness
+function do_p3()
+{
+    echo "Phase 3"
+}
+
+#========================================
+# PHASE 4 - xxx
+#========================================
+
+# phase1 test harness
+function do_p4()
+{
+    echo "Phase 4"
+}
+
+#========================================
+# RUN DRIVER
+#========================================
+
 main
