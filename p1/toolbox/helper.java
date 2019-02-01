@@ -26,14 +26,18 @@ public class helper{
         return duplicates;
     }
 
-    public static Vector<Struct> fields(Struct c) {
+    public static Vector<Struct> fields(Struct c, Map<String,Map<String,Struct>> m) {
         Vector<Struct> f = new Vector<Struct>();
+        if(c.getType() != "class") {
+            System.out.println("XXXXXXXXXXXXXXXXXXXX");
+        }
         for(Struct i: c.getFields()) {
             f.add(i);
         }
-        if(c.getParent() != null) {
-            for(Struct j: c.getParent().getFields()) {
-                f.add(j);
+        if(c.getParent() != "") {
+            Struct cp = m.get("Global").get(c.getParent());
+            for(Struct i: cp.getFields()) {
+                f.add(i);
             }
         }
         return f;

@@ -5,7 +5,7 @@ public class ClassStruct extends Struct {
 
     public Vector<Struct> fields;
     public Vector<Struct> methods;
-    ClassStruct parent;
+    public String parent;
 
     public ClassStruct (String n, Vector<Struct> f, Vector<Struct> m)
     {
@@ -13,7 +13,7 @@ public class ClassStruct extends Struct {
         type = "class";
         fields = f;
         methods = m;
-        parent = null;
+        parent = "";
     }
     public Vector<Struct> getFields()
     {
@@ -25,17 +25,13 @@ public class ClassStruct extends Struct {
         return methods;
     }
 
-    public void setParent(ClassStruct p)
+    public void setParent(String p)
     {
         parent = p;
     }
 
-    public ClassStruct getParent()
+    public String getParent()
     {
-        if (parent == null)
-        {
-            return null;
-        }
         return parent;
     }
 }

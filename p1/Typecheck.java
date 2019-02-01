@@ -27,7 +27,6 @@ public class Typecheck
         Goal goal = parser.Goal();              // THROWS: ParseException
 
         // Data Members from Visitors
-        boolean pass_check = false;
         Map<String,Map<String,Struct>> symbol_table1; // named symbol table for each context - partial
         Map<String,Map<String,Struct>> symbol_table2; // named symbol table for each context - filled in
 
@@ -67,10 +66,13 @@ public class Typecheck
         // print_map_structs(symbol_table2);
 
         // HERE DO TYPECHECK
+        DFTypeCheckVisitor df_type_visitor = new DFTypeCheckVisitor(symbol_table2);
+        goal.accept(df_type_visitor);
+
 
         /* ---------- END VISITS ---------- */
 
-        if(pass_check)
+        if(df_type_visitor.typechecks)
         {
             System.out.println("Program type checked successfully");
         }

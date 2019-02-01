@@ -34,7 +34,7 @@ public class Struct {
 
     public Vector<Struct> getFields(){return new Vector<>();}
     public Vector<Struct> getMethods(){return new Vector<>();}
-    public void setParent(ClassStruct p){}
-    public Struct getParent(){return new Struct();}
+    public void setParent(String p){}
+    public String getParent(){return "";}
 }
 //INT, BOOL, ARRAY, FUNC, CLASS
