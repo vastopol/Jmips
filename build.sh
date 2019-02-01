@@ -122,8 +122,8 @@ function test_p1()
     mkdir hw1
     mkdir hw1/visitor2 # only want some of the files so no recurse copy (see below)
 
-    cp -r p1/struct/  hw1
-    cp -r p1/toolbox/ hw1
+    cp -R p1/struct/  hw1
+    cp -R p1/toolbox/ hw1
     cp p1/Typecheck.java hw1
     cp p1/visitor2/DFStackVisitor.java hw1/visitor2
     cp p1/visitor2/DFStackVisitor2.java hw1/visitor2
