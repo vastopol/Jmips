@@ -6,13 +6,6 @@ class AAAA_Class
     }
 }
 
-class CCCC_Class
-{
-    int n;
-
-}
-
-
 class BBBB_Class
 {
     int x;
@@ -44,4 +37,10 @@ class BBBB_Class
         // a = c; CATCHES AND WORKS PROPERLY
         return a;
     }
+}
+
+class CCCC_Class extends BBBB_Class
+{
+    int n;
+
 }

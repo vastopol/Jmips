@@ -233,10 +233,10 @@ public class DFStackVisitor implements Visitor {
             String tmp4 = context_stack.pop();
             context_stack.push(tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
 
-            ClassStruct struct1 = new ClassStruct(tmp4, new Vector<Struct>(), new Vector<Struct>() );
+            ClassStruct struct1 = new ClassStruct(tmp3, new Vector<Struct>(), new Vector<Struct>() );
             struct1.setParent(tmp1);
-            // System.out.println("Inside dfsv1 extends " + tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
-            struct_stack.peek().put(tmp1,struct1);                             // add this class to global map
+            System.out.println("Inside dfsv1 extends " + tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
+            struct_stack.peek().put(tmp3,struct1);                             // add this class to global map
             Map<String,Struct> class_map = new HashMap<String,Struct>();      // map for this class
             struct_stack.push(class_map);                                   // push this class's map onto stack
 
@@ -248,7 +248,7 @@ public class DFStackVisitor implements Visitor {
             context_stack.push("} class_end");
 
             struct_vec.add(struct_stack.peek());
-            struct_map.put(tmp1,struct_stack.peek());
+            struct_map.put(tmp3,struct_stack.peek());
             struct_stack.pop();
    }
 

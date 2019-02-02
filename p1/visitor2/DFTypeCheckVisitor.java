@@ -389,9 +389,18 @@ public class DFTypeCheckVisitor implements Visitor {
               if(id == null) {
                   id = symbol_table.get(current_class).get(tmp11);
                   if(id == null) {
-                    System.out.println("Typecheck error in assignment1");
-                    typechecks = false;
-                    return;
+                    Struct prnt = symbol_table.get("Global").get(current_class);
+                    if(prnt.getParent() != "") {
+                        id = symbol_table.get(prnt.getParent()).get(tmp11);
+                        if(id == null) {
+                            System.out.println("Typecheck error in assignment1");
+                        }
+                    }
+                    else {
+                        System.out.println("Typecheck error in assignment2");
+                        typechecks = false;
+                        return;
+                    }
                   }
               }
 
@@ -685,9 +694,18 @@ public class DFTypeCheckVisitor implements Visitor {
         if(curr == null) {;
             curr = symbol_table.get(current_class).get(tmp1);
             if(curr == null) {
-                System.out.println("Typecheck error in message send 1 " + tmp1 + " " + current_class + " " + current_function);
-                typechecks = false;
-                return;
+                Struct prnt = symbol_table.get("Global").get(current_class);
+                if(prnt.getParent() != "") {
+                    curr = symbol_table.get(prnt.getParent()).get(tmp1);
+                    if(curr == null) {
+                        System.out.println("Typecheck error in message send 1");
+                    }
+                }
+                else {
+                    System.out.println("Typecheck error in message send 1.5");
+                    typechecks = false;
+                    return;
+                }
             }
         }
       }
