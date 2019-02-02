@@ -62,8 +62,8 @@ public class Typecheck
 
         // HERE GET SYMBOL TABLE #2
         symbol_table2 = df_stack_visitor2.struct_map;
-        // System.out.println("SYMBOL TABLE #2");
-        // print_map_structs(symbol_table2);
+        System.out.println("SYMBOL TABLE #2");
+        print_map_structs(symbol_table2);
 
         // HERE DO TYPECHECK
         DFTypeCheckVisitor df_type_visitor = new DFTypeCheckVisitor(symbol_table2);
@@ -106,7 +106,7 @@ public class Typecheck
         ClassStruct factorialClass = new ClassStruct("factorial", params, meths);
         // System.out.println(factorialClass.getType() + " " + factorialClass.getName() + " " + factorialClass.getFields() + " " + factorialClass.getMethods());
 
-        ObjStruct facObject = new ObjStruct("facObject", new ClassStruct("facotrial", params, meths));
+        // ObjStruct facObject = new ObjStruct("facObject", new ClassStruct("facotrial", params, meths));
         // System.out.println(facObject.getType() + " " + facObject.getName() + " " + facObject.getFields() + " " + facObject.getMethods());
         System.out.println(""); // end test with newline
         toolbox.tools.print(numSev);
@@ -114,7 +114,7 @@ public class Typecheck
         toolbox.tools.print(numList);
         toolbox.tools.print(facFunc);
         toolbox.tools.print(factorialClass);
-        toolbox.tools.print(facObject);
+        // toolbox.tools.print(facObject);
         // Vector<Struct> f = helper.fields(factorialClass);
         // for(Struct i: f)
         // {

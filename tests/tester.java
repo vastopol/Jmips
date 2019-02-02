@@ -32,16 +32,16 @@ class BBBB_Class
         // a = b[1]; works
         // a = b[a]; works
         // b = new int[a]; works
-        // b = new int[c]; catchs error
+        // b = new int[c]; catches error
         // b = new int[1]; works
         // CCCC_Class cee;
         // cee = new CCCC_Class(); WORKS!
-        // cee = new b(); CATCHS
-        // a = a.length; CATCHS and works properly
+        // cee = new b(); CATCHES
+        // a = a.length; CATCHES and works properly
         // a = a*a; WORKS
-        //  b[a] = c; //CATCHS AND WORKS PROPERLY
+        //  b[a] = c; //CATCHES AND WORKS PROPERLY
         // a[1] = 1;
-        a = c;
+        // a = c; CATCHES AND WORKS PROPERLY
         return a;
     }
 }

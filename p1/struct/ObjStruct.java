@@ -3,26 +3,27 @@ import java.util.*;
 
 public class ObjStruct extends Struct {
 
-    public ClassStruct literal;
-    public String objtype;
+    public String literal;
 
-    public ObjStruct (String n, ClassStruct l)
+    public ObjStruct (String n, String l)
     {
         name = n;
         type = "object";
-        objtype = l.getName();
         literal = l;
     }
-
-    public Vector<Struct> getFields()
-    {
-        return literal.getFields();
+    public String get_className() {
+        return literal;
     }
 
-    public Vector<Struct> getMethods()
-    {
-        return literal.getMethods();
-    }
+    // public Vector<Struct> getFields()
+    // {
+    //     return literal;
+    // }
+
+    // public Vector<Struct> getMethods()
+    // {
+    //     return literal.getMethods();
+    // }
 
 
 }

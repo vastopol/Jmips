@@ -275,10 +275,15 @@ public class DFStackVisitor implements Visitor {
                 ArrStruct struct1 = new ArrStruct(tmp1, new Vector<Integer>() );
                 struct_stack.peek().put(tmp1,struct1);                           // add this var to class map
             }
-            else
+            else if(tmp2 == "boolean")
             {
                 BoolStruct struct1 = new BoolStruct(tmp1, new Boolean(false) );
                 struct_stack.peek().put(tmp1,struct1);                           // add this var to class map
+            }
+            else
+            {
+                ObjStruct struct1 = new ObjStruct(tmp1, tmp2);
+                struct_stack.peek().put(tmp1, struct1);
             }
 
         n.f2.accept(this);
@@ -357,19 +362,25 @@ public class DFStackVisitor implements Visitor {
 
             if(tmp2 == "int")
             {
-                IntStruct struct1 = new IntStruct(tmp1, new Integer(0));
-                struct_stack.peek().put(tmp1,struct1);                           // add this var to method map
+                IntStruct struct1 = new IntStruct(tmp1, new Integer(0) );
+                struct_stack.peek().put(tmp1,struct1);                           // add this var to class map
             }
             else if(tmp2 == "int[]")
             {
-                ArrStruct struct1 = new ArrStruct(tmp1, new Vector<Integer>());
-                struct_stack.peek().put(tmp1,struct1);                           // add this var to method map
+                ArrStruct struct1 = new ArrStruct(tmp1, new Vector<Integer>() );
+                struct_stack.peek().put(tmp1,struct1);                           // add this var to class map
+            }
+            else if(tmp2 == "boolean")
+            {
+                BoolStruct struct1 = new BoolStruct(tmp1, new Boolean(false) );
+                struct_stack.peek().put(tmp1,struct1);                           // add this var to class map
             }
             else
             {
-                BoolStruct struct1 = new BoolStruct(tmp1, new Boolean(false));
-                struct_stack.peek().put(tmp1,struct1);                           // add this var to method map
+                ObjStruct struct1 = new ObjStruct(tmp1, tmp2);
+                struct_stack.peek().put(tmp1, struct1);
             }
+
    }
 
    /**

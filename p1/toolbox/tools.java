@@ -49,19 +49,7 @@ public class tools {
                 System.out.println("String[]" + " " + s.getName());
                 break;
             case "object":
-                System.out.println(s.getType() + " " + s.getName() + " " + s.getFields());
-                // System.out.println(s.getName() + " fields: ");
-                for(Struct i: s.getFields()) {
-                    System.out.println(s.getName() + " fields: ");
-                    tools.print(i);
-                    System.out.println("");
-                }
-                // System.out.println(s.getName() + " methods: ");
-                for(Struct i: s.getMethods()) {
-                    System.out.println(s.getName() + " methods: ");
-                    tools.print(i);
-                    System.out.println("");
-                }
+                System.out.println(s.getType() + " " + s.getName() + " " + s.get_className());
                 break;
         }
     }
