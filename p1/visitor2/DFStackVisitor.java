@@ -24,6 +24,9 @@ public class DFStackVisitor implements Visitor {
     public Stack<Map<String,Struct>> struct_stack;       // used to construct the maps, on enter context push new map to stack, on exit contex pop top map to vector
     public Vector<Map<String,Struct>> struct_vec;        // vector of unlabeled symbol tables appended in order cfeated from pops on stack
     public Map<String,Map<String,Struct>> struct_map;   // all of the labeled symbol tables but with structs for the individual table values
+    public String cur_class;
+    public String cur_function;
+    public String cur_struct;
 
     public DFStackVisitor()
     {
@@ -111,6 +114,8 @@ public class DFStackVisitor implements Visitor {
         n.f1.accept(this);
             String tmp1 = context_stack.pop();
             String tmp2 = context_stack.pop();
+            cur_class = tmp1;
+            cur_function = "main";
             context_stack.push(tmp2+" "+tmp1);
 
             ClassStruct struct1 = new ClassStruct(tmp1, new Vector<Struct>(), new Vector<Struct>() );
@@ -164,6 +169,8 @@ public class DFStackVisitor implements Visitor {
             struct_vec.add(struct_stack.peek());
             struct_map.put(tmp1,struct_stack.peek());
             struct_stack.pop();
+        cur_class = "";
+        cur_function = "";
    }
 
    /**
@@ -191,6 +198,7 @@ public class DFStackVisitor implements Visitor {
             String tmp1 = context_stack.pop();
             String tmp2 = context_stack.pop();
             context_stack.push(tmp2+" "+tmp1);
+            cur_class = tmp1;
 
             ClassStruct struct1 = new ClassStruct(tmp1, new Vector<Struct>(), new Vector<Struct>() );
             struct_stack.peek().put(tmp1,struct1);                             // add this class to global map
@@ -207,6 +215,7 @@ public class DFStackVisitor implements Visitor {
             struct_vec.add(struct_stack.peek());
             struct_map.put(tmp1,struct_stack.peek());
             struct_stack.pop();
+        cur_class = "";
    }
 
    /**
@@ -232,6 +241,7 @@ public class DFStackVisitor implements Visitor {
             String tmp3 = context_stack.pop();
             String tmp4 = context_stack.pop();
             context_stack.push(tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
+            cur_class = tmp3;
 
             ClassStruct struct1 = new ClassStruct(tmp3, new Vector<Struct>(), new Vector<Struct>() );
             struct1.setParent(tmp1);
@@ -250,6 +260,7 @@ public class DFStackVisitor implements Visitor {
             struct_vec.add(struct_stack.peek());
             struct_map.put(tmp3,struct_stack.peek());
             struct_stack.pop();
+            cur_class = "";
    }
 
    /**
@@ -313,6 +324,7 @@ public class DFStackVisitor implements Visitor {
             String tmp1 = context_stack.pop();
             String tmp2 = context_stack.pop();
             String tmp3 = context_stack.pop();
+            cur_function = tmp1;
             context_stack.push(tmp3+" "+tmp2+" "+tmp1);
             context_stack.push("{ method_start");
 
@@ -336,6 +348,7 @@ public class DFStackVisitor implements Visitor {
             struct_vec.add(struct_stack.peek());
             struct_map.put(tmp1,struct_stack.peek());
             struct_stack.pop();
+        cur_function = "";
    }
 
    /**
