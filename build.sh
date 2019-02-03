@@ -30,14 +30,14 @@ MARS="../stuff/mars.jar"            # MIPS Interpreter
 # GLOBALS - tests
 TJAVA="../tests/tester.java"
 TEST1="../tests/Phase1Tester/SelfTestCases/*"
-TEST2="../tests/Phase2Tester/SelfTestCases/*"
+TEST2="../tests/Phase2Tester/SelfTestCases/*.java"
 
 # Driver for all the test harnesses, main is called at bottom
 # each phase has a specific test harness procedure, test harnesses are commented out as needed
 function main()
 {
-    do_p 1
-    # do_p 2
+    # do_p 1
+    do_p 2
     p_wipe
 }
 
@@ -53,7 +53,7 @@ function do_p()
             ;;
         2)
             p_init1  p2 J2V.java
-            p_check1 p2 J2V $TJJAVA $TEST2
+            p_check1 p2 J2V $TJAVA $TEST2
             p_clean1 p2
             # p_test2
             ;;
@@ -182,18 +182,18 @@ function p_test1()
 
     cp p1/struct/*  hw1/struct
     cp p1/toolbox/* hw1/toolbox
-    cp p1/Typecheck.java hw1
+    cp p1/Typecheck.java hw1                            # <--- main file
     cp p1/visitor2/DFStackVisitor.java hw1/visitor2
     cp p1/visitor2/DFStackVisitor2.java hw1/visitor2
-    cp p1/visitor2/DFTypeCheckVisitor.java hw1/visitor2
+    cp p1/visitor2/DFTypeCheckVisitor.java hw1/visitor2 # <--- visitor file
 
     tar zcvf hw1.tgz hw1 > /dev/null
 
     echo "4. Running Phase1Tester Script"; echo
 
-    cd tests/Phase1Tester
+    cd tests/Phase1Tester                               # <--- number
 
-    source run SelfTestCases ../../hw1.tgz
+    source run SelfTestCases ../../hw1.tgz              # <--- number
 
     echo;
 

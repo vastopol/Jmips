@@ -18,7 +18,7 @@ import struct.*;
 import toolbox.*;
 
 // main
-public class Typecheck
+public class J2V
 {
     public static void main(String[] args)  // could use try/catch block instead of exception
         throws ParseException
@@ -33,15 +33,6 @@ public class Typecheck
         /* ---------- START TESTS ---------- */
 
         // test_struct();
-
-        // DFPrintVisitor df_p_v = new DFPrintVisitor();
-        // goal.accept(df_p_v);
-
-        // DFStackTestVisitor df_s_t_v = new DFStackTestVisitor();
-        // goal.accept(df_s_t_v);
-        // print_stack_trace(df_s_t_v.context_stack);
-        // print_vec_maps(df_s_t_v.map_vec);
-        // print_map_maps(df_s_t_v.map_map);
 
         /* ---------- END TESTS ---------- */
 
@@ -65,22 +56,10 @@ public class Typecheck
         // System.out.println("SYMBOL TABLE #2");
         // print_map_structs(symbol_table2);
 
-        // HERE DO TYPECHECK
-        DFTypeCheckVisitor df_type_visitor = new DFTypeCheckVisitor(symbol_table2);
-        goal.accept(df_type_visitor);
-
+        DFVaporVisitor df_vapor_visitor= new DFVaporVisitor(symbol_table2);
+        goal.accept(df_vapor_visitor);
 
         /* ---------- END VISITS ---------- */
-
-        if(df_type_visitor.typechecks)
-        {
-            System.out.println("Program type checked successfully");
-        }
-        else
-        {
-            System.out.println("Type error");
-            System.exit(1);
-        }
 
         return;
     }
