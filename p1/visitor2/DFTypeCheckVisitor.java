@@ -64,6 +64,22 @@ public class DFTypeCheckVisitor implements Visitor {
     * f2 -> <EOF>
     */
    public void visit(Goal n) {
+      Vector<String> cnames = new Vector<String>();
+      Map<String, Struct> globaltable = symbol_table.get("Global");
+      if(globaltable == null) {
+         System.out.println("Typecheck error in goal");
+         typechecks = false;
+         return;
+      }
+      for(String i: globaltable.keySet()) {
+         cnames.add(i);
+      }
+      if(cnames.size() > 1) {
+         if(!helper.distinct(cnames)) {
+            typechecks = false;
+            return;
+         }
+      }
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
@@ -90,6 +106,7 @@ public class DFTypeCheckVisitor implements Visitor {
     * f17 -> "}"
     */
    public void visit(MainClass n) {
+
       n.f0.accept(this);
       n.f1.accept(this);
       current_class = curr_id;
@@ -99,6 +116,17 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f5.accept(this);
       n.f6.accept(this);
       current_function = "main";
+      String func_key = "main " + current_class;
+      Vector<String> inames = new Vector<String>();
+      Map<String, Struct> maintable = symbol_table.get(func_key);
+      for(String i: maintable.keySet()) {
+         inames.add(i);
+      }
+      if(!helper.distinct(inames)) {
+         System.out.println("Typecheck error in main");
+         typechecks = false;
+         return;
+      }
       n.f7.accept(this);
       n.f8.accept(this);
       n.f9.accept(this);
@@ -134,6 +162,42 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       n.f1.accept(this);
       current_class = curr_id;
+      Struct currClass = symbol_table.get("Global").get(current_class);
+      if(currClass == null) {
+         typechecks = false;
+         System.out.println("Typecheck error in classdeclaration1 " + current_class);
+         return;
+      }
+      System.out.println(currClass.getName());
+      Vector<Struct> fstr = helper.fields(currClass, symbol_table);
+      Vector<Struct> mstr = currClass.getMethods();
+      Vector<String> fnames = new Vector<String>();
+      Vector<String> mnames = new Vector<String>();
+      for(Struct i: fstr) {
+         fnames.add(i.getName());
+      }
+
+      for(Struct i: mstr) {
+         mnames.add(i.getName());
+      }
+
+      if(fnames.size() > 1) {
+         if(!helper.distinct(fnames)) {
+            System.out.println("Typecheck error in classdeclaration2 " + current_class);
+            typechecks = false;
+            return;
+         }
+      }
+
+      if(mnames.size() > 1) {
+         if(!helper.distinct(mnames)) {
+            System.out.println("Typecheck error in classdeclaration3 " + current_class);
+            typechecks = false;
+            return;
+         }
+      }
+
+   
       n.f2.accept(this);
       n.f3.accept(this);
       n.f4.accept(this);
@@ -157,7 +221,57 @@ public class DFTypeCheckVisitor implements Visitor {
       current_class = curr_id;
       n.f2.accept(this);
       n.f3.accept(this);
+      String extended_class = curr_id;
       n.f4.accept(this);
+      Struct currClass = symbol_table.get("Global").get(current_class);
+      Struct extClass = symbol_table.get("Global").get(extended_class);
+      if(currClass == null) {
+         typechecks = false;
+         System.out.println("Typecheck error in class extends 1 " + current_class);
+         return;
+      }
+      if(extClass == null) {
+         typechecks = false;
+         System.out.println("Typecheck error in class extends 2 " + extended_class);
+         return;
+      }
+      Vector<Struct> fstr = helper.fields(currClass, symbol_table);
+      Vector<Struct> mstr = currClass.getMethods();
+      Vector<String> fnames = new Vector<String>();
+      Vector<String> mnames = new Vector<String>();
+      for(Struct i: fstr) {
+         fnames.add(i.getName());
+      }
+
+      if(fnames.size() > 1) {
+         boolean dfnames = helper.distinct(fnames);
+         if(!dfnames) {
+            System.out.println("Typecheck error in class extends 3");
+            typechecks = false;
+            return;
+         }
+      }
+      
+      if(mnames.size() > 1) {
+         boolean dmnames = helper.distinct(mnames);
+         if(!dmnames) {
+            System.out.println("Typecheck error in class extends 4");
+            typechecks = false;
+            return;
+         }
+
+         boolean overld = false;
+         for(Struct i: mstr) {
+            mnames.add(i.getName());
+            overld = helper.noOverloading(currClass, extClass, i);
+         }
+
+         if(overld) {
+            System.out.println("Typecheck error in class extends 5");
+            typechecks = false;
+            return;
+         }
+      }
       n.f5.accept(this);
       n.f6.accept(this);
       n.f7.accept(this);
