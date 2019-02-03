@@ -246,7 +246,7 @@ public class DFStackVisitor implements Visitor {
 
             ClassStruct struct1 = new ClassStruct(tmp3, new Vector<Struct>(), new Vector<Struct>() );
             struct1.setParent(tmp1);
-            System.out.println("Inside dfsv1 extends " + tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
+            // System.out.println("Inside dfsv1 extends " + tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
             struct_stack.peek().put(tmp3,struct1);                             // add this class to global map
             Map<String,Struct> class_map = new HashMap<String,Struct>();      // map for this class
             struct_stack.push(class_map);                                   // push this class's map onto stack
@@ -374,7 +374,7 @@ public class DFStackVisitor implements Visitor {
             String tmp1 = context_stack.pop();
             String tmp2 = context_stack.pop();
             context_stack.push(tmp2+" "+tmp1);
-            System.out.println("formal param in stack visitor " + tmp2 + " " + tmp1 + " " + cur_function);
+            // System.out.println("formal param in stack visitor " + tmp2 + " " + tmp1 + " " + cur_function);
             if(tmp2 == "int")
             {
                 IntStruct struct1 = new IntStruct(tmp1, new Integer(0) );
