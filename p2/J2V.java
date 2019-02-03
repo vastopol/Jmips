@@ -18,7 +18,7 @@ import struct.*;
 import toolbox.*;
 
 // main
-public class J2V
+public class Typecheck
 {
     public static void main(String[] args)  // could use try/catch block instead of exception
         throws ParseException
@@ -62,8 +62,8 @@ public class J2V
 
         // HERE GET SYMBOL TABLE #2
         symbol_table2 = df_stack_visitor2.struct_map;
-        System.out.println("SYMBOL TABLE #2");
-        print_map_structs(symbol_table2);
+        // System.out.println("SYMBOL TABLE #2");
+        // print_map_structs(symbol_table2);
 
         // HERE DO TYPECHECK
         DFTypeCheckVisitor df_type_visitor = new DFTypeCheckVisitor(symbol_table2);

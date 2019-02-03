@@ -18,6 +18,8 @@ public class DFTypeCheckVisitor implements Visitor {
    String current_function;
    String expr_type;
    String curr_id;
+   String msgsendcaller;
+   Struct msgsendstruct;
    Vector<String> expr_type_vec;
    Vector<String> expr_name_vec;
    public boolean typechecks = true;
@@ -26,6 +28,7 @@ public class DFTypeCheckVisitor implements Visitor {
       symbol_table = m;
       expr_type_vec = new Vector<String>();
       expr_name_vec = new Vector<String>();
+      msgsendstruct = null;
    }
 
    public void visit(NodeList n) {
@@ -61,6 +64,22 @@ public class DFTypeCheckVisitor implements Visitor {
     * f2 -> <EOF>
     */
    public void visit(Goal n) {
+      Vector<String> cnames = new Vector<String>();
+      Map<String, Struct> globaltable = symbol_table.get("Global");
+      if(globaltable == null) {
+         // System.out.println("Typecheck error in goal");
+         typechecks = false;
+         return;
+      }
+      for(String i: globaltable.keySet()) {
+         cnames.add(i);
+      }
+      if(cnames.size() > 1) {
+         if(!helper.distinct(cnames)) {
+            typechecks = false;
+            return;
+         }
+      }
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
@@ -87,6 +106,7 @@ public class DFTypeCheckVisitor implements Visitor {
     * f17 -> "}"
     */
    public void visit(MainClass n) {
+
       n.f0.accept(this);
       n.f1.accept(this);
       current_class = curr_id;
@@ -95,7 +115,18 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f4.accept(this);
       n.f5.accept(this);
       n.f6.accept(this);
-      current_function = curr_id;
+      current_function = "main";
+      String func_key = "main " + current_class;
+      Vector<String> inames = new Vector<String>();
+      Map<String, Struct> maintable = symbol_table.get(func_key);
+      for(String i: maintable.keySet()) {
+         inames.add(i);
+      }
+      if(!helper.distinct(inames)) {
+         // System.out.println("Typecheck error in main");
+         typechecks = false;
+         return;
+      }
       n.f7.accept(this);
       n.f8.accept(this);
       n.f9.accept(this);
@@ -131,6 +162,42 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       n.f1.accept(this);
       current_class = curr_id;
+      Struct currClass = symbol_table.get("Global").get(current_class);
+      if(currClass == null) {
+         typechecks = false;
+         // System.out.println("Typecheck error in classdeclaration1 " + current_class);
+         return;
+      }
+      // System.out.println(currClass.getName());
+      Vector<Struct> fstr = helper.fields(currClass, symbol_table);
+      Vector<Struct> mstr = currClass.getMethods();
+      Vector<String> fnames = new Vector<String>();
+      Vector<String> mnames = new Vector<String>();
+      for(Struct i: fstr) {
+         fnames.add(i.getName());
+      }
+
+      for(Struct i: mstr) {
+         mnames.add(i.getName());
+      }
+
+      if(fnames.size() > 1) {
+         if(!helper.distinct(fnames)) {
+            // System.out.println("Typecheck error in classdeclaration2 " + current_class);
+            typechecks = false;
+            return;
+         }
+      }
+
+      if(mnames.size() > 1) {
+         if(!helper.distinct(mnames)) {
+            // System.out.println("Typecheck error in classdeclaration3 " + current_class);
+            typechecks = false;
+            return;
+         }
+      }
+
+   
       n.f2.accept(this);
       n.f3.accept(this);
       n.f4.accept(this);
@@ -154,7 +221,57 @@ public class DFTypeCheckVisitor implements Visitor {
       current_class = curr_id;
       n.f2.accept(this);
       n.f3.accept(this);
+      String extended_class = curr_id;
       n.f4.accept(this);
+      Struct currClass = symbol_table.get("Global").get(current_class);
+      Struct extClass = symbol_table.get("Global").get(extended_class);
+      if(currClass == null) {
+         typechecks = false;
+         // System.out.println("Typecheck error in class extends 1 " + current_class);
+         return;
+      }
+      if(extClass == null) {
+         typechecks = false;
+         // System.out.println("Typecheck error in class extends 2 " + extended_class);
+         return;
+      }
+      Vector<Struct> fstr = helper.fields(currClass, symbol_table);
+      Vector<Struct> mstr = currClass.getMethods();
+      Vector<String> fnames = new Vector<String>();
+      Vector<String> mnames = new Vector<String>();
+      for(Struct i: fstr) {
+         fnames.add(i.getName());
+      }
+
+      if(fnames.size() > 1) {
+         boolean dfnames = helper.distinct(fnames);
+         if(!dfnames) {
+            // System.out.println("Typecheck error in class extends 3");
+            typechecks = false;
+            return;
+         }
+      }
+      
+      if(mnames.size() > 1) {
+         boolean dmnames = helper.distinct(mnames);
+         if(!dmnames) {
+            // System.out.println("Typecheck error in class extends 4");
+            typechecks = false;
+            return;
+         }
+
+         boolean overld = false;
+         for(Struct i: mstr) {
+            mnames.add(i.getName());
+            overld = helper.noOverloading(currClass, extClass, i);
+         }
+
+         if(overld) {
+            // System.out.println("Typecheck error in class extends 5");
+            typechecks = false;
+            return;
+         }
+      }
       n.f5.accept(this);
       n.f6.accept(this);
       n.f7.accept(this);
@@ -194,20 +311,25 @@ public class DFTypeCheckVisitor implements Visitor {
       String tmp11 = curr_id;
     //   System.out.println("Type is " + expr_type);
       n.f2.accept(this);
-      System.out.println(curr_id);
+      // System.out.println(curr_id);
       current_function = curr_id;
         //   System.out.println("current class is " + current_class + " current function is " + current_function);
           Map<String, Struct> method_struct2 = symbol_table.get(current_class);
           if(method_struct2 == null) {
               typechecks = false;
-              System.out.println("Typecheck error in methoddeclaration1");
+            //   System.out.println("Typecheck error in methoddeclaration1");
               return;
           }
-          Struct method_struct = method_struct2.get(current_function);
+          String func_key = current_function + " " + current_class;
+          Struct method_struct = method_struct2.get(func_key);
+          if(method_struct == null) {
+              method_struct = method_struct2.get(current_function);
+          }
+        //   System.out.println(method_struct.getName() + " " + func_key + " sup its methoddeclaration");
           Vector<String> pnames = new Vector<String>();
           if(method_struct == null) {
               typechecks = false;
-              System.out.println("Typecheck error in methoddeclaration2");
+            //   System.out.println("Typecheck error in methoddeclaration2");
               return;
           }
     
@@ -219,7 +341,7 @@ public class DFTypeCheckVisitor implements Visitor {
     
             if(!helper.distinct(pnames)) {
               typechecks = false;
-                 System.out.println("Typecheck error in methoddeclaration3");
+               //   System.out.println("Typecheck error in methoddeclaration3");
                  return;
             }
         }
@@ -229,7 +351,8 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f5.accept(this);
       n.f6.accept(this);
       n.f7.accept(this);
-      Map<String, Struct> method_table = symbol_table.get(current_function);
+      func_key = current_function + " " + current_class;
+      Map<String, Struct> method_table = symbol_table.get(func_key);
       Vector<String> inames = new Vector<String>();
 
       for(String i: method_table.keySet()) {
@@ -238,9 +361,9 @@ public class DFTypeCheckVisitor implements Visitor {
       if(inames.size() > 1) {
         if(!helper.distinct(inames)) {
             typechecks = false;
-            System.out.println("Typecheck error in methoddeclaration 6");
+            // System.out.println("Typecheck error in methoddeclaration 6");
             for (String i: inames) {
-                System.out.println("identifier " + i);
+               //  System.out.println("identifier " + i);
             }
             return;
          }
@@ -252,24 +375,25 @@ public class DFTypeCheckVisitor implements Visitor {
       String tmp22 = curr_id;
       if(tmp1 != tmp2) {
         if(tmp2 == "object") {
-            Struct id = symbol_table.get(current_function).get(tmp22);
+            func_key = current_function + " " + current_class;
+            Struct id = symbol_table.get(func_key).get(tmp22);
             if(id == null) {
                 id = symbol_table.get(current_class).get(tmp22);
                 if(id == null) {
-                  System.out.println("Typecheck error in methoddeclaration7");
+                  // System.out.println("Typecheck error in methoddeclaration7");
                   typechecks = false;
                   return;
                 }
             }
 
             if(id.get_className() != tmp11) {
-              System.out.println("Typecheck error in methoddeclaration8 " + tmp1 + " " + id.get_className());
+            //   System.out.println("Typecheck error in methoddeclaration8 " + tmp1 + " " + id.get_className());
               typechecks = false;
               return;
             }
         }
         else {
-            System.out.println("Typecheck error in methoddeclaration9 ");
+            // System.out.println("Typecheck error in methoddeclaration9 ");
             typechecks = false;
             return;
         }
@@ -382,10 +506,11 @@ public class DFTypeCheckVisitor implements Visitor {
       String tmp2 = expr_type;
       String tmp22 = curr_id;
       n.f3.accept(this);
-      System.out.println(tmp1 + " " + tmp11 + " = " + tmp2 + " " + tmp22);
+      // System.out.println(tmp1 + " " + tmp11 + " = " + tmp2 + " " + tmp22);
+      String func_key = current_function + " " + current_class;
       if(tmp1 != tmp2) {
           if(tmp1 == "object") {
-              Struct id = symbol_table.get(current_function).get(tmp11);
+              Struct id = symbol_table.get(func_key).get(tmp11);
               if(id == null) {
                   id = symbol_table.get(current_class).get(tmp11);
                   if(id == null) {
@@ -393,11 +518,11 @@ public class DFTypeCheckVisitor implements Visitor {
                     if(prnt.getParent() != "") {
                         id = symbol_table.get(prnt.getParent()).get(tmp11);
                         if(id == null) {
-                            System.out.println("Typecheck error in assignment1");
+                           //  System.out.println("Typecheck error in assignment1");
                         }
                     }
                     else {
-                        System.out.println("Typecheck error in assignment2");
+                        // System.out.println("Typecheck error in assignment2");
                         typechecks = false;
                         return;
                     }
@@ -405,7 +530,7 @@ public class DFTypeCheckVisitor implements Visitor {
               }
 
               if(id.get_className() != tmp2) {
-                System.out.println("Typecheck error in assignment2");
+               //  System.out.println("Typecheck error in assignment2");
                 typechecks = false;
                 return;
               }
@@ -426,14 +551,14 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       if(expr_type != "int[]") {
         typechecks = false;
-        System.out.println("Typecheck error in arrayassignment1");
+      //   System.out.println("Typecheck error in arrayassignment1");
         return;
      }
       n.f1.accept(this);
       n.f2.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Typecheck error in arrayassignment2");
+      //   System.out.println("Typecheck error in arrayassignment2");
         return;
      }
       n.f3.accept(this);
@@ -441,7 +566,7 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f5.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Typecheck error in arrayassignment3");
+      //   System.out.println("Typecheck error in arrayassignment3");
         return;
      }
       n.f6.accept(this);
@@ -462,7 +587,7 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f2.accept(this);
       if(expr_type != "boolean") {
         typechecks = false;
-        System.out.println("Typecheck error in ifstatement");
+      //   System.out.println("Typecheck error in ifstatement");
         return;
      }
       n.f3.accept(this);
@@ -484,7 +609,7 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f2.accept(this);
       if(expr_type != "boolean") {
         typechecks = false;
-        System.out.println("Typecheck error in whilestatement");
+      //   System.out.println("Typecheck error in whilestatement");
         return;
      }
       n.f3.accept(this);
@@ -504,7 +629,7 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f2.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Type error in print");
+      //   System.out.println("Type error in print");
         return;
      }
       n.f3.accept(this);
@@ -535,14 +660,14 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       if(expr_type != "boolean") {
         typechecks = false;
-        System.out.println("Typecheck error in and1");
+      //   System.out.println("Typecheck error in and1");
         return;
      }
       n.f1.accept(this);
       n.f2.accept(this);
       if(expr_type != "boolean") {
         typechecks = false;
-        System.out.println("Typecheck error in and2");
+      //   System.out.println("Typecheck error in and2");
         return;
      }
      expr_type = "boolean";
@@ -557,14 +682,14 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Typecheck error in lessthan1");
+      //   System.out.println("Typecheck error in lessthan1");
         return;
      }
       n.f1.accept(this);
       n.f2.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Typecheck error in lessthan2");
+      //   System.out.println("Typecheck error in lessthan2");
         return;
      }
      expr_type = "boolean";
@@ -579,14 +704,14 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Typecheck error in plus1");
+      //   System.out.println("Typecheck error in plus1");
         return;
      }
       n.f1.accept(this);
       n.f2.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Typecheck error in plus2");
+      //   System.out.println("Typecheck error in plus2");
         return;
      }
      expr_type = "int";
@@ -601,14 +726,14 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Typecheck error in minus1");
+      //   System.out.println("Typecheck error in minus1");
         return;
      }
       n.f1.accept(this);
       n.f2.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Typecheck error in minus2");
+      //   System.out.println("Typecheck error in minus2");
         return;
      }
      expr_type = "int";
@@ -623,14 +748,14 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Typecheck error in times1");
+      //   System.out.println("Typecheck error in times1");
         return;
      }
       n.f1.accept(this);
       n.f2.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Typecheck error in times2");
+      //   System.out.println("Typecheck error in times2");
         return;
      }
      expr_type = "int";
@@ -646,14 +771,14 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       if(expr_type != "int[]") {
         typechecks = false;
-        System.out.println("Type error in arraylookup1");
+      //   System.out.println("Type error in arraylookup1");
         return;
      }
       n.f1.accept(this);
       n.f2.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Type error in arraylookup2");
+      //   System.out.println("Type error in arraylookup2");
         return;
      }
       n.f3.accept(this);
@@ -669,7 +794,7 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       if(expr_type != "int[]") {
         typechecks = false;
-        System.out.println("Typecheck error in array length");
+      //   System.out.println("Typecheck error in array length");
         return;
      }
       n.f1.accept(this);
@@ -688,34 +813,40 @@ public class DFTypeCheckVisitor implements Visitor {
    public void visit(MessageSend n) {
       n.f0.accept(this);
       String tmp1 = curr_id;
-      Struct curr = symbol_table.get("Global").get(tmp1);
+      msgsendcaller = tmp1;
+      // System.out.println(curr_id);
+      String func_key = current_function + " " + current_class;
+      Struct curr = symbol_table.get("Global").get(tmp1); // if primary is a class
       if(curr == null) {
-        curr = symbol_table.get(current_function).get(tmp1);
+        // System.out.println(tmp1 + " Current class in msgsnd is " + current_class + " current func in msgsend " + current_function + " or maybe " + func_key);
+        curr = symbol_table.get(func_key).get(tmp1); //if primary is an object in the function
         if(curr == null) {;
-            curr = symbol_table.get(current_class).get(tmp1);
+            curr = symbol_table.get(current_class).get(tmp1);// if primary is a class with a parent
             if(curr == null) {
                 Struct prnt = symbol_table.get("Global").get(current_class);
-                if(prnt.getParent() != "") {
-                    curr = symbol_table.get(prnt.getParent()).get(tmp1);
+                if(prnt.getParent() != "") { 
+                    curr = symbol_table.get(prnt.getParent()).get(tmp1); //if the parent exists then get function from parent
                     if(curr == null) {
-                        System.out.println("Typecheck error in message send 1");
+                        // System.out.println("Typecheck error in message send 1");
                     }
                 }
                 else {
-                    System.out.println("Typecheck error in message send 1.5");
+                  //   System.out.println("Typecheck error in message send 1.5");
                     typechecks = false;
                     return;
                 }
             }
         }
       }
+      msgsendstruct = curr;
+
     //   System.out.println(expr_type);
       n.f1.accept(this);
       n.f2.accept(this);
       String tmp2 = curr_id;
       String rettype = "";
       Struct methodn = null;
-      if(curr.getType() == "class") {
+      if(curr.getType() == "class") { //if curr is a class retrieves return type and method struct
           for(Struct i: curr.getMethods()) {
               if(tmp2 == i.getName()) {
                   rettype = i.get_returnType();
@@ -724,23 +855,23 @@ public class DFTypeCheckVisitor implements Visitor {
           }
       }
       else if(curr.getType() == "object") {
-        Struct cname = symbol_table.get("Global").get(curr.get_className());
+        Struct cname = symbol_table.get("Global").get(curr.get_className()); //if curr is an object, retrieves class of object and then return type and method struct
         if(cname == null) {
-            System.out.println("Typecheck error in message send2");
+            // System.out.println("Typecheck error in message send2");
             typechecks = false;
             return;
         }
-        for(Struct i: cname.getMethods()) {
+        for(Struct i: cname.getMethods()) { //
             if(tmp2 == i.getName()) {
                 rettype = i.get_returnType();
                 methodn = i;
             }
         } 
       }
-      else if(curr.getType() == "function") {
+      else if(curr.getType() == "function") { //if curr is a function ??
         Struct cname = symbol_table.get("Global").get(curr.get_returnType());
         if(cname == null) {
-            System.out.println("Typecheck error in message send3");
+            // System.out.println("Typecheck error in message send3");
             typechecks = false;
             return;
         }
@@ -753,56 +884,76 @@ public class DFTypeCheckVisitor implements Visitor {
         }
       }
       else {
-          System.out.println("wtf error in messagesend4 " + tmp1 + " " + tmp2 + " " + current_class + " " + current_function);
+         //  System.out.println("wtf error in messagesend4 " + tmp1 + " " + tmp2 + " " + current_class + " " + current_function);
           typechecks = false;
           return;
       }
       n.f3.accept(this);
       n.f4.accept(this);
-      if(methodn != null) {
-          if(methodn.getParams().size() > 0) {
-            for(int i = 0; i < expr_type_vec.size(); i++) {
-                System.out.println(i + " " + expr_type_vec.elementAt(i));
-            }
-            if(expr_type_vec.size() == methodn.getParams().size()) {
-              for(Struct i: methodn.getParams()) {
-                  System.out.println(i.getType());
-              }
-              System.out.println("");
-              for(String i: expr_type_vec) {
-                  System.out.println(i);
-              }
-              System.out.println(expr_name_vec.size() + " " + methodn.getParams().size() + " " + expr_type_vec.size());
-                for(String i: expr_type_vec) {
-                    for(Struct j: methodn.getParams()) {
-                        if(i != j.getType()) {
-                            System.out.println("Typecheck error in messagesend5 " + i + " " + j.getType());
-                            typechecks = false;
-                            return;
+      if(methodn != null) { //if the method exists then
+          if(methodn.getParams().size() > 0) { //if it has parameters
+            // for(int i = 0; i < expr_type_vec.size(); i++) {
+            //    //  System.out.println(i + " " + expr_type_vec.elementAt(i));
+            // }
+            if(expr_type_vec.size() == methodn.getParams().size()) { //check if sizes match
+            //   for(Struct i: methodn.getParams()) {
+            //       // System.out.println(i.getType());
+            //   }
+            //   System.out.println("");
+            //   for(String i: expr_type_vec) {
+            //       // System.out.println(i);
+            //   }
+            //   System.out.println(expr_name_vec.size() + " " + methodn.getParams().size() + " " + expr_type_vec.size());
+               //  for(String i: expr_type_vec) {
+               //      for(Struct j: methodn.getParams()) {
+               //          if(i != j.getType()) { //check if types match
+               //              System.out.println("Typecheck error in messagesend5 " + i + " " + j.getType());
+               //              typechecks = false;
+               //              return;
+               //          }
+               //      }
+               //  }
+               Vector<Struct> methodps = methodn.getParams();
+               for(int i = 0; i < expr_type_vec.size(); i++) {
+                  if(expr_type_vec.elementAt(i) != methodps.elementAt(i).getType()) {
+                     if(methodps.elementAt(i).getType() == "object") {
+                        if(expr_type_vec.elementAt(i) != methodps.elementAt(i).get_className()) {
+                           // System.out.println("Typecheck error in messagesend5 " + expr_type_vec.elementAt(i) + " " + methodps.elementAt(i));
+                           typechecks = false;
+                           return;
                         }
-                    }
-                }
+                     }
+                     else {
+                        // System.out.println("Typecheck error in messagesend5.5 " + expr_type_vec.elementAt(i) + " " + methodps.elementAt(i));
+                        typechecks = false;
+                        return;
+                     }
+
+                  }
+               }
             }
             else {
-                System.out.println("Typecheck error in messagesend6 " + expr_type_vec.size() + " " + methodn.getParams().size() + " " + methodn.getName());
-                for(Struct i: methodn.getParams()) {
-                    System.out.println(i.getType());
-                }
-                System.out.println("");
-                for(String i: expr_name_vec) {
-                    System.out.println(i);
-                }
+               //  System.out.println("Typecheck error in messagesend6 " + expr_type_vec.size() + " " + methodn.getParams().size() + " " + methodn.getName() + " " + methodn.getType());
+               //  for(Struct i: methodn.getParams()) {
+               //      System.out.println(i.getType());
+               //  }
+               //  System.out.println("");
+               //  for(String i: expr_name_vec) {
+               //      System.out.println(i);
+               //  }
                 typechecks = false;
                 return;
             }   
           }
     }
     else {
-        System.out.println("Typecheck error in messagesend7");
+      //   System.out.println("Typecheck error in messagesend7");
         typechecks = false;
         return;
     }
       n.f5.accept(this);
+      msgsendcaller = "";
+      msgsendstruct = null;
       expr_type = rettype;
    }
 
@@ -873,17 +1024,56 @@ public class DFTypeCheckVisitor implements Visitor {
    public void visit(Identifier n) {
       n.f0.accept(this);
       Struct id = null;
-      for(String i: symbol_table.keySet()) {
-          for(String j: symbol_table.get(i).keySet()) {
-              if(n.f0.toString() == symbol_table.get(i).get(j).getName()) {
-                  id = symbol_table.get(i).get(j);
-              }
+   //  System.out.println("in identifier \""+ current_class + "\" \"" + current_function + "\" \"" + n.f0.toString() +"\"");
+    for(String i: symbol_table.keySet()) {
+      for(String j: symbol_table.get(i).keySet()) {
+          if(n.f0.toString() == symbol_table.get(i).get(j).getName()) {
+              id = symbol_table.get(i).get(j);
           }
       }
+  }
+      if(current_function != null && current_function != "") {
+         String func_key = current_function + " " + current_class;
+         // System.out.println("funckey is " + func_key);
+         id = symbol_table.get(func_key).get(n.f0.toString()); //get current id from current function map
+         if(id == null && current_class != null && current_class != "") {
+            id = symbol_table.get(current_class).get(n.f0.toString()); //get current id from class map
+            if(id == null) {
+               Struct prnt = symbol_table.get("Global").get(current_class);
+               if(prnt != null && prnt.getParent() != "") {
+                  id = symbol_table.get(prnt.getParent()).get(n.f0.toString());
+                  if(id == null) {
+                     id = symbol_table.get("Global").get(n.f0.toString());
+                  }
+               }
+               else {
+                  for(String i: symbol_table.keySet()) {
+                     for(String j: symbol_table.get(i).keySet()) {
+                         if(n.f0.toString() == symbol_table.get(i).get(j).getName()) {
+                             id = symbol_table.get(i).get(j);
+                         }
+                     }
+                 }
+               }
+            }
+         }
+      }
+      if(id == null && msgsendcaller != "" && msgsendcaller != null) {
+         // System.out.println("Type error in identifier in stupid " + n.f0.toString() + " " + current_class + " " + msgsendcaller + " " + current_function);
+         if(msgsendstruct != null && msgsendstruct.getType() == "object") {
+            // System.out.println("stupid " + msgsendstruct.getName() + " " + msgsendstruct.get_className());
+            Struct prnt = symbol_table.get("Global").get(msgsendstruct.get_className());
+            if(prnt != null) {
+               id = symbol_table.get(prnt.getName()).get(n.f0.toString());
+               // System.out.println("stupid id is " + id.getName());
+            }
+         }
+      }
+
       if(id == null)
       {
           typechecks = false;
-          System.out.println("Type error in identifier " + n.f0.toString());
+         //  System.out.println("Type error in identifier2 " + n.f0.toString() + " " + current_class + " " + msgsendcaller + " " + current_function);
           return;
       }
       if(id.getType() == "function") {
@@ -919,7 +1109,7 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f3.accept(this);
       if(expr_type != "int") {
         typechecks = false;
-        System.out.println("Typecheck error in arrayallocationexpr");
+      //   System.out.println("Typecheck error in arrayallocationexpr");
         return;
      }
       n.f4.accept(this);
@@ -937,7 +1127,7 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f1.accept(this);
       if(expr_type != "class") {
           typechecks = false;
-          System.out.println("allocation expression error");
+         //  System.out.println("allocation expression error");
           return;
       }
       n.f2.accept(this);
@@ -957,7 +1147,7 @@ public class DFTypeCheckVisitor implements Visitor {
         }
       else {
         typechecks = false;
-        System.out.println("Type error in not expression");
+      //   System.out.println("Type error in not expression");
         return;
       }
    }
