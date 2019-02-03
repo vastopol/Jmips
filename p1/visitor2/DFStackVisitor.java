@@ -159,7 +159,8 @@ public class DFStackVisitor implements Visitor {
             context_stack.push("} main_end");
 
             struct_vec.add(struct_stack.peek());
-            struct_map.put("main",struct_stack.peek());
+            String func_key = "main " + tmp1;
+            struct_map.put(func_key,struct_stack.peek());
             struct_stack.pop();
 
         n.f16.accept(this);
@@ -329,6 +330,7 @@ public class DFStackVisitor implements Visitor {
             context_stack.push("{ method_start");
 
             FuncStruct struct1 = new FuncStruct(tmp1, tmp2, new Vector<Struct>() );
+            String func_key = tmp1 + " " +  cur_class;
             struct_stack.peek().put(tmp1,struct1);                             // add this method to class
             Map<String,Struct> method_map = new HashMap<String,Struct>();    // map for this method
             struct_stack.push(method_map);                                   // push method map onto stack
@@ -344,9 +346,9 @@ public class DFStackVisitor implements Visitor {
         n.f11.accept(this);
         n.f12.accept(this);
             context_stack.push("} method_end");
-
             struct_vec.add(struct_stack.peek());
-            struct_map.put(tmp1,struct_stack.peek());
+            struct_map.put(func_key,struct_stack.peek());
+
             struct_stack.pop();
         cur_function = "";
    }
@@ -372,7 +374,7 @@ public class DFStackVisitor implements Visitor {
             String tmp1 = context_stack.pop();
             String tmp2 = context_stack.pop();
             context_stack.push(tmp2+" "+tmp1);
-
+            System.out.println("formal param in stack visitor " + tmp2 + " " + tmp1 + " " + cur_function);
             if(tmp2 == "int")
             {
                 IntStruct struct1 = new IntStruct(tmp1, new Integer(0) );
@@ -392,6 +394,7 @@ public class DFStackVisitor implements Visitor {
             {
                 ObjStruct struct1 = new ObjStruct(tmp1, tmp2);
                 struct_stack.peek().put(tmp1, struct1);
+                // System.out.println(struct1.get_className() + " " + struct1.getName());
             }
 
    }

@@ -320,6 +320,16 @@ public class DFStackVisitor2 implements Visitor {
                 BoolStruct struct1 = new BoolStruct(tmp2, new Boolean(false));
                 cur_struct.getParams().add(struct1);
             }
+            else
+            {
+                ObjStruct struct1 = new ObjStruct(tmp2, tmp1);
+                for(Struct i: cur_struct.getParams()) {
+                     if(i.getName() == tmp2) {
+                          return;
+                     }
+                }
+                cur_struct.getParams().add(struct1);
+            }
             /*else
             {
                 System.out.println("ERROR");
