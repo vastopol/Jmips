@@ -535,6 +535,10 @@ public class DFTypeCheckVisitor implements Visitor {
                 return;
               }
           }
+         else {
+            typechecks = false;
+            return;
+         }
       }
    }
 
