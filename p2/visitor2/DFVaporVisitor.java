@@ -3,9 +3,7 @@
 //
 
 package visitor2;
-
 import visitor.Visitor;
-
 import syntaxtree.*;
 import java.util.*;
 import struct.*;
@@ -15,20 +13,20 @@ import toolbox.*;
  * Provides default methods which visit each node in the tree in depth-first
  * order.  Your visitors may extend this class.
  */
-public class DFTypeCheckVisitor implements Visitor {
-   //
-   // Auto class visitors--probably don't need to be overridden.
-   //
-   Map<String,Map<String,Struct>> symbol_table;
+public class DFVaporVisitor implements Visitor {
+
+   Map<String,Map<String,Struct>> symbol_table; // from DFStackVisitor2
    String current_class;
    String current_function;
-   String expr_type;
-   public boolean typechecks = true;
 
-   public DFTypeCheckVisitor(Map<String, Map<String,Struct>> m) {
+   public DFVaporVisitor(Map<String, Map<String,Struct>> m)
+   {
       symbol_table = m;
    }
 
+   //
+   // Auto class visitors--probably don't need to be overridden.
+   //
    public void visit(NodeList n) {
       for ( Enumeration<Node> e = n.elements(); e.hasMoreElements(); )
          e.nextElement().accept(this);
@@ -62,15 +60,6 @@ public class DFTypeCheckVisitor implements Visitor {
     * f2 -> <EOF>
     */
    public void visit(Goal n) {
-      Vector<String> cnames = new Vector<String>();
-      Map<String, Struct> globaltable = symbol_table.get("Global");
-      for(String i: globaltable.keySet()) {
-         cnames.add(i);
-      }
-      if(!helper.distinct(cnames)) {
-         typechecks = false;
-         return;
-      }
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
@@ -97,26 +86,13 @@ public class DFTypeCheckVisitor implements Visitor {
     * f17 -> "}"
     */
    public void visit(MainClass n) {
-
-      Vector<String> inames = new Vector<String>();
-      Map<String, Struct> maintable = symbol_table.get("main");
-      for(String i: maintable.keySet()) {
-         inames.add(i);
-      }
-      if(!helper.distinct(inames)) {
-         typechecks = false;
-         return;
-      }
-
       n.f0.accept(this);
       n.f1.accept(this);
-      current_class = n.f1.toString();
       n.f2.accept(this);
       n.f3.accept(this);
       n.f4.accept(this);
       n.f5.accept(this);
       n.f6.accept(this);
-      current_function = n.f6.toString();
       n.f7.accept(this);
       n.f8.accept(this);
       n.f9.accept(this);
@@ -128,8 +104,6 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f15.accept(this);
       n.f16.accept(this);
       n.f17.accept(this);
-      current_function = "";
-      current_class = "";
    }
 
    /**
@@ -137,7 +111,6 @@ public class DFTypeCheckVisitor implements Visitor {
     *       | ClassExtendsDeclaration()
     */
    public void visit(TypeDeclaration n) {
-
       n.f0.accept(this);
    }
 
@@ -152,30 +125,10 @@ public class DFTypeCheckVisitor implements Visitor {
    public void visit(ClassDeclaration n) {
       n.f0.accept(this);
       n.f1.accept(this);
-      current_class = n.f1.toString();
-      Struct currClass = symbol_table.get("Global").get(n.f1.toString());
-      System.out.println(currClass.getName());
-      Vector<Struct> fstr = helper.fields(currClass, symbol_table);
-      Vector<Struct> mstr = currClass.getMethods();
-      Vector<String> fnames = new Vector<String>();
-      Vector<String> mnames = new Vector<String>();
-      for(Struct i: fstr) {
-         fnames.add(i.getName());
-      }
-
-      for(Struct i: mstr) {
-         mnames.add(i.getName());
-      }
-
-      if(!helper.distinct(fnames) || !helper.distinct(mnames)) {
-         typechecks = false;
-         return;
-      }
       n.f2.accept(this);
       n.f3.accept(this);
       n.f4.accept(this);
       n.f5.accept(this);
-      current_class = "";
    }
 
    /**
@@ -191,36 +144,12 @@ public class DFTypeCheckVisitor implements Visitor {
    public void visit(ClassExtendsDeclaration n) {
       n.f0.accept(this);
       n.f1.accept(this);
-      current_class = n.f1.toString();
       n.f2.accept(this);
       n.f3.accept(this);
       n.f4.accept(this);
-      Struct currClass = symbol_table.get("Global").get(n.f1.toString());
-      Struct extClass = symbol_table.get("Global").get(n.f3.toString());
-      Vector<Struct> fstr = helper.fields(currClass, symbol_table);
-      Vector<Struct> mstr = currClass.getMethods();
-      Vector<String> fnames = new Vector<String>();
-      Vector<String> mnames = new Vector<String>();
-      for(Struct i: fstr) {
-         fnames.add(i.getName());
-      }
-
-      boolean overld = false;
-      for(Struct i: mstr) {
-         mnames.add(i.getName());
-         overld = helper.noOverloading(currClass, extClass, i);
-      }
-      boolean dfnames = helper.distinct(fnames);
-      boolean dmnames = helper.distinct(mnames);
-
-      if(!dfnames || !dmnames || overld) {
-         typechecks = false;
-         return;
-      }
       n.f5.accept(this);
       n.f6.accept(this);
       n.f7.accept(this);
-      current_class = "";
    }
 
    /**
@@ -253,39 +182,16 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
-      current_function = n.f2.toString();
       n.f3.accept(this);
       n.f4.accept(this);
-      Struct method_struct = symbol_table.get(current_class).get(current_function);
-      Vector<String> pnames = new Vector<String>();
-
-      for(Struct i: method_struct.getParams()) {
-         pnames.add(i.getName());
-      }
-
-      if(!helper.distinct(pnames)) {
-         typechecks = false;
-         return;
-      }
-
       n.f5.accept(this);
       n.f6.accept(this);
       n.f7.accept(this);
-      Map<String, Struct> method_table = symbol_table.get(current_function);
-      Vector<String> inames = new Vector<String>();
-      for(String i: method_table.keySet()) {
-         inames.add(method_table.get(i).getName());
-      }
-      if(!helper.distinct(inames)) {
-         typechecks = false;
-         return;
-      }
       n.f8.accept(this);
       n.f9.accept(this);
       n.f10.accept(this);
       n.f11.accept(this);
       n.f12.accept(this);
-      current_function = "";
    }
 
    /**
@@ -304,7 +210,6 @@ public class DFTypeCheckVisitor implements Visitor {
    public void visit(FormalParameter n) {
       n.f0.accept(this);
       n.f1.accept(this);
-      expr_type = n.f0.toString();
    }
 
    /**
@@ -335,7 +240,6 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
-      expr_type = "int[]";
    }
 
    /**
@@ -343,7 +247,6 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(BooleanType n) {
       n.f0.accept(this);
-      expr_type = "boolean";
    }
 
    /**
@@ -351,7 +254,6 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(IntegerType n) {
       n.f0.accept(this);
-      expr_type = "int";
    }
 
    /**
@@ -385,33 +287,9 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(AssignmentStatement n) {
       n.f0.accept(this);
-      String istype = "";
-      if(current_function != "") {
-         Struct idarray = symbol_table.get("Global").get(current_function);
-         if(idarray != null) {
-            Vector<String> fnames = new Vector<String>();
-            for(Struct i: helper.fields(idarray, symbol_table)) {
-               if(i.getName() == n.f0.toString()) {
-                  istype = i.getType();
-               }
-            }
-
-         }
-      }
-      else {
-         typechecks = false;
-         return;
-      }
       n.f1.accept(this);
       n.f2.accept(this);
-      String t2 = expr_type;
       n.f3.accept(this);
-      if(t2 != istype) {
-         typechecks = false;
-         return;
-      }
-
-      expr_type = istype;
    }
 
    /**
@@ -425,36 +303,11 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(ArrayAssignmentStatement n) {
       n.f0.accept(this);
-      boolean isarray = false;
-      if(current_function != "") {
-         Struct idarray = symbol_table.get("Global").get(current_function);
-         if(idarray != null) {
-            Vector<String> fnames = new Vector<String>();
-            for(Struct i: helper.fields(idarray, symbol_table)) {
-               if(i.getName() == n.f0.toString() && i.getType() == "int[]") {
-                  isarray = true;
-               }
-            }
-
-         }
-      }
-      else {
-         typechecks = false;
-         return;
-      }
       n.f1.accept(this);
       n.f2.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
       n.f3.accept(this);
       n.f4.accept(this);
       n.f5.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
       n.f6.accept(this);
    }
 
@@ -471,10 +324,6 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
-      if(expr_type != "boolean") {
-         typechecks = false;
-         return;
-      }
       n.f3.accept(this);
       n.f4.accept(this);
       n.f5.accept(this);
@@ -492,10 +341,6 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
-      if(expr_type != "boolean") {
-         typechecks = false;
-         return;
-      }
       n.f3.accept(this);
       n.f4.accept(this);
    }
@@ -511,10 +356,6 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
       n.f3.accept(this);
       n.f4.accept(this);
    }
@@ -541,18 +382,8 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(AndExpression n) {
       n.f0.accept(this);
-      if(expr_type != "boolean") {
-         typechecks = false;
-         return;
-      }
       n.f1.accept(this);
       n.f2.accept(this);
-      if(expr_type != "boolean") {
-         typechecks = false;
-         return;
-      }
-
-      expr_type = "boolean";
    }
 
    /**
@@ -562,18 +393,8 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(CompareExpression n) {
       n.f0.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
       n.f1.accept(this);
       n.f2.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
-
-      expr_type = "boolean";
    }
 
    /**
@@ -583,18 +404,8 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(PlusExpression n) {
       n.f0.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
       n.f1.accept(this);
       n.f2.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
-
-      expr_type = "int";
    }
 
    /**
@@ -604,18 +415,8 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(MinusExpression n) {
       n.f0.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
       n.f1.accept(this);
       n.f2.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
-
-      expr_type = "int";
    }
 
    /**
@@ -625,17 +426,8 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(TimesExpression n) {
       n.f0.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
       n.f1.accept(this);
       n.f2.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
-      expr_type = "int";
    }
 
    /**
@@ -646,18 +438,9 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(ArrayLookup n) {
       n.f0.accept(this);
-      if(expr_type != "int[]") {
-         typechecks = false;
-         return;
-      }
       n.f1.accept(this);
       n.f2.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-         return;
-      }
       n.f3.accept(this);
-      expr_type = "int";
    }
 
    /**
@@ -667,13 +450,8 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(ArrayLength n) {
       n.f0.accept(this);
-      if(expr_type != "int[]") {
-         typechecks = false;
-         return;
-      }
       n.f1.accept(this);
       n.f2.accept(this);
-      expr_type = "int";
    }
 
    /**
@@ -686,47 +464,11 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(MessageSend n) {
       n.f0.accept(this);
-      if(expr_type != "class") {
-         typechecks = false;
-         return;
-      }
-      Struct curr = symbol_table.get("Global").get(current_class);
       n.f1.accept(this);
       n.f2.accept(this);
       n.f3.accept(this);
       n.f4.accept(this);
       n.f5.accept(this);
-      String funcname = n.f2.toString();
-      boolean methinclass = false;
-      for(Struct i: curr.getMethods()) {
-         if(i.getName() == funcname) {
-            methinclass = true;
-         }
-      }
-      Struct currp;
-      if(methinclass == false && curr.getParent() != "") {
-         currp = symbol_table.get("Global").get(curr.getParent());
-         Struct meth = null;
-         for(Struct i: currp.getMethods()) {
-            if(i.getName() == funcname) {
-               methinclass = true;
-               meth = i;
-            }
-         }
-         if(meth != null) {
-            expr_type = meth.get_returnType();
-         }
-         else {
-            typechecks = false;
-            return;
-         }
-      } 
-      else {
-         typechecks = false;
-         return;
-      }
-
-
    }
 
    /**
@@ -767,7 +509,6 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(IntegerLiteral n) {
       n.f0.accept(this);
-      expr_type = "int";
    }
 
    /**
@@ -775,7 +516,6 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(TrueLiteral n) {
       n.f0.accept(this);
-      expr_type = "boolean";
    }
 
    /**
@@ -783,7 +523,6 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(FalseLiteral n) {
       n.f0.accept(this);
-      expr_type = "boolean";
    }
 
    /**
@@ -798,7 +537,6 @@ public class DFTypeCheckVisitor implements Visitor {
     */
    public void visit(ThisExpression n) {
       n.f0.accept(this);
-      expr_type = "class";
    }
 
    /**
@@ -813,11 +551,7 @@ public class DFTypeCheckVisitor implements Visitor {
       n.f1.accept(this);
       n.f2.accept(this);
       n.f3.accept(this);
-      if(expr_type != "int") {
-         typechecks = false;
-      }
       n.f4.accept(this);
-      expr_type = "int[]";
    }
 
    /**
@@ -829,22 +563,8 @@ public class DFTypeCheckVisitor implements Visitor {
    public void visit(AllocationExpression n) {
       n.f0.accept(this);
       n.f1.accept(this);
-      Struct id = symbol_table.get("Global").get(n.f1.toString());
-      if(id != null) {
-         if(id.getType() != "class") {
-            typechecks = false;
-            System.out.println("Type error in allocation expression1");
-            return;
-         }
-      }
-      else {
-         typechecks = false;
-         System.out.println("Type error in allocation expression2");
-         return;
-      }
       n.f2.accept(this);
       n.f3.accept(this);
-      expr_type = "class";
    }
 
    /**
@@ -854,13 +574,6 @@ public class DFTypeCheckVisitor implements Visitor {
    public void visit(NotExpression n) {
       n.f0.accept(this);
       n.f1.accept(this);
-      if(expr_type == "boolean") {
-         expr_type = "boolean";
-      }
-      else {
-         typechecks = false;
-         return;
-      }
    }
 
    /**

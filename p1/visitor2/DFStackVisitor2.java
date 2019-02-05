@@ -215,7 +215,10 @@ public class DFStackVisitor2 implements Visitor {
    {
         n.f0.accept(this);
         n.f1.accept(this);
-            String tmp1 = context_stack.peek(); // name of this class
+
+            cur_class = context_stack.peek(); // class name
+            cur_map = struct_map.get(cur_class); // this classes map
+
         n.f2.accept(this);
         n.f3.accept(this);
             String tmp2 = context_stack.peek(); // name of the class it extends
@@ -223,6 +226,12 @@ public class DFStackVisitor2 implements Visitor {
         n.f5.accept(this);
         n.f6.accept(this);
         n.f7.accept(this);
+
+        // replace(K key, V value) -> overwrite old entry with new one that has filled in data
+        struct_map.replace(cur_class,cur_map);
+
+        cur_class = "";
+
    }
 
    /**
