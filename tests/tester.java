@@ -61,17 +61,25 @@ class CCCC_Class
     }
 }
 
+// class CCCC_Class
+// {
+//     int x;
+// }
 
-// class CCCC_Class extends BBBB_Class
 class DDDD_Class extends CCCC_Class
 {
-    // int n;
     int n;
+    // int n; // double declare
 
     public boolean funk(boolean tf)
     {
         return tf;
     }
+
+    // public boolean funk(boolean tf) // double declare
+    // {
+    //     return tf;
+    // }
 
     public int foo(int s)
     {

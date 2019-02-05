@@ -348,6 +348,12 @@ public class DFStackVisitor implements Visitor {
             context_stack.push(tmp3+" "+tmp2+" "+tmp1);
             context_stack.push("{ method_start");
 
+            if( struct_stack.peek().get(tmp1) != null ) // double declare
+            {
+                checkers = false;
+                return;
+            }
+
             FuncStruct struct1 = new FuncStruct(tmp1, tmp2, new Vector<Struct>() );
             String func_key = tmp1 + " " +  cur_class;
             struct_stack.peek().put(tmp1,struct1);                             // add this method to class
