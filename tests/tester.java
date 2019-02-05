@@ -49,29 +49,37 @@ class BBBB_Class
 
 }
 
-class CCCC_Class 
+class CCCC_Class
 {
-
-    int n;
-
-    public int foo(int s) 
+    public int foo(int s)
     {
         BBBB_Class bvar;
         bvar = new BBBB_Class();
         System.out.println(bvar.retY());
-        
+
         return s;
     }
-
 }
 
-class DDDD_Class extends BBBB_Class
+
+// class CCCC_Class extends BBBB_Class
+class DDDD_Class extends CCCC_Class
 {
-    int n;
+    // int n;
     int n;
 
     public boolean funk(boolean tf)
     {
         return tf;
     }
+
+    public int foo(int s)
+    {
+        BBBB_Class bvar;
+        bvar = new BBBB_Class();
+        System.out.println(bvar.retY());
+
+        return s+1;
+    }
+
 }

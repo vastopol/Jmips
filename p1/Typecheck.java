@@ -51,6 +51,12 @@ public class Typecheck
         DFStackVisitor df_stack_visitor1 = new DFStackVisitor();
         goal.accept(df_stack_visitor1);
 
+        if(!df_stack_visitor1.checkers)
+        {
+            System.out.println("Type error");
+            System.exit(1);
+        }
+
         // HERE GET SYMBOL TABLE #1
         symbol_table1 = df_stack_visitor1.struct_map;
         // System.out.println("SYMBOL TABLE #1");
