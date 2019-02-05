@@ -48,12 +48,14 @@ function do_p()
         1)
             p_init1  p1 Typecheck.java
             p_check1 p1 Typecheck $TJAVA $TEST1
+            # p_log
             p_clean1 p1
             p_test1
             ;;
         2)
             p_init1  p2 J2V.java
             p_check1 p2 J2V $TJAVA $TEST2
+            # p_log
             p_clean1 p2
             # p_test2
             ;;
@@ -140,6 +142,17 @@ function p_check1()
     done
 
     cd ..
+}
+
+# print the log files
+function p_log()
+{
+    echo "Printing Logs"; echo
+    echo "custom_logfile.txt"; echo
+    cat custom_logfile.txt; echo
+    echo "manual_logfile.txt"
+    cat manual_logfile.txt
+    echo
 }
 
 # REMOVE CLASS FILES

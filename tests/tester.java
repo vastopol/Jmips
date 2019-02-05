@@ -18,9 +18,13 @@ class BBBB_Class
         int[] b;
         boolean c;
         if (num < 1)
+        {
             a = 1;
+        }
         else
+        {
             a = num * (this.MAGIC_Func(num-1));
+        }
         //a = b[c]; we can catch type errors for array lookups
         // a = b[1]; works
         // a = b[a]; works
@@ -43,4 +47,15 @@ class CCCC_Class extends BBBB_Class
 {
     int n;
 
+}
+
+class DDDD_Class extends BBBB_Class
+{
+    int n;
+    int n;
+
+    public boolean funk(boolean tf)
+    {
+        return tf;
+    }
 }
