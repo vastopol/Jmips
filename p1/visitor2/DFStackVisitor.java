@@ -19,7 +19,8 @@ import struct.*;
  */
 public class DFStackVisitor implements Visitor {
 
-    // data members
+    // data
+    public boolean checkers = true;
     public Stack<String> context_stack;               // contains the stack the stack trace
     public Stack<Map<String,Struct>> struct_stack;       // used to construct the maps, on enter context push new map to stack, on exit contex pop top map to vector
     public Vector<Map<String,Struct>> struct_vec;        // vector of unlabeled symbol tables appended in order cfeated from pops on stack
@@ -201,6 +202,12 @@ public class DFStackVisitor implements Visitor {
             context_stack.push(tmp2+" "+tmp1);
             cur_class = tmp1;
 
+            if( struct_stack.peek().get(tmp1) != null ) // double declare
+            {
+                checkers = false;
+                return;
+            }
+
             ClassStruct struct1 = new ClassStruct(tmp1, new Vector<Struct>(), new Vector<Struct>() );
             struct_stack.peek().put(tmp1,struct1);                             // add this class to global map
             Map<String,Struct> class_map = new HashMap<String,Struct>(); // map for this class
@@ -244,6 +251,12 @@ public class DFStackVisitor implements Visitor {
             context_stack.push(tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
             cur_class = tmp3;
 
+            if( struct_stack.peek().get(tmp3) != null ) // double declare
+            {
+                checkers = false;
+                return;
+            }
+
             ClassStruct struct1 = new ClassStruct(tmp3, new Vector<Struct>(), new Vector<Struct>() );
             struct1.setParent(tmp1);
             // System.out.println("Inside dfsv1 extends " + tmp4+" "+tmp3+" "+tmp2+" "+tmp1);
@@ -276,6 +289,12 @@ public class DFStackVisitor implements Visitor {
             String tmp1 = context_stack.pop();
             String tmp2 = context_stack.pop();
             context_stack.push(tmp2+" "+tmp1);
+
+            if( struct_stack.peek().get(tmp1) != null ) // double declare
+            {
+                checkers = false;
+                return;
+            }
 
             if(tmp2 == "int")
             {
@@ -328,6 +347,12 @@ public class DFStackVisitor implements Visitor {
             cur_function = tmp1;
             context_stack.push(tmp3+" "+tmp2+" "+tmp1);
             context_stack.push("{ method_start");
+
+            if( struct_stack.peek().get(tmp1) != null ) // double declare
+            {
+                checkers = false;
+                return;
+            }
 
             FuncStruct struct1 = new FuncStruct(tmp1, tmp2, new Vector<Struct>() );
             String func_key = tmp1 + " " +  cur_class;

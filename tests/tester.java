@@ -62,7 +62,6 @@ class CCCC_Class extends BBBB_Class
         
         return 2;
     }
-
 }
 
 class DDDD_Class extends CCCC_Class
