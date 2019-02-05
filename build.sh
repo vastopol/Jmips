@@ -36,8 +36,8 @@ TEST2="../tests/Phase2Tester/SelfTestCases/*.java"
 # each phase has a specific test harness procedure, test harnesses are commented out as needed
 function main()
 {
-    # do_p 1
-    do_p 2
+    do_p 1
+    # do_p 2
     p_wipe
 }
 
@@ -124,7 +124,7 @@ function p_check1()
 
     echo "2. Checking "$3; echo
     echo "See custom_logfile.txt for trace"; echo
-    java $2 < $3 > $LOG1
+    java $2 < $3 &> $LOG1
 
     echo "3. Manually testing all the Test cases"; echo
     echo "See manual_logfile.txt for trace"; echo
@@ -132,11 +132,11 @@ function p_check1()
     echo "" > $LOG2
     for FILE in $4 ;
     do
-        echo "CHECKING: "$FILE >> $LOG2
-        if ! java $2 < $FILE >> $LOG2; then
+        echo "CHECKING: "$FILE &>> $LOG2
+        if ! java $2 < $FILE &>> $LOG2; then
             continue
         fi
-        echo "" >> $LOG2
+        echo "" &>> $LOG2
     done
 
     cd ..
