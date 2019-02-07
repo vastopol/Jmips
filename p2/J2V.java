@@ -56,7 +56,8 @@ public class J2V
         // System.out.println("SYMBOL TABLE #2");
         // print_map_structs(symbol_table2);
 
-        DFVaporVisitor df_vapor_visitor= new DFVaporVisitor(symbol_table2);
+        // HERE EMIT VAPOR IR CODE
+        DFTypeVaporVisitor df_vapor_visitor = new DFVaporVisitor(symbol_table2);
         goal.accept(df_vapor_visitor);
 
         /* ---------- END VISITS ---------- */

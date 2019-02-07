@@ -36,9 +36,17 @@ public class helper{
         }
         if(c.getParent() != "") {
             Struct cp = m.get("Global").get(c.getParent());
-            for(Struct i: cp.getFields()) {
+            if(tools.loop_exist(c, m)){
+                return f;
+            }
+            // for(Struct i: cp.getFields()) {
+            //     f.add(i);
+            // }
+            Vector<Struct> parent_fields = fields(cp, m);
+            for(Struct i: parent_fields) {
                 f.add(i);
             }
+
         }
         return f;
     }
@@ -56,15 +64,32 @@ public class helper{
         return tuple;
     }
 
-    public static boolean noOverloading(Struct id, Struct idp, Struct idM) {
-        boolean overloading = false;
-        for(Struct i: id.getMethods()) {
-            for(Struct j: idp.getMethods()) {
+    public static boolean noOverloading(Struct id, Struct idp, Struct idM, Map<String, Map<String, Struct>> m) {
+        boolean overloading = true;
+        // System.out.println("sup1");
+        Vector<Struct> foo = new Vector<Struct>();
+        Vector<Struct> p = tools.methods(id, m, foo);
+        for(Struct i: p) {
+            // System.out.println("sup2");
+            foo = new Vector<Struct>();
+            Vector<Struct> q = tools.methods(idp, m, foo);
+            for(Struct j: q) {
+                // System.out.println("sup3");
                 Vector<Vector<String>> idn = methodtype(id, i);
                 Vector<Vector<String>> idpn = methodtype(idp, j);
-                if(idn.equals(idpn)) {
-                    overloading = true;
-                    break;
+                // System.out.println("sup4");
+                // if(idn.equals(idpn)) {
+                //     overloading = true;
+                //     // System.out.println("sup5");
+                //     break;
+                // }
+                if(i.getName() == idM.getName()) {
+                    if(j.getName() == idM.getName()) {
+                        if(!idn.equals(idpn)) {
+                            overloading = false;
+                            break;
+                        }
+                    }
                 }
             }
         }

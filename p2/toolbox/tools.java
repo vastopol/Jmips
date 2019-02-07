@@ -53,4 +53,51 @@ public class tools {
                 break;
         }
     }
+
+    public static Vector<Struct> methods(Struct c, Map<String,Map<String,Struct>> m , Vector<Struct> f) {
+        if(c.getType() != "class") {
+            System.out.println("XXXXXXXXXXXXXXXXXXXX");
+        }
+        for(Struct i: c.getMethods()) {
+            f.add(i);
+        }
+        if(c.getParent() != "") {
+            Struct cp = m.get("Global").get(c.getParent());
+            // for(Struct i: cp.getFields()) {
+            //     f.add(i);
+            // }
+            if(loop_exist(c, m)){
+                return f;
+            }
+            return methods(cp, m, f);
+            // for(Struct i: parent_methods) {
+            //     f.add(i);
+            // }
+
+        }
+        return f;
+    }
+
+    public static boolean loop_exist(Struct c, Map<String, Map<String, Struct>> m) {
+        Vector<String> seen = new Vector<String>();
+        boolean retval = false;
+        while(c.getParent() != "")
+        {
+            if(seen.contains(c.getName())) {
+                retval = true;
+                break;
+            }
+            else {
+                seen.add(c.getName());
+                c = m.get("Global").get(c.getParent());
+            }
+        }
+
+        return retval;
+
+    }
+
+    // public static Struct final_parent(Struct p, Map<String, Map<String, Struct>> m) {
+
+    // }
 }
