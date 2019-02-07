@@ -36,8 +36,8 @@ TEST2="../tests/Phase2Tester/SelfTestCases/*.java"
 # each phase has a specific test harness procedure, test harnesses are commented out as needed
 function main()
 {
-    do_p 1
-    # do_p 2
+    # do_p 1
+    do_p 2
     p_wipe
 }
 
