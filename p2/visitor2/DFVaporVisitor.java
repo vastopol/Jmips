@@ -60,8 +60,9 @@ public class DFVaporVisitor implements Visitor {
     * f2 -> <EOF>
     */
    public void visit(Goal n) {
-      n.f0.accept(this);
-      n.f1.accept(this);
+      // here do the vtables for the other classes before the main class
+      n.f0.accept(this); // goto main there do the main function
+      n.f1.accept(this); // goto the classes and do their records
       n.f2.accept(this);
    }
 
@@ -85,7 +86,7 @@ public class DFVaporVisitor implements Visitor {
     * f16 -> "}"
     * f17 -> "}"
     */
-   public void visit(MainClass n) {
+   public void visit(MainClass n) { // special case for the main method, dont need to do a vtable or a record. just output function only
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
