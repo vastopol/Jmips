@@ -329,6 +329,24 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
+
+        String tmpexp = var_stk.pop();
+
+        String tmpid = var_name + Integer.toString(var_cnt);
+        var_cnt++;
+
+        var_stk.push(tmpid);
+
+        String assign = tmpid + " = " + tmpexp + "\n";
+
+        String printdent = "";
+        for(int i = 0; i < indent_cnt; i++)
+        {
+            printdent += indent;
+        }
+
+        str_buf.append(printdent + assign);
+
         n.f3.accept(this);
     }
 
@@ -455,8 +473,30 @@ public class DFVaporVisitor implements Visitor
     public void visit(CompareExpression n)
     {
         n.f0.accept(this);
+
+            // get last tmp
+            String val1 = var_stk.pop();
+
         n.f1.accept(this);
         n.f2.accept(this);
+
+            // get last tmp
+            String val2 = var_stk.pop();
+
+            String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
+            var_cnt++; // increment variable number
+
+            var_stk.push(tmpres); // push tmp on stack
+
+            String result = tmpres + " = LtS(" + val1 + " " + val2 + ")\n";
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            str_buf.append(printdent + result);
     }
 
     /**
@@ -468,21 +508,21 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
 
-            // get last tmp left side
-            String lval = var_stk.pop();
+            // get last tmp
+            String val1 = var_stk.pop();
 
         n.f1.accept(this);
         n.f2.accept(this);
 
-            // get last tmp right side
-            String rval = var_stk.pop();
+            // get last tmp
+            String val2 = var_stk.pop();
 
             String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
             var_cnt++; // increment variable number
 
             var_stk.push(tmpres); // push tmp on stack
 
-            String result = tmpres + " = Add(" + lval + " " + rval + ")\n";
+            String result = tmpres + " = Add(" + val1 + " " + val2 + ")\n";
 
             String printdent = "";
             for(int i = 0; i < indent_cnt; i++)
@@ -501,8 +541,30 @@ public class DFVaporVisitor implements Visitor
     public void visit(MinusExpression n)
     {
         n.f0.accept(this);
+
+            // get last tmp
+            String val1 = var_stk.pop();
+
         n.f1.accept(this);
         n.f2.accept(this);
+
+            // get last tmp
+            String val2 = var_stk.pop();
+
+            String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
+            var_cnt++; // increment variable number
+
+            var_stk.push(tmpres); // push tmp on stack
+
+            String result = tmpres + " = Sub(" + val1 + " " + val2 + ")\n";
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            str_buf.append(printdent + result);
     }
 
     /**
@@ -513,8 +575,30 @@ public class DFVaporVisitor implements Visitor
     public void visit(TimesExpression n)
     {
         n.f0.accept(this);
+
+            // get last tmp
+            String val1 = var_stk.pop();
+
         n.f1.accept(this);
         n.f2.accept(this);
+
+            // get last tmp
+            String val2 = var_stk.pop();
+
+            String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
+            var_cnt++; // increment variable number
+
+            var_stk.push(tmpres); // push tmp on stack
+
+            String result = tmpres + " = MulS(" + val1 + " " + val2 + ")\n";
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            str_buf.append(printdent + result);
     }
 
     /**
@@ -615,7 +699,6 @@ public class DFVaporVisitor implements Visitor
             }
 
             str_buf.append( printdent + tmpid + " = " + n.f0.toString() + "\n");
-
     }
 
     /**

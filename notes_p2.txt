@@ -1,32 +1,48 @@
-// class A
-// {
-//     public static void main(String[] args)
-//     {
-//         System.out.println(1 + 2);
-//     }
-// }
 
-// class A
-// {
-//     public static void main(String[] args)
-//     {
-//         int x;
-//         int y;
-//         x = 1;
-//         y = 2;
-//         System.out.println(x + y);
-//     }
-// }
+RUN THIS IN THE TERMINAL COPY PASTE
 
-// class A
-// {
-//     public static void main(String[] args)
-//     {
-//         int x;
-//         x = 1;
-//         while ( x < 100 )
-//         {
-//             x = x * 2;
-//         }
-//     }
-// }
+./build.sh && mv custom_logfile.txt custom_logfile.vapor && cat custom_logfile.vapor && echo "vapor test" && java -jar stuff/vapor.jar run custom_logfile.vapor
+
+
+// works for a number
+class A
+{
+    public static void main(String[] args) {
+        System.out.println(1);
+    }
+}
+
+// works for + - *
+class A
+{
+    public static void main(String[] args)
+    {
+        System.out.println(1 - 2);
+    }
+}
+
+// kind of works but opposite order for the variables ?
+class A
+{
+    public static void main(String[] args)
+    {
+        int x;
+        int y;
+        x = 1;
+        y = 2;
+        System.out.println(x - y);
+    }
+}
+
+class A
+{
+    public static void main(String[] args)
+    {
+        int x;
+        x = 1;
+        while ( x < 100 )
+        {
+            x = x * 2;
+        }
+    }
+}
