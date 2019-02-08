@@ -16,12 +16,14 @@ import toolbox.*;
 public class DFVaporVisitor implements Visitor {
 
    Map<String,Map<String,Struct>> symbol_table; // from DFStackVisitor2
+   StringBuffer str_buf;
    String current_class;
    String current_function;
 
    public DFVaporVisitor(Map<String, Map<String,Struct>> m)
    {
       symbol_table = m;
+      str_buf = new StringBuffer();
    }
 
    //
