@@ -473,15 +473,12 @@ public class DFVaporVisitor implements Visitor
     public void visit(CompareExpression n)
     {
         n.f0.accept(this);
-
-            // get last tmp
-            String val1 = var_stk.pop();
-
         n.f1.accept(this);
         n.f2.accept(this);
 
             // get last tmp
             String val2 = var_stk.pop();
+            String val1 = var_stk.pop();
 
             String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
             var_cnt++; // increment variable number
@@ -507,15 +504,12 @@ public class DFVaporVisitor implements Visitor
     public void visit(PlusExpression n)
     {
         n.f0.accept(this);
-
-            // get last tmp
-            String val1 = var_stk.pop();
-
         n.f1.accept(this);
         n.f2.accept(this);
 
             // get last tmp
             String val2 = var_stk.pop();
+            String val1 = var_stk.pop();
 
             String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
             var_cnt++; // increment variable number
@@ -541,15 +535,11 @@ public class DFVaporVisitor implements Visitor
     public void visit(MinusExpression n)
     {
         n.f0.accept(this);
-
-            // get last tmp
-            String val1 = var_stk.pop();
-
         n.f1.accept(this);
         n.f2.accept(this);
 
-            // get last tmp
             String val2 = var_stk.pop();
+            String val1 = var_stk.pop();
 
             String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
             var_cnt++; // increment variable number
@@ -575,15 +565,12 @@ public class DFVaporVisitor implements Visitor
     public void visit(TimesExpression n)
     {
         n.f0.accept(this);
-
-            // get last tmp
-            String val1 = var_stk.pop();
-
         n.f1.accept(this);
         n.f2.accept(this);
 
             // get last tmp
             String val2 = var_stk.pop();
+            String val1 = var_stk.pop();
 
             String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
             var_cnt++; // increment variable number
