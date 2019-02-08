@@ -20,17 +20,21 @@ public class DFVaporVisitor implements Visitor
     String current_class;
     String current_function;
     StringBuffer str_buf;    // write the intermediat code generation here
-    int label_cnt = 0;       // counter for distinct goto labels
-    int variable_cnt = 0;    // counter for distinct variables
+    int var_cnt = 0;    // counter for distinct variables
+    int lbl_cnt = 0;       // counter for distinct goto labels
     int indent_cnt = 0;      // count the indentation depth, increment on enter blocks, decrement on exit blocks
     String var_name = "tmp"; // tmp variable name string
     String lbl_name = "lbl"; // label name string
     String indent = "  ";    // 2 spaces for the indents
+    Stack<String> var_stk;  // stack to get last use
+    Stack<String> lbl_stk;  // stack to get last used label
 
     public DFVaporVisitor(Map<String, Map<String,Struct>> m)
     {
-      symbol_table = m;
-      str_buf = new StringBuffer();
+        symbol_table = m;
+        str_buf = new StringBuffer();
+        var_stk = new Stack<String>();
+        lbl_stk = new Stack<String>();
     }
 
     //
@@ -74,6 +78,7 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this); // goto main there do the main function
         n.f1.accept(this); // goto the classes and do their records
         n.f2.accept(this);
+
             System.out.println(str_buf.toString()); // print out the complete Vapor IR code
     }
 
@@ -107,8 +112,8 @@ public class DFVaporVisitor implements Visitor
         n.f5.accept(this);
         n.f6.accept(this);
 
-        str_buf.append("func Main()\n"); // declare the main function
-        indent_cnt++;   // increase indent on enter main
+            str_buf.append("func Main()\n"); // declare the main function
+            indent_cnt++;   // increase indent on enter main
 
         n.f7.accept(this);
         n.f8.accept(this);
@@ -122,8 +127,8 @@ public class DFVaporVisitor implements Visitor
         n.f16.accept(this);
         n.f17.accept(this);
 
-        str_buf.append(indent + "ret" + "\n" ); // void function return
-        indent_cnt--;   // decrease indent on leave main
+            str_buf.append(indent + "ret" + "\n" ); // void function return
+            indent_cnt--;   // decrease indent on leave main
     }
 
     /**
@@ -396,22 +401,22 @@ public class DFVaporVisitor implements Visitor
         n.f1.accept(this);
         n.f2.accept(this);
 
-        // grab the name of the last tmp variable
-        String lasttmp = "";
+            // grab the name of the last tmp variable
+            String lasttmp = var_stk.pop();
 
         n.f3.accept(this);
         n.f4.accept(this);
 
-        // write out the print statement with indents
-        String printints = "PrintIntS(" + lasttmp + ")\n";
-        String printdent = "";
+            // write out the print statement with indents
+            String printints = "PrintIntS(" + lasttmp + ")\n";
 
-        for(int i = 0; i < indent_cnt; i++)
-        {
-            printdent += indent;
-        }
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
 
-        str_buf.append( printdent + printints );
+            str_buf.append( printdent + printints );
     }
 
     /**
@@ -462,8 +467,30 @@ public class DFVaporVisitor implements Visitor
     public void visit(PlusExpression n)
     {
         n.f0.accept(this);
+
+            // get last tmp left side
+            String lval = var_stk.pop();
+
         n.f1.accept(this);
         n.f2.accept(this);
+
+            // get last tmp right side
+            String rval = var_stk.pop();
+
+            String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
+            var_cnt++; // increment variable number
+
+            var_stk.push(tmpres); // push tmp on stack
+
+            String result = tmpres + " = Add(" + lval + " " + rval + ")\n";
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            str_buf.append(printdent + result);
     }
 
     /**
@@ -576,6 +603,19 @@ public class DFVaporVisitor implements Visitor
     public void visit(IntegerLiteral n)
     {
         n.f0.accept(this);
+
+            String tmpid = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+            var_stk.push(tmpid); // put new tmp int var onto the stack
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            str_buf.append( printdent + tmpid + " = " + n.f0.toString() + "\n");
+
     }
 
     /**
@@ -600,6 +640,9 @@ public class DFVaporVisitor implements Visitor
     public void visit(Identifier n)
     {
         n.f0.accept(this);
+            // String tmpid = var_name + Integer.toString(var_cnt);
+            // var_cnt++;
+            // var_stk.push(tmpid);
     }
 
     /**
