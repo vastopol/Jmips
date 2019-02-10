@@ -22,33 +22,35 @@ class Easy
         int b;
         int c;
         int d;
+
         a = 1;
         b = 2;
         c = 2;
+        System.out.println(1);      //   1
+        System.out.println(a);      //   1
+        System.out.println(2 - 3);  //  -1
+        System.out.println(2 + 3);  //   5
+        System.out.println(2 * 3);  //   6
+        System.out.println(c - 5);  //  -3
+        System.out.println(c + 5);  //   7
+        System.out.println(c * 5);  //   10
+        System.out.println(5 - c);  //   3
+        System.out.println(5 + c);  //   7
+        System.out.println(5 * c);  //   10
+        System.out.println(a - b);  //  -1
+        System.out.println(a + b);  //   3
+        System.out.println(a * b);  //   2
+        System.out.println(c - b);  //   0
+        System.out.println(c + b);  //   4
+        System.out.println(c * b);  //   4
 
-        System.out.println(1);  // 1 correct
-        System.out.println(a);  // 1 correct
-        System.out.println(2 - 3); // -1 correct
-        System.out.println(2 + 3); // 5 correct
-        System.out.println(2 * 3); // 6 correct
-        System.out.println(c - 5); // -3 correct
-        System.out.println(c + 5); // 7 correct
-        System.out.println(c * 5); // 10 correct
-        System.out.println(5 - c); // 3 correct
-        System.out.println(5 + c); // 7 correct
-        System.out.println(5 * c); // 10 correct
-        System.out.println(a - b); // -1 correct
-        System.out.println(a + b); // 3 correct
-        System.out.println(a * b); // 2 correct
-        System.out.println(c - b); // 0 correct
-        System.out.println(c + b); // 4 correct
-        System.out.println(c * b); // 4 correct
         d = 6 + 5;
         d = d + 1;
-        System.out.println(d); // 12 correct
+        System.out.println(d);  //  12
+
         d = a + b;
         d = d + c;
-        System.out.println(d); // 5 correct
+        System.out.println(d);  //  5
     }
 }
 
@@ -60,12 +62,15 @@ class Medium
     {
         int low;
         int high;
-
         boolean a;
         boolean b;
 
         a = true;
         b = false;
+        low = 1;
+        high = 1024;
+
+        // IF BRANCHES
 
         // true
         if (a) { System.out.println(1); } else { System.out.println(0); } // 1
@@ -80,7 +85,7 @@ class Medium
         if (!b) { System.out.println(1); } else { System.out.println(0); } // 1
 
         // WHILE LOOPS
-        low = 1; high = 1024;
+
         while ( low < high ) { System.out.println(low); low = low * 2; System.out.println(low); }
     }
 }
@@ -92,41 +97,27 @@ class Hard
     public static void main(String[] args)
     {
         int a;
+
         a = 5;
-        System.put.println( new Aux.f_id( a ) );
-        System.put.println( new Aux.f_inc( a ) );
-        System.put.println( new Aux.f_dec( a ) );
-        System.put.println( new Aux.f_dub( a ) );
-        System.put.println( new Aux.f_sqr( a ) );
+        System.out.println( new Aux.f_idt( a ) );
+        System.out.println( new Aux.f_inc( a ) );
+        System.out.println( new Aux.f_dec( a ) );
+        System.out.println( new Aux.f_dub( a ) );
+        System.out.println( new Aux.f_sqr( a ) );
     }
 }
 
 class Aux
 {
-    int f_id(int b)
-    {
-        return b;
-    }
+    int f_idt (int b) { return b; }
 
-    int f_inc(int b)
-    {
-        return b+1;
-    }
+    int f_inc (int b) { return b+1; }
 
-    int f_dec(int b)
-    {
-        return b-1;
-    }
+    int f_dec (int b) { return b-1; }
 
-    int f_dub(int b)
-    {
-        return b*2;
-    }
+    int f_dub (int b) { return b*2; }
 
-    int f_sqr(int b)
-    {
-        return b*b;
-    }
+    int f_sqr (int b) { return b*b; }
 }
 
 ----------------------------------------

@@ -10,7 +10,6 @@ class Medium
 
         // true
         if (a) { System.out.println(1); } else { System.out.println(0); } // 1
-        
-    }
 
+    }
 }
