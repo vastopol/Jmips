@@ -79,7 +79,7 @@ function p_wipe()
 {
     echo "5. wiping out the extras"; echo
     rm -rf hw*
-    rm *logfile.txt
+    rm *logfile.*
     rm -rf tests/Phase1Tester/Output
     rm -rf tests/Phase2Tester/Output
     rm -rf tests/Phase3Tester/Output

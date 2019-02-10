@@ -691,17 +691,41 @@ public class DFVaporVisitor implements Visitor
     /**
     * f0 -> "true"
     */
-    public void visit(TrueLiteral n)
+    public void visit(TrueLiteral n) // true == 1
     {
         n.f0.accept(this);
+
+            String tmpid = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+            var_stk.push(tmpid); // put new tmp int var onto the stack
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            str_buf.append( printdent + tmpid + " = 1\n");
     }
 
     /**
     * f0 -> "false"
     */
-    public void visit(FalseLiteral n)
+    public void visit(FalseLiteral n) // false == 0
     {
         n.f0.accept(this);
+
+            String tmpid = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+            var_stk.push(tmpid); // put new tmp int var onto the stack
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            str_buf.append( printdent + tmpid + " = 0\n");
     }
 
     /**
