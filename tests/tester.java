@@ -2,47 +2,36 @@ class AAAA_Class
 {
     public static void main(String[] str_arg)
     {
-        System.out.println(new BBBB_Class().MAGIC_Func(10));
+        int a;
+        int b;
+        int c;
+        int d;
+        a = 1;
+        b = 2;
+        c = 2;
+        System.out.println(1);  // 1 correct
+        System.out.println(a);  // 1 correct
+        System.out.println(2 - 3); // -1 correct
+        System.out.println(2 + 3); // 5 correct
+        System.out.println(2 * 3); // 6 correct
+        System.out.println(c - 5); // -3 correct
+        System.out.println(c + 5); // 7 correct
+        System.out.println(c * 5); // 10 correct
+        System.out.println(5 - c); // 3 correct
+        System.out.println(5 + c); // 7 correct
+        System.out.println(5 * c); // 10 correct
+        System.out.println(a - b); // -1 correct
+        System.out.println(a + b); // 3 correct
+        System.out.println(a * b); // 2 correct
+        System.out.println(c - b); // 0 correct
+        System.out.println(c + b); // 4 correct
+        System.out.println(c * b); // 4 correct
+        d = 6 + 5;
+        d = d + 1;
+        System.out.println(d); // 12 correct
+        d = a + b;
+        d = d + c;
+        System.out.println(d); // 5 correct
     }
 }
 
-class A
-{
-    int x;
-
-    public int F(int a_num)
-    {
-        int a_num;
-        return num;
-    }
-
-}
-
-class B extends A
-{
-
-    public int G(int b_num) 
-    {
-        int b_num;
-
-        return num;
-    }
-}
-
-class C extends B
-{
-    public int G(int c_num) {
-        int c_num;
-        return num;
-    }
-
-
-}
-
-class D extends C {
-    int y;
-
-    public int F(int d_num) {
-        return num;
-    }
-}
