@@ -30,6 +30,7 @@ public class DFVaporVisitor implements Visitor
     String current_class;
     String current_function;
     String cur_name;
+    String old_name;
 
     public DFVaporVisitor(Map<String, Map<String,Struct>> m) // constructor takes in the symbol table from the DFStackVisitor2
     {
@@ -45,6 +46,16 @@ public class DFVaporVisitor implements Visitor
     {
         name_map_stk.peek().forEach( (k,v) -> System.out.println("( "+ k + " : " + v + " )") ); // dump map
         System.out.println("");
+    }
+
+    void ErrorPrinter(Exception e)
+    {
+        System.out.println("AN ERROR HAPPENED...");
+        e.printStackTrace();
+        System.out.println("\nTop Map Dump");
+        MapDump();
+        System.out.println("\nString Buffer Dump");
+        System.out.println(str_buf.toString());
     }
 
     //
@@ -84,12 +95,21 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(Goal n)
     {
-        // here do the vtables for the other classes before the main class
-        n.f0.accept(this); // goto main there do the main function
-        n.f1.accept(this); // goto the classes and do their records
-        n.f2.accept(this);
+        try
+        {
+            // here do the vtables for the other classes before the main class
+            n.f0.accept(this); // goto main there do the main function
+            n.f1.accept(this); // goto the classes and do their records
+            n.f2.accept(this);
 
-            System.out.println(str_buf.toString()); // print out the complete Vapor IR code
+                System.out.println(str_buf.toString()); // print out the complete Vapor IR code
+        }
+        catch(Exception e)
+        {
+            ErrorPrinter(e); // to print the crash information
+
+            // System.out.println(str_buf.toString() + "  ret\n"); // test run the broken code
+        }
     }
 
     /**
@@ -341,34 +361,46 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(AssignmentStatement n)
     {
+            if(cur_name != "")
+            {
+                old_name = cur_name; // get old name
+            }
+
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
 
-        String tmpexp = var_stk.pop();
+            String name;
+            String tmpexp = var_stk.pop();
+            String tmpid = var_name + Integer.toString(var_cnt);
+            var_cnt++;
 
-        String tmpid = var_name + Integer.toString(var_cnt);
-        var_cnt++;
+            if( old_name != ""  && cur_name == "" )
+            {
+                name = old_name;
+            }
+            else
+            {
+                name = cur_name;
+            }
 
-        String name = cur_name;
+            name_map_stk.peek().put(name,tmpid);
 
-        name_map_stk.peek().put(name,tmpid);
+            var_stk.push(tmpid);
 
-        var_stk.push(tmpid);
+            String assign = tmpid + " = " + tmpexp + "\n";
 
-        String assign = tmpid + " = " + tmpexp + "\n";
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
 
-        String printdent = "";
-        for(int i = 0; i < indent_cnt; i++)
-        {
-            printdent += indent;
-        }
+            str_buf.append(printdent + assign);
 
-        str_buf.append(printdent + assign);
+            cur_name = ""; // clear name
 
         n.f3.accept(this);
-
-        cur_name = ""; // clear name
     }
 
     /**
@@ -446,7 +478,6 @@ public class DFVaporVisitor implements Visitor
             {
                 // grab the name of the last tmp variable
                 tmp = var_stk.pop();
-
             }
             else
             {
@@ -466,6 +497,8 @@ public class DFVaporVisitor implements Visitor
             }
 
             str_buf.append( printdent + printints );
+
+            cur_name = "";
     }
 
     /**
@@ -503,13 +536,40 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(CompareExpression n)
     {
+        // get tmp
+        String val2;
+        String val1;
+        String name;
+
         n.f0.accept(this);
+
+            name = cur_name;
+            if( name_map_stk.peek().get(name) == null )
+            {
+                // grab the name of the last tmp variable
+                val1 = var_stk.pop();
+            }
+            else
+            {
+                val1 = name_map_stk.peek().get(name);
+            }
+
+            cur_name = "";
+
         n.f1.accept(this);
+
         n.f2.accept(this);
 
-            // get last tmp
-            String val2 = var_stk.pop();
-            String val1 = var_stk.pop();
+            name = cur_name;
+            if( name_map_stk.peek().get(name) == null )
+            {
+                // grab the name of the last tmp variable
+                val2 = var_stk.pop();
+            }
+            else
+            {
+                val2 = name_map_stk.peek().get(name);
+            }
 
             String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
             var_cnt++; // increment variable number
@@ -536,13 +596,40 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(PlusExpression n)
     {
+        // get tmp
+        String val2;
+        String val1;
+        String name;
+
         n.f0.accept(this);
+
+            name = cur_name;
+            if( name_map_stk.peek().get(name) == null )
+            {
+                // grab the name of the last tmp variable
+                val1 = var_stk.pop();
+            }
+            else
+            {
+                val1 = name_map_stk.peek().get(name);
+            }
+
+            cur_name = "";
+
         n.f1.accept(this);
+
         n.f2.accept(this);
 
-            // get last tmp
-            String val2 = var_stk.pop();
-            String val1 = var_stk.pop();
+            name = cur_name;
+            if( name_map_stk.peek().get(name) == null )
+            {
+                // grab the name of the last tmp variable
+                val2 = var_stk.pop();
+            }
+            else
+            {
+                val2 = name_map_stk.peek().get(name);
+            }
 
             String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
             var_cnt++; // increment variable number
@@ -569,12 +656,40 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(MinusExpression n)
     {
+        // get tmp
+        String val2;
+        String val1;
+        String name;
+
         n.f0.accept(this);
+
+            name = cur_name;
+            if( name_map_stk.peek().get(name) == null )
+            {
+                // grab the name of the last tmp variable
+                val1 = var_stk.pop();
+            }
+            else
+            {
+                val1 = name_map_stk.peek().get(name);
+            }
+
+            cur_name = "";
+
         n.f1.accept(this);
+
         n.f2.accept(this);
 
-            String val2 = var_stk.pop();
-            String val1 = var_stk.pop();
+            name = cur_name;
+            if( name_map_stk.peek().get(name) == null )
+            {
+                // grab the name of the last tmp variable
+                val2 = var_stk.pop();
+            }
+            else
+            {
+                val2 = name_map_stk.peek().get(name);
+            }
 
             String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
             var_cnt++; // increment variable number
@@ -601,13 +716,40 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(TimesExpression n)
     {
+        // get tmp
+        String val2;
+        String val1;
+        String name;
+
         n.f0.accept(this);
+
+            name = cur_name;
+            if( name_map_stk.peek().get(name) == null )
+            {
+                // grab the name of the last tmp variable
+                val1 = var_stk.pop();
+            }
+            else
+            {
+                val1 = name_map_stk.peek().get(name);
+            }
+
+            cur_name = "";
+
         n.f1.accept(this);
+
         n.f2.accept(this);
 
-            // get last tmp
-            String val2 = var_stk.pop();
-            String val1 = var_stk.pop();
+            name = cur_name;
+            if( name_map_stk.peek().get(name) == null )
+            {
+                // grab the name of the last tmp variable
+                val2 = var_stk.pop();
+            }
+            else
+            {
+                val2 = name_map_stk.peek().get(name);
+            }
 
             String tmpres = var_name + Integer.toString(var_cnt); // create new tmp var for result of operation
             var_cnt++; // increment variable number
