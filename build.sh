@@ -79,7 +79,7 @@ function p_wipe()
 {
     echo "5. wiping out the extras"; echo
     rm -rf hw*
-    rm *logfile.txt
+    rm *logfile.*
     rm -rf tests/Phase1Tester/Output
     rm -rf tests/Phase2Tester/Output
     rm -rf tests/Phase3Tester/Output
@@ -128,18 +128,18 @@ function p_check1()
     echo "See custom_logfile.txt for trace"; echo
     java $2 < $3 &> $LOG1
 
-    echo "3. Manually testing all the Test cases"; echo
-    echo "See manual_logfile.txt for trace"; echo
-
-    echo "" > $LOG2
-    for FILE in $4 ;
-    do
-        echo "CHECKING: "$FILE >> $LOG2
-        if ! java $2 < $FILE >> $LOG2; then
-            continue
-        fi
-        echo "" >> $LOG2
-    done
+    # echo "3. Manually testing all the Test cases"; echo
+    # echo "See manual_logfile.txt for trace"; echo
+    #
+    # echo "" > $LOG2
+    # for FILE in $4 ;
+    # do
+    #     echo "CHECKING: "$FILE >> $LOG2
+    #     if ! java $2 < $FILE >> $LOG2; then
+    #         continue
+    #     fi
+    #     echo "" >> $LOG2
+    # done
 
     cd ..
 }

@@ -1,0 +1,102 @@
+PUT THE DIFFERENT CASES IN
+
+tester.java
+
+RUN THIS IN THE TERMINAL
+
+./build.sh && mv custom_logfile.txt custom_logfile.vapor && cat custom_logfile.vapor && echo "vapor test" && java -jar stuff/vapor.jar run custom_logfile.vapor
+
+----------------------------------------
+
+class Easy
+{
+    public static void main(String[] args)
+    {
+        int x;
+        int y;
+        x = 1;
+        y = 2;
+        System.out.println(1);     // works for int literals
+        System.out.println(x);
+        System.out.println(1 - 2); // works for int literals: <,+,-,*
+        System.out.println(x - y); // works for variables: <,+,-,*
+    }
+}
+
+----------------------------------------
+
+class Medium
+{
+    public static void main(String[] args)
+    {
+        int x;
+        int y;
+        boolean z;
+        x = 1;
+        y = 256;
+        z = true;
+        while ( x < y )
+        {
+            x = x * 2;
+
+            if(z)
+            {
+                z = false;
+                System.out.println(1);
+            }
+            else
+            {
+                z = true;
+                System.out.println(0);
+            }
+
+        }
+    }
+}
+
+----------------------------------------
+
+class Hard
+{
+    public static void main(String[] args)
+    {
+        int a;
+        a = 5;
+        System.put.println( new Aux.f_id( a ) );
+        System.put.println( new Aux.f_inc( a ) );
+        System.put.println( new Aux.f_dec( a ) );
+        System.put.println( new Aux.f_dub( a ) );
+        System.put.println( new Aux.f_sqr( a ) );
+    }
+}
+
+class Aux
+{
+    int f_id(int b)
+    {
+        return b;
+    }
+
+    int f_inc(int b)
+    {
+        return b+1;
+    }
+
+    int f_dec(int b)
+    {
+        return b-1;
+    }
+
+    int f_dub(int b)
+    {
+        return b*2;
+    }
+
+    int f_sqr(int b)
+    {
+        return b*b;
+    }
+}
+
+----------------------------------------
+
