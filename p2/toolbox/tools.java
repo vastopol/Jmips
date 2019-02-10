@@ -1,5 +1,6 @@
 package toolbox;
 import java.util.*;
+
 import struct.*;
 public class tools {
 
@@ -100,34 +101,36 @@ public class tools {
     // public static Struct final_parent(Struct p, Map<String, Map<String, Struct>> m) {
 
     // }
-    public static Vector<Struct> vtable_correct(Struct c, Map<String,Map<String,Struct>> m) {
-        Vector<Struct> eff = new Vector<Struct>();
-        Vector<Struct> che = new Vector<Struct>();
+    public static Vector<Pair> vtable_correct(Struct c, Map<String,Map<String,Struct>> m) {
+        Vector<Pair> eff = new Vector<Pair>();
+        Vector<Pair> che = new Vector<Pair>();
         che = vtable_create(c, m, eff);
         return che;
     }
 
-    public static Vector<Struct> vtable_create(Struct c, Map<String,Map<String,Struct>> m , Vector<Struct> f) {
+    public static Vector<Pair> vtable_create(Struct c, Map<String,Map<String,Struct>> m ,Vector<Pair> f) {
         if(c.getParent() != "") {
             Struct cp = m.get("Global").get(c.getParent());
             if(loop_exist(c, m)){
                 return f;
             }
             
-            Vector<Struct> inter = new Vector<Struct>();
+            Vector<Pair> inter = new Vector<Pair>();
              f = vtable_create(cp, m, f);
         }
         boolean exists = false;
         for(Struct i: c.getMethods()) {
             for(int j = 0; j < f.size(); j++) {
-                if(i.getName() == f.elementAt(j).getName()) {
-                    f.set(j, i);
+                if(i.getName() == f.elementAt(j).getValue().getName()) {
+                    Pair yeehaw = new Pair(c.getName(), i);
+                    f.set(j, yeehaw);
                     exists = true;
                 }
             }
 
             if(!exists) {
-                f.add(i);
+                Pair yeethaw = new Pair(c.getName(), i);
+                f.add(yeethaw);
                 exists = false;
             }
         }

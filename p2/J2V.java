@@ -7,7 +7,6 @@
 // java modules
 import java.io.*;
 import java.util.*;
-
 // builtin project folders
 import visitor2.*;    // <------------- CHANGED THIS FOR OUR VISITORS
 import syntaxtree.*;
@@ -57,37 +56,42 @@ public class J2V
         // print_map_structs(symbol_table2);
 
 
-        // Vector<Struct> jef = new Vector<Struct>();
-        // Vector<Struct> jeebus = new Vector<Struct>();
+        Vector<Pair> jef = new Vector<Pair>();
+        Vector<Pair> jeebus = new Vector<Pair>();
 
-        // Struct vtab_starter1 = symbol_table2.get("Global").get("A");
-        // jef = tools.vtable_correct(vtab_starter1, symbol_table2);
-        // // jef = tools.vtable_create(vtab_starter, symbol_table2, jeebus);
-        // System.out.println("Class A vtable: ");
-        // for(Struct i: jef) {
-        //     toolbox.tools.print(i);
-        // }
-        // Struct vtab_starter2 = symbol_table2.get("Global").get("B");
-        // jef = tools.vtable_correct(vtab_starter2, symbol_table2);
-        // // jef = tools.vtable_create(vtab_starter, symbol_table2, jeebus);
-        // System.out.println("Class B vtable: ");
-        // for(Struct i: jef) {
-        //     toolbox.tools.print(i);
-        // }
-        // Struct vtab_starter3 = symbol_table2.get("Global").get("C");
-        // jef = tools.vtable_correct(vtab_starter3, symbol_table2);
-        // // jef = tools.vtable_create(vtab_starter, symbol_table2, jeebus);
-        // System.out.println("Class C vtable: ");
-        // for(Struct i: jef) {
-        //     toolbox.tools.print(i);
-        // }
-        // Struct vtab_starter4 = symbol_table2.get("Global").get("D");
-        // jef = tools.vtable_correct(vtab_starter4, symbol_table2);
-        // // jef = tools.vtable_create(vtab_starter, symbol_table2, jeebus);
-        // System.out.println("Class D vtable: ");
-        // for(Struct i: jef) {
-        //     toolbox.tools.print(i);
-        // }
+        Struct vtab_starter1 = symbol_table2.get("Global").get("A");
+        jef = tools.vtable_correct(vtab_starter1, symbol_table2);
+        // jef = tools.vtable_create(vtab_starter, symbol_table2, jeebus);
+        System.out.println("Class A vtable: ");
+        for(Pair i: jef) {
+            System.out.println(i.getKey() + "_" + i.getValue().getName());
+            // toolbox.tools.print(i.getValue());
+        }
+        Struct vtab_starter2 = symbol_table2.get("Global").get("B");
+        jef = tools.vtable_correct(vtab_starter2, symbol_table2);
+        // jef = tools.vtable_create(vtab_starter, symbol_table2, jeebus);
+        System.out.println("Class B vtable: ");
+        for(Pair i: jef) {
+            System.out.println(i.getKey() + "_" + i.getValue().getName());
+
+            // toolbox.tools.print(i);
+        }
+        Struct vtab_starter3 = symbol_table2.get("Global").get("C");
+        jef = tools.vtable_correct(vtab_starter3, symbol_table2);
+        // jef = tools.vtable_create(vtab_starter, symbol_table2, jeebus);
+        System.out.println("Class C vtable: ");
+        for(Pair i: jef) {
+            // toolbox.tools.print(i);
+            System.out.println(i.getKey() + "_" + i.getValue().getName());
+        }
+        Struct vtab_starter4 = symbol_table2.get("Global").get("D");
+        jef = tools.vtable_correct(vtab_starter4, symbol_table2);
+        // jef = tools.vtable_create(vtab_starter, symbol_table2, jeebus);
+        System.out.println("Class D vtable: ");
+        for(Pair i: jef) {
+            // toolbox.tools.print(i);
+            System.out.println(i.getKey() + "_" + i.getValue().getName());
+        }
 
 
         // HERE EMIT VAPOR IR CODE
