@@ -38,7 +38,7 @@ function main()
 {
     # do_p 1
     do_p 2
-    p_wipe
+    # p_wipe
 }
 
 
