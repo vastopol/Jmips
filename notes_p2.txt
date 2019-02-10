@@ -25,6 +25,7 @@ class Easy
         a = 1;
         b = 2;
         c = 2;
+
         System.out.println(1);  // 1 correct
         System.out.println(a);  // 1 correct
         System.out.println(2 - 3); // -1 correct
@@ -57,28 +58,30 @@ class Medium
 {
     public static void main(String[] args)
     {
-        int x;
-        int y;
-        boolean z;
-        x = 1;
-        y = 256;
-        z = true;
-        while ( x < y )
-        {
-            x = x * 2;
+        int low;
+        int high;
 
-            if(z)
-            {
-                z = false;
-                System.out.println(1);
-            }
-            else
-            {
-                z = true;
-                System.out.println(0);
-            }
+        boolean a;
+        boolean b;
 
-        }
+        a = true;
+        b = false;
+
+        // true
+        if (a) { System.out.println(1); } else { System.out.println(0); } // 1
+
+        // false
+        if (b) { System.out.println(1); } else { System.out.println(0); } // 0
+
+         // not true = false
+        if (!a) { System.out.println(1); } else { System.out.println(0); } // 0
+
+        // not false = true
+        if (!b) { System.out.println(1); } else { System.out.println(0); } // 1
+
+        // WHILE LOOPS
+        low = 1; high = 1024;
+        while ( low < high ) { System.out.println(low); low = low * 2; System.out.println(low); }
     }
 }
 

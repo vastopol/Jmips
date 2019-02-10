@@ -92,7 +92,7 @@ public class J2V
 
         // HERE EMIT VAPOR IR CODE
         DFVaporVisitor df_vapor_visitor = new DFVaporVisitor(symbol_table2);
-        // goal.accept(df_vapor_visitor);
+        goal.accept(df_vapor_visitor);
 
         /* ---------- END VISITS ---------- */
 

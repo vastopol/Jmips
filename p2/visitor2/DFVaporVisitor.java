@@ -434,13 +434,59 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(IfStatement n)
     {
+
+            String label_else;
+            String label_end;
+            String cur_dent;
+
+            label_else = lbl_name + Integer.toString(lbl_cnt);
+            lbl_cnt++;
+
+            label_end = lbl_name + Integer.toString(lbl_cnt);
+            lbl_cnt++;
+
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
+
+            String bool_code = "code for the boolean expression";
+            String bool_expr = "tmpbool";
+
+            // code for the bool_expr
+            str_buf.append(bool_code + "\n");
+
+            // IF0  valOf(bool_expr) == false GOTO B
+            str_buf.append( "if0 " + bool_expr + " goto :" + label_else + "\n");
+
         n.f3.accept(this);
+
+
+            String code_s1 = "code for statement 1 below";
+            str_buf.append(code_s1 + "\n");
+
         n.f4.accept(this);
+
+            // A - true
+
+            // code for statement #1
+
+            // GOTO END
+            str_buf.append("goto :" + label_end + "\n");
+
+            //  B - false
+            str_buf.append(label_else + ":\n");
+
         n.f5.accept(this);
+
+            String code_s2 = "code for statement 2 below";
+            str_buf.append(code_s2 + "\n");
+
         n.f6.accept(this);
+
+            // code for statement #2
+
+            // END
+            str_buf.append(label_end + ":\n");
     }
 
     /**
