@@ -1,14 +1,48 @@
-class Easy
+class AAAA_Class
 {
-    public static void main(String[] args)
+    public static void main(String[] str_arg)
     {
-        int x;
-        int y;
-        x = 1;
-        y = 2;
-        // System.out.println(1);     // works for int literals
-        System.out.println(x);
-        // System.out.println(1 - 2); // works for int literals: <,+,-,*
-        // System.out.println(x - y); // works for variables: <,+,-,*
+        System.out.println(new BBBB_Class().MAGIC_Func(10));
+    }
+}
+
+class A
+{
+    int x;
+
+    public int F(int a_num)
+    {
+        int a_num;
+        return num;
+    }
+
+}
+
+class B extends A
+{
+
+    public int G(int b_num) 
+    {
+        int b_num;
+
+        return num;
+    }
+}
+
+class C extends B
+{
+    public int G(int c_num) {
+        int c_num;
+        return num;
+    }
+
+
+}
+
+class D extends C {
+    int y;
+
+    public int F(int d_num) {
+        return num;
     }
 }

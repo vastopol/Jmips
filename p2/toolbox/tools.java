@@ -100,4 +100,37 @@ public class tools {
     // public static Struct final_parent(Struct p, Map<String, Map<String, Struct>> m) {
 
     // }
+    public static Vector<Struct> vtable_correct(Struct c, Map<String,Map<String,Struct>> m) {
+        Vector<Struct> eff = new Vector<Struct>();
+        Vector<Struct> che = new Vector<Struct>();
+        che = vtable_create(c, m, eff);
+        return che;
+    }
+
+    public static Vector<Struct> vtable_create(Struct c, Map<String,Map<String,Struct>> m , Vector<Struct> f) {
+        if(c.getParent() != "") {
+            Struct cp = m.get("Global").get(c.getParent());
+            if(loop_exist(c, m)){
+                return f;
+            }
+            
+            Vector<Struct> inter = new Vector<Struct>();
+             f = vtable_create(cp, m, f);
+        }
+        boolean exists = false;
+        for(Struct i: c.getMethods()) {
+            for(int j = 0; j < f.size(); j++) {
+                if(i.getName() == f.elementAt(j).getName()) {
+                    f.set(j, i);
+                    exists = true;
+                }
+            }
+
+            if(!exists) {
+                f.add(i);
+                exists = false;
+            }
+        }
+        return f;
+    }
 }
