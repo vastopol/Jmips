@@ -18,19 +18,21 @@ public class DFVaporVisitor implements Visitor
 {
     Map<String,Map<String,Struct>> symbol_table; // from DFStackVisitor2
     StringBuffer str_buf;    // write the intermediate code generation here
-    int var_cnt = 0;    // counter for distinct variables
-    int lbl_cnt = 0;       // counter for distinct goto labels
+    int var_cnt = 0;         // counter for distinct variables, increment every time variable created
+    int lbl_cnt = 0;         // counter for distinct goto labels, increment every time label created
     int indent_cnt = 0;      // count the indentation depth, increment on enter blocks, decrement on exit blocks
     String var_name = "tmp"; // tmp variable name string
     String lbl_name = "lbl"; // label name string
     String indent = "  ";    // 2 spaces for the indents
-    Stack<String> var_stk;  // stack to get last use
-    Stack<String> lbl_stk;  // stack to get last used label
+    Stack<String> var_stk;   // stack to get last used variable
+    Stack<String> lbl_stk;   // stack to get last used label
     Stack<Map<String,String>> name_map_stk; // associate variables with their current tmps
-    String current_class;
-    String current_function;
-    String cur_name;
-    String old_name;
+    // String current_class;
+    // String current_function;
+    String cur_name; // track current identifier
+    String old_name; // track the previous identifier
+    boolean if_param_flag = false; // track if inside the expression argument to an if statement
+    String  if_param_arg = "";  // put the name of the specific temp that goes in the argument spot: if(HERE){...} else{...}
 
     public DFVaporVisitor(Map<String, Map<String,Struct>> m) // constructor takes in the symbol table from the DFStackVisitor2
     {
@@ -57,6 +59,8 @@ public class DFVaporVisitor implements Visitor
         System.out.println("\nString Buffer Dump");
         System.out.println(str_buf.toString());
     }
+
+    /* ---------- VISITOR STUFFS BELOW ---------- */
 
     //
     // Auto class visitors--probably don't need to be overridden.
@@ -449,19 +453,21 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this);
         n.f1.accept(this);
 
-            str_buf.append( printdent + "code for the boolean expression\n");
+            // str_buf.append( printdent + "code for the boolean expression\n");
 
+            if_param_flag = true;
         n.f2.accept(this); // code for the bool_expr
+            if_param_flag = false;
 
-            String bool_expr = "tmpbool";
+            String bool_expr = if_param_arg;
 
-            // IF (valOf(bool_expr) == false) GOTO B
+            // IF0 (valOf(bool_expr) == false) THEN GOTO B
             str_buf.append( printdent + "if0 " + bool_expr + " goto :" + label_else + "\n");
 
         n.f3.accept(this);
 
-            // A - true
-            str_buf.append( printdent + "code for statement 1 below\n");
+            // A <---- valOf(bool_expr) == true
+            // str_buf.append( printdent + "code for statement 1 below\n");
 
             indent_cnt++;
         n.f4.accept(this); // code for statement #1
@@ -472,10 +478,9 @@ public class DFVaporVisitor implements Visitor
 
         n.f5.accept(this);
 
-            //  B - false
+            // B <---- valOf(bool_expr) == false
             str_buf.append( printdent + label_else + ":\n");
-
-            str_buf.append( printdent + "code for statement 2 below\n");
+            // str_buf.append( printdent + "code for statement 2 below\n");
 
             indent_cnt++;
         n.f6.accept(this); // code for statement #2
@@ -929,6 +934,11 @@ public class DFVaporVisitor implements Visitor
             }
 
             str_buf.append( printdent + tmpid + " = 1\n");
+
+            if(if_param_flag == true) // maybe a special case for when single true is in the if expression
+            {
+                if_param_arg = tmpid;
+            }
     }
 
     /**
@@ -949,6 +959,11 @@ public class DFVaporVisitor implements Visitor
             }
 
             str_buf.append( printdent + tmpid + " = 0\n");
+
+            if(if_param_flag == true) // maybe a special case for when single false is in the if expression
+            {
+                if_param_arg = tmpid;
+            }
     }
 
     /**
@@ -959,6 +974,11 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this);
 
             cur_name = n.f0.toString();
+
+            if(if_param_flag == true) // maybe a special case for when single id is in the if expression
+            {
+                if_param_arg = name_map_stk.peek().get(cur_name); // might break if empty stack?
+            }
     }
 
     /**
@@ -1007,6 +1027,8 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
         n.f1.accept(this);
+
+            str_buf.append("not expression\n");
     }
 
     /**

@@ -56,6 +56,8 @@ class Easy
 
 ----------------------------------------
 
+can do simple if that has a single literal or a single boolean variable
+
 class Medium
 {
     public static void main(String[] args)
@@ -72,21 +74,46 @@ class Medium
 
         // IF BRANCHES
 
-        // true
-        if (a) { System.out.println(1); } else { System.out.println(0); } // 1
+        // literals
+        if (true)   { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = true
+        if (false)  { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false
 
-        // false
-        if (b) { System.out.println(1); } else { System.out.println(0); } // 0
+        // variables
+        if (a)  { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = true
+        if (b)  { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false
 
-         // not true = false
-        if (!a) { System.out.println(1); } else { System.out.println(0); } // 0
+        // not
+        if (!true)  { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = not true
+        if (!false) { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = not false
 
-        // not false = true
-        if (!b) { System.out.println(1); } else { System.out.println(0); } // 1
+        if (!a) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = not true
+        if (!b) { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = not false
+
+        // and
+        if (true  && true)  { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = true  && true
+        if (false && false) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = true  && false
+        if (false && true)  { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && true
+        if (false && false) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && false
+
+        if (a && true)  { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = true  && true
+        if (a && false) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = true  && false
+        if (b && true)  { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && true
+        if (b && false) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && false
+
+        if (true  && a) { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = true  && true
+        if (true  && b) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = true  && false
+        if (false && a) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && true
+        if (false && b) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && false
+
+        if (a && a) { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = true  && true
+        if (a && b) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = true  && false
+        if (b && a) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && true
+        if (b && b) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && false
 
         // WHILE LOOPS
 
-        while ( low < high ) { System.out.println(low); low = low * 2; System.out.println(low); }
+        // print 1, 2, 4, 8, 16, ... , 1024
+        while ( low < high ) { System.out.println(low); low = low * 2; }
     }
 }
 
