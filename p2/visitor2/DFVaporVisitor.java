@@ -521,15 +521,15 @@ public class DFVaporVisitor implements Visitor
 
             String tmp;
             String name = cur_name;
-            if( name_map_stk.peek().get(name) == null )
-            {
+            // if( name_map_stk.peek().get(name) == null )
+            // {
                 // grab the name of the last tmp variable
                 tmp = var_stk.pop();
-            }
-            else
-            {
-                tmp = name_map_stk.peek().get(name);
-            }
+            // }
+            // else
+            // {
+            //     tmp = name_map_stk.peek().get(name);
+            // }
 
         n.f3.accept(this);
         n.f4.accept(this);
@@ -634,6 +634,11 @@ public class DFVaporVisitor implements Visitor
             str_buf.append(printdent + result);
 
             cur_name = "";
+
+            if(if_param_flag == true) // maybe a special case for when less than
+            {
+                if_param_arg = tmpres;
+            }
     }
 
     /**
@@ -1028,7 +1033,8 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this);
         n.f1.accept(this);
 
-            str_buf.append("not expression\n");
+            // str_buf.append("not expression\n");
+            // System.out.println(var_stk.peek());
     }
 
     /**

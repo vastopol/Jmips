@@ -1,17 +1,39 @@
-class Medium
+class Easy
 {
     public static void main(String[] args)
     {
-        boolean a;
-        boolean b;
+        int a;
+        int b;
+        int c;
+        int d;
 
-        a = true;
-        b = false;
+        a = 1;
+        b = 2;
+        c = 2;
+        System.out.println(1);      //   1
+        System.out.println(a);      //   1   <-------- BROKEN
+        System.out.println(2 - 3);  //  -1
+        System.out.println(2 + 3);  //   5
+        System.out.println(2 * 3);  //   6
+        System.out.println(c - 5);  //  -3
+        System.out.println(c + 5);  //   7
+        System.out.println(c * 5);  //   10
+        System.out.println(5 - c);  //   3
+        System.out.println(5 + c);  //   7
+        System.out.println(5 * c);  //   10
+        System.out.println(a - b);  //  -1
+        System.out.println(a + b);  //   3
+        System.out.println(a * b);  //   2
+        System.out.println(c - b);  //   0
+        System.out.println(c + b);  //   4
+        System.out.println(c * b);  //   4
 
-        if (true)   { System.out.println(1); } else { System.out.println(0); }
-        if (false)  { System.out.println(1); } else { System.out.println(0); }
+        d = 6 + 5;
+        d = d + 1;
+        System.out.println(d);  //  12
 
-        if (a)  { System.out.println(1); } else { System.out.println(0); }
-        if (b)  { System.out.println(1); } else { System.out.println(0); }
+        d = a + b;
+        d = d + c;
+        System.out.println(d);  //  5
     }
 }
