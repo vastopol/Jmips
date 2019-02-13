@@ -36,4 +36,7 @@ class Easy
         d = d + c;
         System.out.println(d);  //  5
     }
+
 }
+
+
