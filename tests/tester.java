@@ -19,6 +19,10 @@ class B extends A {
     public int g(int b){
         return b;
     }
+    
+    public int h(int b) {
+        return b;
+    }
 
 }
 

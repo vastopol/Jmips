@@ -1,5 +1,6 @@
 package toolbox;
 import java.util.*;
+import java.lang.*;
 
 import struct.*;
 public class tools {
@@ -135,5 +136,36 @@ public class tools {
             }
         }
         return f;
+    }
+
+    public static StringBuffer print_vtable(Vector<Pair> table, String cname) {
+        StringBuffer string_buf = new StringBuffer();
+        string_buf.append("const vmt_" + cname + "\n");
+        for(Pair i: table) {
+            string_buf.append("  :" + i.getKey() + "." + i.getValue().getName() + "\n");
+        }
+        string_buf.append("\n");
+        return string_buf;
+    }
+
+    public static StringBuffer create_vtables(Map<String,Map<String,Struct>> m) {
+        Vector<Vector<Pair>> all_vtables = new Vector<>();
+        StringBuffer sbuffer = new StringBuffer();
+        for(String i: m.get("Global").keySet()) {
+            boolean main_method = false;
+            Struct temp = m.get("Global").get(i);
+            for(Struct j: temp.getMethods()) {
+                if(j.getName() == "main" || j.getName() == "Main") {
+                    main_method = true;
+                }
+            }
+            if(!main_method){
+                Vector<Pair> vtemp = vtable_correct(temp, m);
+                all_vtables.add(vtemp);
+                StringBuffer btemp = print_vtable(vtemp, temp.getName());
+                sbuffer.append(btemp.toString());
+            }
+        }
+        return sbuffer;
     }
 }
