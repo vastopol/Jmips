@@ -371,6 +371,9 @@ public class DFVaporVisitor implements Visitor
             }
 
         n.f0.accept(this);
+
+            String a_name = cur_name;
+
         n.f1.accept(this);
         n.f2.accept(this);
 
@@ -388,7 +391,25 @@ public class DFVaporVisitor implements Visitor
                 name = cur_name;
             }
 
-            name_map_stk.peek().put(name,tmpid);
+            if(name_map_stk.peek().get(name) != null)
+            {
+                // System.out.println("ASS#1");
+                // System.out.println("C: " + cur_name + " O: " + old_name + " " + tmpid);
+                // System.out.println(var_stk.peek());
+                // System.out.println(a_name);
+                // MapDump();
+                // // name_map_stk.peek().replace(a_name,tmpid);
+                // MapDump();
+                tmpid = name_map_stk.peek().get(a_name);
+            }
+            else
+            {
+                // System.out.println("ASS#2");
+                // System.out.println("C: " + cur_name + " O: " + old_name + " " + tmpid);
+                // MapDump();
+                name_map_stk.peek().put(name,tmpid);
+                // MapDump();
+            }
 
             var_stk.push(tmpid);
 
@@ -438,10 +459,10 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(IfStatement n)
     {
-            String label_else = lbl_name + Integer.toString(lbl_cnt);
+            String label_else = "else_start_" + lbl_name + Integer.toString(lbl_cnt);
             lbl_cnt++;
 
-            String label_end = lbl_name + Integer.toString(lbl_cnt);
+            String label_end = "if_end_" + lbl_name + Integer.toString(lbl_cnt);
             lbl_cnt++;
 
             String printdent = "";
@@ -499,11 +520,44 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(WhileStatement n)
     {
+
+            String label_begin = "loop_start_" + lbl_name + Integer.toString(lbl_cnt);
+            lbl_cnt++;
+
+            String label_end = "loop_end_" + lbl_name + Integer.toString(lbl_cnt);
+            lbl_cnt++;
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            // BEGIN
+            str_buf.append(printdent + label_begin + ":\n");
+
         n.f0.accept(this);
         n.f1.accept(this);
-        n.f2.accept(this);
+
+            if_param_flag = true;
+        n.f2.accept(this);  // code for bool expr
+            if_param_flag = false;
+
+            String bool_expr = if_param_arg;
+
+            // IF0 (valOf(bool_expr) == false) THEN GOTO B
+            str_buf.append( printdent + "if0 " + bool_expr + " goto :" + label_end + "\n");
+
         n.f3.accept(this);
+
+            indent_cnt++;
         n.f4.accept(this);
+            indent_cnt--;
+
+            str_buf.append("  " + printdent + "goto :" + label_begin + "\n");
+
+            // END
+            str_buf.append(printdent + label_end + ":\n");
     }
 
     /**
@@ -979,6 +1033,28 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this);
 
             cur_name = n.f0.toString();
+
+            if(symbol_table.get(cur_name) != null ) // if exists in map then is a class/function
+            {
+                return;
+            }
+
+            if(name_map_stk.peek().get(cur_name) == null)  // dont create random null vars?
+            {
+                return;
+            }
+
+            String tmpid = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+            var_stk.push(tmpid); // put new tmp int var onto the stack
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            str_buf.append( printdent + tmpid + " = " + name_map_stk.peek().get(cur_name) + "\n");
 
             if(if_param_flag == true) // maybe a special case for when single id is in the if expression
             {
