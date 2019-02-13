@@ -27,8 +27,8 @@ public class DFVaporVisitor implements Visitor
     Stack<String> var_stk;   // stack to get last used variable
     Stack<String> lbl_stk;   // stack to get last used label
     Stack<Map<String,String>> name_map_stk; // associate variables with their current tmps
-    // String current_class;
-    // String current_function;
+    String current_class;
+    String current_function;
     String cur_name; // track current identifier
     String old_name; // track the previous identifier
     boolean if_param_flag = false; // track if inside the expression argument to an if statement
@@ -102,6 +102,8 @@ public class DFVaporVisitor implements Visitor
         try
         {
             // here do the vtables for the other classes before the main class
+            StringBuffer temp = tools.create_vtables(symbol_table);
+            str_buf.append(temp.toString());
             n.f0.accept(this); // goto main there do the main function
             n.f1.accept(this); // goto the classes and do their records
             n.f2.accept(this);
@@ -140,12 +142,13 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
         n.f1.accept(this);
+            current_class = cur_name;
         n.f2.accept(this);
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
         n.f6.accept(this);
-
+            current_function = "main";
             str_buf.append("func Main()\n"); // declare the main function
             indent_cnt++;   // increase indent on enter main
 
@@ -168,6 +171,8 @@ public class DFVaporVisitor implements Visitor
             indent_cnt--;   // decrease indent on leave main
 
             name_map_stk.pop();
+            current_function = "";
+            current_class = "";
     }
 
     /**
@@ -191,10 +196,12 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
         n.f1.accept(this);
+        current_class = cur_name;
         n.f2.accept(this);
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
+        current_class = "";
     }
 
     /**
@@ -211,12 +218,14 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
         n.f1.accept(this);
+        current_class = cur_name;
         n.f2.accept(this);
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
         n.f6.accept(this);
         n.f7.accept(this);
+        current_class = "";
     }
 
     /**
@@ -248,19 +257,48 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(MethodDeclaration n)
     {
+        name_map_stk.push(new HashMap<String, String>());
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
+            current_function = cur_name;
+            Struct current_method = symbol_table.get(current_class).get(current_function);
+            str_buf.append("\nfunc " + current_class + "." + current_function + "(this");
+            for(Struct i: current_method.getParams()) {
+              str_buf.append(" " + i.getName());
+              String new_temp = var_name + var_cnt;
+              var_cnt++;
+              var_stk.push(new_temp);
+              name_map_stk.peek().put(i.getName(), new_temp);
+            }
+            str_buf.append(")" + "\n");
+            indent_cnt++;
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
         n.f6.accept(this);
         n.f7.accept(this);
         n.f8.accept(this);
-        n.f9.accept(this);
         n.f10.accept(this);
+            String tmp1 = "";
+            // System.out.println(cur_name);
+            for(String i: name_map_stk.peek().keySet()) {
+                if(i == cur_name) {
+                    tmp1 = name_map_stk.peek().get(i);
+                }
+            }
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+            String answer = printdent + "ret " + tmp1 + "\n";
+            str_buf.append(answer);
         n.f11.accept(this);
+            indent_cnt--;
         n.f12.accept(this);
+            current_function = "";
+            name_map_stk.pop();
     }
 
     /**

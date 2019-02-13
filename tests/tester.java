@@ -39,4 +39,31 @@ class Easy
 
 }
 
+class A {
+    int x;
+    public int f(int a, int b){
+        int c;
+        c = b + a;
+        return a;
+    }
+}
+
+class B extends A {
+    public int g(int b){
+        return b;
+    }
+}
+
+class C extends B {
+    public int g(int c){
+        return c;
+    }
+}
+
+class D extends C {
+    int y;
+    public int f(int d){
+        return d;
+    }
+}
 

@@ -56,10 +56,10 @@ public class J2V
         // print_map_structs(symbol_table2);
 
 
-        Vector<Pair> jef = new Vector<Pair>();
-        Vector<Pair> jeebus = new Vector<Pair>();
-        StringBuffer sbuffer = tools.create_vtables(symbol_table2);
-        System.out.println(sbuffer.toString());
+        // Vector<Pair> jef = new Vector<Pair>();
+        // Vector<Pair> jeebus = new Vector<Pair>();
+        // StringBuffer sbuffer = tools.create_vtables(symbol_table2);
+        // System.out.println(sbuffer.toString());
         // Vector<Vector<Pair>> all_v = new Vector<>();
         // all_v = tools.create_vtables(symbol_table2);
         // for(Vector<Pair> i: all_v) {
