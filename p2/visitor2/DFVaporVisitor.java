@@ -664,8 +664,97 @@ public class DFVaporVisitor implements Visitor
     public void visit(AndExpression n)
     {
         n.f0.accept(this);
-        n.f1.accept(this);
+
+            // pop
+            String v1 = var_stk.pop();
+
+        n.f1.accept(this); // "&&"
         n.f2.accept(this);
+
+            // pop
+            String v2 = var_stk.pop();
+
+            // here do the double if same for and/not
+            // two if0 instructions that check if each of the operands is zero,
+            // assign zero to the result and goto the end label.
+            // Before the end label, one is assigned to the result.
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            String tv1 = var_name + Integer.toString(var_cnt); //v1
+            var_cnt++;
+
+            String tv2 = var_name + Integer.toString(var_cnt); // 0
+            var_cnt++;
+
+            String tv3 = var_name + Integer.toString(var_cnt); // v1 < 0
+            var_cnt++;
+
+            String tv4 = var_name + Integer.toString(var_cnt); // v2
+            var_cnt++;
+
+            String tv5 = var_name + Integer.toString(var_cnt); // v2 < 0
+            var_cnt++;
+
+            String tv6 = var_name + Integer.toString(var_cnt); // sum of both Eq statements
+            var_cnt++;
+
+            String tv7 = var_name + Integer.toString(var_cnt); // result value of the and, set to either 0 or 1
+            var_cnt++;
+
+            String lb1 = lbl_name + Integer.toString(lbl_cnt);
+            lbl_cnt++;
+
+            String lb2 = lbl_name + Integer.toString(lbl_cnt);
+            lbl_cnt++;
+
+            // str_buf.append(printdent + "in && Expression !!!!!!!!!!!"+ "\n");
+            // str_buf.append(printdent + "v1: " + v1+ "\n");
+            // str_buf.append(printdent + "v2: " + v2+ "\n");
+
+            String x = tv1 + " = " + v1 + "\n";
+            str_buf.append(printdent + x); // set tmp to var1
+
+            String y = tv2 + " = " + "0" + "\n";
+            str_buf.append(printdent + y); // set tmp to 0
+
+            String z = tv3 + " = " +  "Eq(" +  tv1 + " " + tv2 + ")\n"; // if is 1 then v1 = true
+            str_buf.append(printdent + z); // is v1 = 0 ?
+
+            String a = tv4 + " = " + v2 + "\n";
+            str_buf.append(printdent + a); // set tmp to var2
+
+            String b = tv5 + " = " + "Eq(" +  tv4 + " " + tv2 + ")\n"; // if is 1 then v2 = true
+            str_buf.append(printdent + b); // is v2 = 0 ?
+
+            // check if the sum of both Eq is 0
+            String c = tv6 + " = " + "Add(" +  tv3 + " " + tv5 + ")\n"; // sum the Eqs
+            str_buf.append(printdent + c); //
+
+            str_buf.append(  printdent + "if0 " + tv6 + " goto :" + lb1 + "\n" ); // if the sum was 0 then goto end
+            String d = tv7 + " = 0\n";
+            str_buf.append("  " + printdent + d); // set tmp to 0
+            str_buf.append("  " + printdent + "goto :" + lb2 + "\n" ); // set tmp to 0
+            // ELSE
+            str_buf.append( printdent + lb1 + ":\n"); // else label - both were true
+            // else set result to 1
+            String e = tv7 + " = 1\n";
+            str_buf.append("  " + printdent + e); // set tmp to 1
+
+            // END
+            str_buf.append(printdent + lb2 + ":\n"); // else label - both were true
+
+            if(if_param_flag == true)
+            {
+                if_param_arg = tv7;
+            }
+
+            // str_buf.append(printdent + "End of the && expression !!!!!!!!!!!!!!!\n");
+
     }
 
     /**
@@ -1130,7 +1219,7 @@ public class DFVaporVisitor implements Visitor
     * f2 -> "("
     * f3 -> ")"
     */
-    public void visit(AllocationExpression n)
+    public void visit(AllocationExpression n) // DO MAKE CLASS RECORD HERE
     {
         n.f0.accept(this);
         n.f1.accept(this);
