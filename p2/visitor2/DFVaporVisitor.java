@@ -25,21 +25,21 @@ public class DFVaporVisitor implements Visitor
     String lbl_name = "lbl"; // label name string
     String indent = "  ";    // 2 spaces for the indents
     Stack<String> var_stk;   // stack to get last used variable
-    Stack<String> lbl_stk;   // stack to get last used label
+    // Stack<String> lbl_stk;   // stack to get last used label
     Stack<Map<String,String>> name_map_stk; // associate variables with their current tmps
     String current_class;
     String current_function;
     String cur_name; // track current identifier
     String old_name; // track the previous identifier
     boolean if_param_flag = false; // track if inside the expression argument to an if statement
-    String  if_param_arg = "";  // put the name of the specific temp that goes in the argument spot: if(HERE){...} else{...}
+    String  if_param_arg = "";  // used for branch/loops, put the name of the specific temp that goes in the argument spot: if(HERE){...} else{...}
 
     public DFVaporVisitor(Map<String, Map<String,Struct>> m) // constructor takes in the symbol table from the DFStackVisitor2
     {
         symbol_table = m;
         str_buf = new StringBuffer();
         var_stk = new Stack<String>();
-        lbl_stk = new Stack<String>();
+        // lbl_stk = new Stack<String>();
         name_map_stk = new Stack<Map<String,String>>();
     }
 
@@ -101,9 +101,10 @@ public class DFVaporVisitor implements Visitor
     {
         try
         {
-            // here do the vtables for the other classes before the main class
-            StringBuffer temp = tools.create_vtables(symbol_table);
-            str_buf.append(temp.toString());
+                // here do the vtables for the other classes before the main class
+                StringBuffer temp = tools.create_vtables(symbol_table);
+                str_buf.append(temp.toString());
+
             n.f0.accept(this); // goto main there do the main function
             n.f1.accept(this); // goto the classes and do their records
             n.f2.accept(this);
@@ -113,8 +114,6 @@ public class DFVaporVisitor implements Visitor
         catch(Exception e)
         {
             ErrorPrinter(e); // to print the crash information
-
-            // System.out.println(str_buf.toString() + "  ret\n"); // test run the broken code
         }
     }
 
@@ -255,7 +254,7 @@ public class DFVaporVisitor implements Visitor
     * f11 -> ";"
     * f12 -> "}"
     */
-    public void visit(MethodDeclaration n)
+    public void visit(MethodDeclaration n) // Broken, cant return literals???? <---------- FIXME
     {
         name_map_stk.push(new HashMap<String, String>());
         n.f0.accept(this);
@@ -416,7 +415,17 @@ public class DFVaporVisitor implements Visitor
         n.f2.accept(this);
 
             String name;
-            String tmpexp = var_stk.pop();
+            String tmpexp = "";
+
+            if(!var_stk.empty())
+            {
+                tmpexp = var_stk.pop();
+            }
+            else
+            {
+                // System.out.println("cname: " + cur_name); // class name
+            }
+
             String tmpid = var_name + Integer.toString(var_cnt);
             var_cnt++;
 
@@ -475,7 +484,7 @@ public class DFVaporVisitor implements Visitor
     * f5 -> Expression()
     * f6 -> ";"
     */
-    public void visit(ArrayAssignmentStatement n)
+    public void visit(ArrayAssignmentStatement n)   // NOT DONE <----------- FIXME
     {
         n.f0.accept(this);
         n.f1.accept(this);
@@ -754,7 +763,6 @@ public class DFVaporVisitor implements Visitor
             }
 
             // str_buf.append(printdent + "End of the && expression !!!!!!!!!!!!!!!\n");
-
     }
 
     /**
@@ -1008,7 +1016,7 @@ public class DFVaporVisitor implements Visitor
     * f2 -> PrimaryExpression()
     * f3 -> "]"
     */
-    public void visit(ArrayLookup n)
+    public void visit(ArrayLookup n)   // NOT DONE <----------- FIXME
     {
         n.f0.accept(this);
         n.f1.accept(this);
@@ -1021,7 +1029,7 @@ public class DFVaporVisitor implements Visitor
     * f1 -> "."
     * f2 -> "length"
     */
-    public void visit(ArrayLength n)
+    public void visit(ArrayLength n)  // NOT DONE <----------- FIXME
     {
         n.f0.accept(this);
         n.f1.accept(this);
@@ -1036,7 +1044,7 @@ public class DFVaporVisitor implements Visitor
     * f4 -> ( ExpressionList() )?
     * f5 -> ")"
     */
-    public void visit(MessageSend n)
+    public void visit(MessageSend n)   // NOT DONE <----------- FIXME -- Function calls
     {
         n.f0.accept(this);
         n.f1.accept(this);
@@ -1161,15 +1169,20 @@ public class DFVaporVisitor implements Visitor
 
             cur_name = n.f0.toString();
 
+            // System.out.println(cur_name);
+
             if(symbol_table.get(cur_name) != null ) // if exists in map then is a class/function
             {
                 return;
             }
-            // System.out.println(cur_name);
+
             if(name_map_stk.empty() || name_map_stk.peek().get(cur_name) == null)  // dont create random null vars?
             {
                 return;
             }
+
+            // System.out.println(cur_name);
+            // MapDump();
 
             String tmpid = var_name + Integer.toString(var_cnt);
             var_cnt++;
@@ -1192,7 +1205,7 @@ public class DFVaporVisitor implements Visitor
     /**
     * f0 -> "this"
     */
-    public void visit(ThisExpression n)
+    public void visit(ThisExpression n)   // NOT DONE <----------- FIXME  // maybe need to do class fetch, not sure...
     {
         n.f0.accept(this);
     }
@@ -1204,12 +1217,15 @@ public class DFVaporVisitor implements Visitor
     * f3 -> Expression()
     * f4 -> "]"
     */
-    public void visit(ArrayAllocationExpression n)
+    public void visit(ArrayAllocationExpression n)   // NOT DONE <----------- FIXME // DO MAKE ARRAY HERE
     {
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
         n.f3.accept(this);
+
+            // probably pop from stack to get the tmp which hold value of the expression?
+
         n.f4.accept(this);
     }
 
@@ -1219,10 +1235,26 @@ public class DFVaporVisitor implements Visitor
     * f2 -> "("
     * f3 -> ")"
     */
-    public void visit(AllocationExpression n) // DO MAKE CLASS RECORD HERE
+    public void visit(AllocationExpression n)   // NOT DONE <----------- FIXME // DO MAKE CLASS RECORD HERE
     {
         n.f0.accept(this);
         n.f1.accept(this);
+
+            // System.out.println("alloc: " + cur_name);
+
+            Struct cstruct = symbol_table.get("Global").get(cur_name);
+
+            Vector<Struct> vs = helper.fields(cstruct, symbol_table);   // alphabetic ordered ...
+
+            // System.out.println("here");
+            // for( Struct s : vs )
+            // {
+            //     System.out.println(s.getName());
+            // }
+            // System.out.println("there");
+
+            //  need 4 + 4*size of vector bytes for the record
+
         n.f2.accept(this);
         n.f3.accept(this);
     }
@@ -1237,7 +1269,70 @@ public class DFVaporVisitor implements Visitor
         n.f1.accept(this);
 
             // str_buf.append("not expression\n");
-            // System.out.println(var_stk.peek());
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            // pop
+            String v1 = var_stk.pop();
+
+            // here do the double if same for and/not
+            // two if0 instructions that check if each of the operands is zero,
+            // assign zero to the result and goto the end label.
+            // Before the end label, one is assigned to the result.
+
+            String tv1 = var_name + Integer.toString(var_cnt); //v1
+            var_cnt++;
+
+            String tv2 = var_name + Integer.toString(var_cnt); // 0
+            var_cnt++;
+
+            String tv3 = var_name + Integer.toString(var_cnt); // v1 < 0
+            var_cnt++;
+
+            String tv4 = var_name + Integer.toString(var_cnt); // result value of the and, set to either 0 or 1
+            var_cnt++;
+
+            String lb1 = lbl_name + Integer.toString(lbl_cnt);
+            lbl_cnt++;
+
+            String lb2 = lbl_name + Integer.toString(lbl_cnt);
+            lbl_cnt++;
+
+            // str_buf.append(printdent + "in NOT Expression !!!!!!!!!!!"+ "\n");
+            // str_buf.append(printdent + "v1: " + v1+ "\n");
+
+            String x = tv1 + " = " + v1 + "\n";
+            str_buf.append(printdent + x); // set tmp to var1
+
+            String y = tv2 + " = " + "0" + "\n";
+            str_buf.append(printdent + y); // set tmp to 0
+
+            String z = tv3 + " = " +  "Eq(" +  tv1 + " " + tv2 + ")\n"; // if is 0 then v1 = true
+            str_buf.append(printdent + z); // is v1 = 0 ?
+
+            str_buf.append(  printdent + "if0 " + tv3 + " goto :" + lb1 + "\n" ); // if the val was 0 then goto else
+            String d = tv4 + " = 1\n";
+            str_buf.append("  " + printdent + d); // set tmp to 1
+            str_buf.append("  " + printdent + "goto :" + lb2 + "\n" ); // set tmp to 0
+            // ELSE
+            str_buf.append( printdent + lb1 + ":\n"); // else label - is TRUE
+            // else set result to 0
+            String e = tv4 + " = 0\n";
+            str_buf.append("  " + printdent + e); // set tmp to 1
+
+            // END
+            str_buf.append(printdent + lb2 + ":\n"); // else label - both were true
+
+            if(if_param_flag == true)
+            {
+                if_param_arg = tv4;
+            }
+
+            // str_buf.append(printdent + "End of the NOT expression !!!!!!!!!!!!!!!\n");
     }
 
     /**

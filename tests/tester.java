@@ -1,32 +1,42 @@
-class Medium
+class Tester
 {
     public static void main(String[] args)
     {
-        boolean a;
-        boolean b;
+        A as;
+        as = new A();
 
-        a = true;
-        b = false;
+        // as.x = 1;    // ERROR
+        // System.out.println(as.x);
+    }
+}
 
-        if (true  && true)  { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = true  && true
-        if (true && false)  { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = true  && false
-        if (false && true)  { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && true // <------- WRONG
-        if (false && false) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && false
+class A
+{
+    int x;
+    int my_int;
+    boolean my_bool;
 
-        if (a && true)  { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = true  && true
-        if (a && false) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = true  && false
-        if (b && true)  { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && true
-        if (b && false) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && false
+    public int f(int a, int b)
+    {
+        int c;
+        c = b + a;
+        return 5;   // broke if returns a literal
+    }
 
-        if (true  && a) { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = true  && true
-        if (true  && b) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = true  && false
-        if (false && a) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && true
-        if (false && b) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && false
+    public boolean setX(int y)
+    {
+        x = y;
+        return true;   // broke if returns a literal
+    }
+}
 
-        if (a && a) { System.out.println(1); } else { System.out.println(0); }  //  1  //  TRUE  = true  && true
-        if (a && b) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = true  && false
-        if (b && a) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && true
-        if (b && b) { System.out.println(1); } else { System.out.println(0); }  //  0  //  FALSE = false && false
+class B extends A
+{
+    int k;
 
+    public boolean setK(int w)
+    {
+        k = w;
+        return true;   // broke if returns a literal
     }
 }

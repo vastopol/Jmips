@@ -4,7 +4,7 @@
 # Modular procedural shell script with each phase separated
 # each subroutine executes from the base directory
 
-# PHASE 1 - Type Checking
+# PHASE 1 - Type Checking (DONE)
 # PHASE 2 - Intermediate Code Generation
 # PHASE 3 - Register Allocation
 # PHASE 4 - Activation Records and Instruction Selection
@@ -27,6 +27,7 @@ MINI_J="../stuff/minijava.jj"       # Tree Builder Input
 VAPOR_I="../stuff/vapor.jar"        # Vapor Interpreter
 VAPOR_P="../stuff/vapor-parser.jar" # Vapor Parser
 MARS="../stuff/mars.jar"            # MIPS Interpreter
+
 # GLOBALS - tests
 TJAVA="../tests/tester.java"
 TEST1="../tests/Phase1Tester/SelfTestCases/*"

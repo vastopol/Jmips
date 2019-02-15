@@ -56,8 +56,11 @@ class Easy
 
 ----------------------------------------
 
-can do simple if that has a single literal or a single boolean variable
-can do less than with two integers
+can do less than in branch/loop
+can do if branch
+can do nested if branch
+can do while loops
+can do nested while loops
 
 class Medium
 {
@@ -68,7 +71,7 @@ class Medium
         int low; int high; int tmp;
 
         a = true;   b = true;
-        c = false;  d = false
+        c = false;  d = false;
 
         // IF BRANCHES
 
@@ -86,8 +89,8 @@ class Medium
             if (b)  { System.out.println(1); } else { System.out.println(2); }
         }
         else {
-            System.out.println(3);
-            if (d)  { System.out.println(4); } else { System.out.println(5); }
+            System.out.println(3);                                                  // 3
+            if (d)  { System.out.println(4); } else { System.out.println(5); }      // 5
         }
 
         // WHILE LOOPS
@@ -109,6 +112,7 @@ class Medium
 ----------------------------------------
 
 and expressions work
+not expressions work
 
 class Medium2
 {
