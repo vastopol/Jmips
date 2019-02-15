@@ -187,7 +187,7 @@ function p_vapor()
     echo "code print out"; echo
     cat $LOG1
     echo "Code test "$3; echo
-    java -jar $VAPOR_I run $LOG1
+    java -jar $VAPOR_I run $LOG1; echo
 
     # echo "Manually testing all the Test cases"; echo
     # echo "See manual_logfile.txt for trace"; echo

@@ -620,17 +620,24 @@ public class DFVaporVisitor implements Visitor
         n.f1.accept(this);
         n.f2.accept(this);
 
-            String tmp;
+            String tmp = "";
             String name = cur_name;
+
             // if( name_map_stk.peek().get(name) == null )
             // {
-                // grab the name of the last tmp variable
-                tmp = var_stk.pop();
+                // // grab the name of the last tmp variable
+                // tmp = var_stk.pop();
             // }
             // else
             // {
             //     tmp = name_map_stk.peek().get(name);
             // }
+
+            // var_stk could be empty... DANGER CAUSES CRASH IF EMPTY
+            if(!var_stk.empty()) // Broken, idk what to do here when needs return value from a function call  <------ FIXME
+            {
+                tmp = var_stk.pop();
+            }
 
         n.f3.accept(this);
         n.f4.accept(this);
