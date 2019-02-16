@@ -256,7 +256,8 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(MethodDeclaration n) // Broken, cant return literals???? <---------- FIXME
     {
-        name_map_stk.push(new HashMap<String, String>());
+            name_map_stk.push(new HashMap<String, String>());
+
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
@@ -264,15 +265,27 @@ public class DFVaporVisitor implements Visitor
             current_function = cur_name;
             Struct current_method = symbol_table.get(current_class).get(current_function);
             str_buf.append("\nfunc " + current_class + "." + current_function + "(this");
+
+            String tmp_str = "";
+
             for(Struct i: current_method.getParams()) {
               str_buf.append(" " + i.getName());
               String new_temp = var_name + var_cnt;
               var_cnt++;
               var_stk.push(new_temp);
               name_map_stk.peek().put(i.getName(), new_temp);
+
+              String tsts = "  " + new_temp + " = " + i.getName() + "\n";
+              tmp_str += tsts;
             }
+
             str_buf.append(")" + "\n");
             indent_cnt++;
+
+            // MapDump();
+
+            // init the params here???
+            str_buf.append(tmp_str);
 
         n.f3.accept(this);
         n.f4.accept(this);
@@ -283,7 +296,7 @@ public class DFVaporVisitor implements Visitor
         n.f10.accept(this);
 
             String tmp1 = "";
-            // System.out.println(cur_name);    // name of return item is is a variable
+            // System.out.println("in fun def: " + cur_name);    // name of return item is is a variable
             for(String i: name_map_stk.peek().keySet()) {  // probably not going to work for literals
                 if(i == cur_name) {
                     tmp1 = name_map_stk.peek().get(i);
@@ -321,7 +334,7 @@ public class DFVaporVisitor implements Visitor
     * f0 -> FormalParameter()
     * f1 -> ( FormalParameterRest() )*
     */
-    public void visit(FormalParameterList n)
+    public void visit(FormalParameterList n)  // <----  probably need to collect the params for function declarations
     {
         n.f0.accept(this);
         n.f1.accept(this);
@@ -427,6 +440,8 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this);
 
             String a_name = cur_name;
+
+            // System.out.println("in assign: " + a_name);
 
         n.f1.accept(this);
         n.f2.accept(this);
@@ -1353,6 +1368,8 @@ public class DFVaporVisitor implements Visitor
             var_cnt++;
             var_stk.push(tmpid); // put new tmp int var onto the stack
 
+            // System.out.println("in id: " + tmpid);
+
             String printdent = "";
             for(int i = 0; i < indent_cnt; i++)
             {
@@ -1373,6 +1390,8 @@ public class DFVaporVisitor implements Visitor
     public void visit(ThisExpression n)   // NOT DONE <----------- FIXME  // maybe need to do class fetch, not sure...
     {
         n.f0.accept(this);
+
+        // probably should push the word this on stack, or maybe get the class and do that ???
     }
 
     /**
@@ -1413,7 +1432,7 @@ public class DFVaporVisitor implements Visitor
             var_cnt++;
             var_stk.push(tmp4);
             String append5 = printdent + tmp4 + " = Add(" + tmp3 + " 4)\n";
-            String append4 = printdent + "[" + tmp4 + " - 4] = " + expr_temp + "\n";  
+            String append4 = printdent + "[" + tmp4 + " - 4] = " + expr_temp + "\n";
 
             str_buf.append(append1);
             str_buf.append(append2);

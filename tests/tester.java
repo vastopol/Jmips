@@ -6,11 +6,18 @@ class Main {
 
 class A {
 	public int run() {
-		int[] a;
+		int a;
 		int b;
-		a = new int[20];
-		b = a.length;
-		return b;
+		a = this.helper(12);
+		b = this.helper(15);
+		return a + b;
+	}
+
+	public int helper(int param) {
+		int x;
+		x = param;
+		param = param + 1;
+		System.out.println(x);
+		return x;
 	}
 }
-
