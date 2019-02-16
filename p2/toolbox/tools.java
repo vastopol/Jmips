@@ -168,4 +168,22 @@ public class tools {
         }
         return sbuffer;
     }
+
+    public static Vector<Vector<Pair>> create_vtables_no(Map<String,Map<String,Struct>> m) {
+        Vector<Vector<Pair>> all_vtables = new Vector<>();
+        for(String i: m.get("Global").keySet()) {
+            boolean main_method = false;
+            Struct temp = m.get("Global").get(i);
+            for(Struct j: temp.getMethods()) {
+                if(j.getName() == "main" || j.getName() == "Main") {
+                    main_method = true;
+                }
+            }
+            if(!main_method){
+                Vector<Pair> vtemp = vtable_correct(temp, m);
+                all_vtables.add(vtemp);
+                }
+            }
+            return all_vtables;
+        }
 }
