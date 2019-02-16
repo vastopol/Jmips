@@ -519,12 +519,75 @@ public class DFVaporVisitor implements Visitor
     public void visit(ArrayAssignmentStatement n)   // NOT DONE <----------- FIXME
     {
         n.f0.accept(this);
+
+            String arr = var_stk.pop();
+
         n.f1.accept(this);
         n.f2.accept(this);
+
+            String i = var_stk.pop();
+
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
+
+            String expr = var_stk.pop();
+
         n.f6.accept(this);
+
+            String printdent = "";
+            for(int j = 0; j < indent_cnt; j++)
+            {
+                printdent += indent;
+            }
+
+            // MapDump();
+
+            String tmp1 = var_name + var_cnt;
+            var_cnt++;
+            var_stk.push(tmp1);
+            String append1 = printdent + tmp1 + " = [" + arr + "- 4]\n";
+            String tmp2 = var_name + var_cnt;
+            var_cnt++;
+            var_stk.push(tmp2);
+            String append2 = printdent + tmp2  + " = LtS(" + i + " " + tmp1 + ")\n";
+            String label1 = lbl_name + Integer.toString(lbl_cnt);
+            lbl_cnt++;
+            String label2 = lbl_name + Integer.toString(lbl_cnt);
+            lbl_cnt++;
+
+            String append3 = printdent + "if " + tmp2 + " goto :" + label1 + "\n";
+            String append4 =  printdent + "  Error(\"Array index out of bounds\")\n";
+            String append5 = printdent + label1 + ": \n";
+            String append55 = printdent + tmp2 + " = LtS( -1" + " " + i + ")\n";
+            String append6 = printdent + "  if " + tmp2 + " goto :" + label2 + "\n";
+            String append7 = printdent + "  Error(\"Array index out of bounds\")\n";
+            String tmp3 = var_name + var_cnt;
+            var_cnt++;
+            var_stk.push(tmp3);
+            String append8 = printdent + label2 + ": \n";
+            String append88 = printdent + tmp3 + " = MulS(" + i + " 4)\n";
+            String tmp4 = var_name + var_cnt;
+            var_cnt++;
+            var_stk.push(tmp4);
+            String append9 = printdent +  tmp4 + " = Add(" + arr + " " + tmp3 + ") \n";
+            String append10 = printdent +  "[" + tmp4 + "] = " + expr + "\n";
+
+            str_buf.append(append1);
+            str_buf.append(append2);
+            str_buf.append(append3);
+            str_buf.append(append4);
+            str_buf.append(append5);
+            str_buf.append(append55);
+            str_buf.append(append6);
+            str_buf.append(append7);
+            str_buf.append(append8);
+            str_buf.append(append88);
+            str_buf.append(append9);
+            str_buf.append(append10);
+
+            
+
     }
 
     /**
@@ -1058,9 +1121,71 @@ public class DFVaporVisitor implements Visitor
     public void visit(ArrayLookup n)   // NOT DONE <----------- FIXME
     {
         n.f0.accept(this);
+
+            String arr = var_stk.pop();
+
         n.f1.accept(this);
         n.f2.accept(this);
+
+            String i = var_stk.pop();
+
         n.f3.accept(this);
+
+        String printdent = "";
+        for(int j = 0; j < indent_cnt; j++)
+        {
+            printdent += indent;
+        }
+
+        // MapDump();
+
+        String tmp1 = var_name + var_cnt;
+        var_cnt++;
+        var_stk.push(tmp1);
+        String append1 = printdent + tmp1 + " = [" + arr + "- 4]\n";
+        String tmp2 = var_name + var_cnt;
+        var_cnt++;
+        var_stk.push(tmp2);
+        String append2 = printdent + tmp2  + " = LtS(" + i + " " + tmp1 + ")\n";
+        String label1 = lbl_name + Integer.toString(lbl_cnt);
+        lbl_cnt++;
+        String label2 = lbl_name + Integer.toString(lbl_cnt);
+        lbl_cnt++;
+
+        String append3 = printdent + "if " + tmp2 + " goto :" + label1 + "\n";
+        String append4 =  printdent + "  Error(\"Array index out of bounds\")\n";
+        String append5 = printdent + label1 + ": \n";
+        String append55 = printdent + tmp2 + " = LtS(-1" + " " + i + ")\n";
+        String append6 = printdent + "if " + tmp2 + " goto :" + label2 + "\n";
+        String append7 = printdent + "  Error(\"Array index out of bounds\")\n";
+        String tmp3 = var_name + var_cnt;
+        var_cnt++;
+        var_stk.push(tmp3);
+        String append8 = printdent + label2 + ": \n";
+        String append88 = printdent + tmp3 + " = MulS(" + i + " 4)\n";
+        String tmp4 = var_name + var_cnt;
+        var_cnt++;
+        var_stk.push(tmp4);
+        String append9 = printdent + tmp4 + " = Add(" + arr + " " + tmp3 + ") \n";
+        String tmp5 = var_name + var_cnt;
+        var_cnt++;
+        var_stk.push(tmp5);
+        String append10 = printdent + tmp5 + " = [" + tmp4 + "]" + "\n";
+
+        str_buf.append(append1);
+        str_buf.append(append2);
+        str_buf.append(append3);
+        str_buf.append(append4);
+        str_buf.append(append5);
+        str_buf.append(append55);
+        str_buf.append(append6);
+        str_buf.append(append7);
+        str_buf.append(append8);
+        str_buf.append(append88);
+        str_buf.append(append9);
+        str_buf.append(append10);
+
+
     }
 
     /**
