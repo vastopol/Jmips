@@ -1,20 +1,3 @@
-// class Factorial{
-//     public static void main(String[] a){
-//         System.out.println(new Fac().ComputeFac(10));
-//     }
-// }
-//
-// class Fac {
-//     public int ComputeFac(int num){
-//         int num_aux ;
-//         if (num < 1)
-//             num_aux = 1 ;
-//         else
-//             num_aux = num * (this.ComputeFac(num-1)) ;
-//         return num_aux ;
-//     }
-// }
-
 class Main {
 	public static void main(String[] a){
 		System.out.println(new A().run());
@@ -23,11 +6,28 @@ class Main {
 
 class A {
 	public int run() {
+<<<<<<< HEAD
 		//System.out.println(42);
 		int[] a;
 		int b;
 		a = new int[20];
 		b = a.length;
 		return 99;
+=======
+		int a;
+		int b;
+		a = this.helper(12);
+		b = this.helper(15);
+		return a + b;
+	}
+
+	public int helper(int param) {
+		int x;
+		x = param;
+		param = param + 1;
+		System.out.println(x);
+		return x;
+>>>>>>> master
 	}
 }
+
