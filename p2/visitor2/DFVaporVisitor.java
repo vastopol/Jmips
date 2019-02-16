@@ -557,11 +557,11 @@ public class DFVaporVisitor implements Visitor
             lbl_cnt++;
 
             String append3 = printdent + "if " + tmp2 + " goto :" + label1 + "\n";
-            String append4 =  printdent + "  Error(\"Array index out of bounds\")\n";
+            String append4 =  printdent + "  Error(\"array index out of bounds\")\n";
             String append5 = printdent + label1 + ": \n";
             String append55 = printdent + tmp2 + " = LtS( -1" + " " + i + ")\n";
             String append6 = printdent + "  if " + tmp2 + " goto :" + label2 + "\n";
-            String append7 = printdent + "  Error(\"Array index out of bounds\")\n";
+            String append7 = printdent + "  Error(\"array index out of bounds\")\n";
             String tmp3 = var_name + var_cnt;
             var_cnt++;
             var_stk.push(tmp3);
@@ -1153,11 +1153,11 @@ public class DFVaporVisitor implements Visitor
         lbl_cnt++;
 
         String append3 = printdent + "if " + tmp2 + " goto :" + label1 + "\n";
-        String append4 =  printdent + "  Error(\"Array index out of bounds\")\n";
+        String append4 =  printdent + "  Error(\"array index out of bounds\")\n";
         String append5 = printdent + label1 + ": \n";
         String append55 = printdent + tmp2 + " = LtS(-1" + " " + i + ")\n";
         String append6 = printdent + "if " + tmp2 + " goto :" + label2 + "\n";
-        String append7 = printdent + "  Error(\"Array index out of bounds\")\n";
+        String append7 = printdent + "  Error(\"array index out of bounds\")\n";
         String tmp3 = var_name + var_cnt;
         var_cnt++;
         var_stk.push(tmp3);
