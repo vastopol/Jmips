@@ -2,9 +2,12 @@ PUT THE DIFFERENT CASES IN
 
 tester.java
 
-RUN THIS IN THE TERMINAL
+so far can pass some test cases: (3/13)
 
-./build.sh && mv custom_logfile.txt custom_logfile.vapor && cat custom_logfile.vapor && echo "vapor test" && java -jar stuff/vapor.jar run custom_logfile.vapor
+1-PrintLiteral.java
+2-Add.java
+3-Call.java
+
 
 ----------------------------------------
 

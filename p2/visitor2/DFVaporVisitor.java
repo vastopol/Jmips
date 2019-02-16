@@ -25,7 +25,6 @@ public class DFVaporVisitor implements Visitor
     String lbl_name = "lbl"; // label name string
     String indent = "  ";    // 2 spaces for the indents
     Stack<String> var_stk;   // stack to get last used variable
-    // Stack<String> lbl_stk;   // stack to get last used label
     Stack<Map<String,String>> name_map_stk; // associate variables with their current tmps
     String current_class;
     String current_function;
@@ -33,14 +32,15 @@ public class DFVaporVisitor implements Visitor
     String old_name; // track the previous identifier
     boolean if_param_flag = false; // track if inside the expression argument to an if statement
     String  if_param_arg = "";  // used for branch/loops, put the name of the specific temp that goes in the argument spot: if(HERE){...} else{...}
+    Vector<String> fcall_params;
 
     public DFVaporVisitor(Map<String, Map<String,Struct>> m) // constructor takes in the symbol table from the DFStackVisitor2
     {
         symbol_table = m;
         str_buf = new StringBuffer();
         var_stk = new Stack<String>();
-        // lbl_stk = new Stack<String>();
         name_map_stk = new Stack<Map<String,String>>();
+        fcall_params = new Vector<String>();
     }
 
     // helpers
@@ -1080,17 +1080,36 @@ public class DFVaporVisitor implements Visitor
             // System.out.println(var_stk.peek());  // probably the tmp var name of the caller class
 
             String name_c = cur_name;   // class name
-            String tmp_obj = "";    // actual anme of tmp variable that is the object
+            String tmp_obj = "";        // actual anme of tmp variable that is the object
 
-            if(!var_stk.empty()) // looks like the "this" isnt on the stack yet NOT handled yet
+            if(!var_stk.empty())
             {
                 tmp_obj = var_stk.pop(); // get the tmp object so can use the vtable
+            }
+            else
+            {
+                tmp_obj = "this"; // looks like the "this" isnt on the stack
+            }
+
+            // System.out.println(tmp_obj);
+            // MapDump();
+
+            // weird bs here
+            // if found a value in the name map then put value back on var_stk and set tmp_obj to "this"
+            for(String nms : name_map_stk.peek().values())
+            {
+                if(nms == tmp_obj)
+                {
+                    // System.out.println("ooof");
+                    var_stk.push(tmp_obj);
+                    tmp_obj = "this";
+                }
             }
 
         n.f1.accept(this);
         n.f2.accept(this);
 
-            // System.out.println("name_f: " + cur_name); // atual function name
+            // System.out.println("name_f: " + cur_name); // actual function name
             // System.out.println(var_stk.peek());
 
             String name_f = cur_name;   // function name
@@ -1129,9 +1148,19 @@ public class DFVaporVisitor implements Visitor
                 lookup_name = name_c;
             }
 
+            // System.out.println("lkup: " + lookup_name);
+
             Struct struct_c = symbol_table.get("Global").get(lookup_name);
+
+            if(struct_c == null) // looked up an id with name_c, but since isnt a class will be null, need to relookup up by class
+            {
+                // System.out.println("NULL STRUCT WAS RETURNED");
+                lookup_name = current_class;    // this means need to check current class
+                struct_c = symbol_table.get("Global").get(lookup_name);
+            }
+
             Vector<Struct> vs1 = new Vector<Struct>();
-            Vector<Struct> vs2 = toolbox.tools.methods(struct_c, symbol_table, vs1);
+            Vector<Struct> vs2 = toolbox.tools.methods(struct_c, symbol_table, vs1); // probably fix this with different order for methods <---- FIXME
             int position = 0;
 
             for(int i = 0; i < vs2.size(); i++)
@@ -1147,6 +1176,15 @@ public class DFVaporVisitor implements Visitor
 
             // need to get the params for the function
             String params_f = "";
+            for(String pp : fcall_params)
+            {
+                // get the params and separate with spaces
+                params_f += " ";
+                params_f += pp;
+                params_f += " ";
+            }
+
+            fcall_params = new Vector<String>(); // reset and clear old params for next time
 
             String a = printdent + tmp_val + " = [" + tmp_obj + "]\n";
             String b = printdent + tmp_val + " = [" + tmp_val + "+" + offset_f + "]\n";
@@ -1155,21 +1193,22 @@ public class DFVaporVisitor implements Visitor
             str_buf.append(a+b+c);
 
             var_stk.push(tmp_ret);
-
-            /*
-              t.1 = [t.0]
-              t.1 = [t.1+0]
-              t.2 = call t.1(t.0 10)
-            */
     }
 
     /**
     * f0 -> Expression()
     * f1 -> ( ExpressionRest() )*
     */
-    public void visit(ExpressionList n)
+    public void visit(ExpressionList n) // probably need to do stuff in the expression rest also
     {
         n.f0.accept(this);
+
+            if(!var_stk.empty())
+            {
+                // System.out.println(var_stk.peek());
+                fcall_params.add(var_stk.pop());
+            }
+
         n.f1.accept(this);
     }
 
