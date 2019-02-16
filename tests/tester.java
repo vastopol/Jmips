@@ -1,31 +1,29 @@
-class Tester
-{
-    public static void main(String[] args)
-    {
-        int val;
-        A as;
-        as = new A();
+// class Factorial{
+//     public static void main(String[] a){
+//         System.out.println(new Fac().ComputeFac(10));
+//     }
+// }
+//
+// class Fac {
+//     public int ComputeFac(int num){
+//         int num_aux ;
+//         if (num < 1)
+//             num_aux = 1 ;
+//         else
+//             num_aux = num * (this.ComputeFac(num-1)) ;
+//         return num_aux ;
+//     }
+// }
 
-        // val = as.f(1,2);
-        // System.out.println(val);
-
-        // as.x = 1;    // ERROR
-        // System.out.println(as.x);
-    }
+class Main {
+	public static void main(String[] a){
+		System.out.println(new A().run());
+	}
 }
 
-class A
-{
-    int x;
-    int my_int;
-    boolean my_bool;
-
-    public int f(int a, int b)
-    {
-        int c;
-        c = b + a;
-        // return 5;   // broken if returns a literal
-        return c;
-    }
+class A {
+	public int run() {
+		System.out.println(42);
+		return 99;
+	}
 }
-

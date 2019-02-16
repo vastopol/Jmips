@@ -1053,12 +1053,86 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(MessageSend n)   // NOT DONE <----------- FIXME -- Function calls
     {
+
+            // var_stk is probably empty at this point
+
         n.f0.accept(this);
+
+            // System.out.println("name_c: " + cur_name); // actual class name
+            // System.out.println(var_stk.peek());  // probably the tmp var name of the caller class
+
+            String name_c = cur_name;   // class name
+            String tmp_obj = "";    // actual anme of tmp variable that is the object
+
+            if(!var_stk.empty()) // looks like the "this" isnt on the stack yet NOT handled yet
+            {
+                tmp_obj = var_stk.pop(); // get the tmp object so can use the vtable
+            }
+
         n.f1.accept(this);
         n.f2.accept(this);
+
+            // System.out.println("name_f: " + cur_name); // atual function name
+            // System.out.println(var_stk.peek());
+
+            String name_f = cur_name;   // function name
+
         n.f3.accept(this);
         n.f4.accept(this);
+
+            // System.out.println(var_stk.peek()); // probably have do do something special to collect params
+
         n.f5.accept(this);
+
+            // System.out.println( name_c + " " + name_f + " " + tmp_obj );
+
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            String tmp_val = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+
+            String tmp_ret = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+
+            // need to get the offset into the vtable of the function
+            // have to lookup function inside of the class struct and then do the index * 4
+
+            Struct struct_c = symbol_table.get("Global").get(name_c);
+            Vector<Struct> vs1 = new Vector<Struct>();
+            Vector<Struct> vs2 = toolbox.tools.methods(struct_c, symbol_table, vs1);
+            int position = 0;
+
+            for(int i = 0; i < vs2.size(); i++)
+            {
+                if(vs2.get(i).getName() == name_f)
+                {
+                    position = i;
+                }
+            }
+
+            int offs = 0 + (4*position);
+            String offset_f = Integer.toString(offs);
+
+            // need to get the params for the function
+            String params_f = "";
+
+            String a = printdent + tmp_val + " = [" + tmp_obj + "]\n";
+            String b = printdent + tmp_val + " = [" + tmp_val + "+" + offset_f + "]\n";
+            String c = printdent + tmp_ret + " = call " + tmp_val + "(" + tmp_obj + params_f + ")\n";
+
+            str_buf.append(a+b+c);
+
+            var_stk.push(tmp_ret);
+
+            /*
+              t.1 = [t.0]
+              t.1 = [t.1+0]
+              t.2 = call t.1(t.0 10)
+            */
     }
 
     /**
@@ -1247,12 +1321,11 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this);
         n.f1.accept(this);
 
-            // System.out.println("alloc: " + cur_name);
-
             Struct cstruct = symbol_table.get("Global").get(cur_name);
 
             Vector<Struct> vs = helper.fields(cstruct, symbol_table);   // alphabetic ordered ...
 
+            // System.out.println("alloc: " + cur_name);
             // System.out.println("here");
             // for( Struct s : vs )
             // {
@@ -1260,7 +1333,29 @@ public class DFVaporVisitor implements Visitor
             // }
             // System.out.println("there");
 
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
             //  need 4 + 4*size of vector bytes for the record
+            int sz = 4 + (4*vs.size());
+
+            String vtab = "vmt_" + cur_name;
+
+            String tmpv = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+            var_stk.push(tmpv);
+
+            String null_lbl = lbl_name + Integer.toString(lbl_cnt);
+            lbl_cnt++;
+
+            str_buf.append( printdent + tmpv + " = HeapAllocZ(" + Integer.toString(sz) + ")\n" ); // allocate record
+            str_buf.append( printdent + "[" + tmpv + "] = :" + vtab + "\n" );                     // set position 0 to vtable
+            str_buf.append( printdent + "if " + tmpv + " goto :" + null_lbl + "\n" );             // check null
+            str_buf.append( printdent + "  " + "Error(\"null pointer\")\n" );
+            str_buf.append( printdent + null_lbl + ":\n" );
 
         n.f2.accept(this);
         n.f3.accept(this);
