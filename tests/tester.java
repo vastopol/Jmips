@@ -10,7 +10,7 @@ class A {
 		int b;
 		a = new int[20];
 		b = a.length;
-		return b;
+		a[4] = 7;
+		return a[4];
 	}
 }
-
