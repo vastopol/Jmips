@@ -260,6 +260,7 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this);
         n.f1.accept(this);
         n.f2.accept(this);
+
             current_function = cur_name;
             Struct current_method = symbol_table.get(current_class).get(current_function);
             str_buf.append("\nfunc " + current_class + "." + current_function + "(this");
@@ -272,6 +273,7 @@ public class DFVaporVisitor implements Visitor
             }
             str_buf.append(")" + "\n");
             indent_cnt++;
+
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
@@ -279,23 +281,38 @@ public class DFVaporVisitor implements Visitor
         n.f7.accept(this);
         n.f8.accept(this);
         n.f10.accept(this);
+
             String tmp1 = "";
-            // System.out.println(cur_name);
-            for(String i: name_map_stk.peek().keySet()) {
+            // System.out.println(cur_name);    // name of return item is is a variable
+            for(String i: name_map_stk.peek().keySet()) {  // probably not going to work for literals
                 if(i == cur_name) {
                     tmp1 = name_map_stk.peek().get(i);
                 }
             }
+
+            if(tmp1 == "") // if didnt find the name then probably is return a literal or expression
+            {
+                // System.out.println(var_stk.peek()); // last thing on stack probably is what should be returned
+                tmp1 = var_stk.pop();
+            }
+
             String printdent = "";
             for(int i = 0; i < indent_cnt; i++)
             {
                 printdent += indent;
             }
+
             String answer = printdent + "ret " + tmp1 + "\n";
             str_buf.append(answer);
+
         n.f11.accept(this);
+
             indent_cnt--;
+
         n.f12.accept(this);
+
+            // MapDump();
+
             current_function = "";
             name_map_stk.pop();
     }
@@ -1059,6 +1076,7 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this);
 
             // System.out.println("name_c: " + cur_name); // actual class name
+            // System.out.println("class_c: " + current_class); // name of class if is a THIS
             // System.out.println(var_stk.peek());  // probably the tmp var name of the caller class
 
             String name_c = cur_name;   // class name
@@ -1101,7 +1119,17 @@ public class DFVaporVisitor implements Visitor
             // need to get the offset into the vtable of the function
             // have to lookup function inside of the class struct and then do the index * 4
 
-            Struct struct_c = symbol_table.get("Global").get(name_c);
+            String lookup_name = "";
+            if(name_c == "")
+            {
+                lookup_name = current_class;    // this means need to check current class
+            }
+            else
+            {
+                lookup_name = name_c;
+            }
+
+            Struct struct_c = symbol_table.get("Global").get(lookup_name);
             Vector<Struct> vs1 = new Vector<Struct>();
             Vector<Struct> vs2 = toolbox.tools.methods(struct_c, symbol_table, vs1);
             int position = 0;
