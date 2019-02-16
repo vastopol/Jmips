@@ -1039,8 +1039,25 @@ public class DFVaporVisitor implements Visitor
     public void visit(ArrayLength n)  // NOT DONE <----------- FIXME
     {
         n.f0.accept(this);
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+
+            String tmp1 = var_stk.pop();
+            String tmp2 = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+            var_stk.push(tmp2);
+
+            String append1 = printdent + tmp2 + " = [" + tmp1 + "- 4]\n";
+            str_buf.append(append1);
+
+
+
         n.f1.accept(this);
         n.f2.accept(this);
+
     }
 
     /**
@@ -1306,6 +1323,36 @@ public class DFVaporVisitor implements Visitor
         n.f3.accept(this);
 
             // probably pop from stack to get the tmp which hold value of the expression?
+            String printdent = "";
+            for(int i = 0; i < indent_cnt; i++)
+            {
+                printdent += indent;
+            }
+            String expr_temp = var_stk.pop();
+            String tmp1 = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+            var_stk.push(tmp1);
+            String append1 = printdent + tmp1 + " = MulS(" + expr_temp + " 4)\n";
+            String tmp2 = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+            var_stk.push(tmp2);
+            // HeapAllocZ(alloc);
+            String append2 = printdent + tmp2 + " = Add(" + tmp1 + " 4)\n";
+            String tmp3 = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+            var_stk.push(tmp3);
+            String append3 = printdent + tmp3 + " = HeapAllocZ(" + tmp2 + ")\n";
+            String tmp4 = var_name + Integer.toString(var_cnt);
+            var_cnt++;
+            var_stk.push(tmp4);
+            String append5 = printdent + tmp4 + " = Add(" + tmp3 + " 4)\n";
+            String append4 = printdent + "[" + tmp4 + " - 4] = " + expr_temp + "\n";  
+
+            str_buf.append(append1);
+            str_buf.append(append2);
+            str_buf.append(append3);
+            str_buf.append(append5);
+            str_buf.append(append4);
 
         n.f4.accept(this);
     }

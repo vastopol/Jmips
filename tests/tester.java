@@ -23,7 +23,11 @@ class Main {
 
 class A {
 	public int run() {
-		System.out.println(42);
+		//System.out.println(42);
+		int[] a;
+		int b;
+		a = new int[20];
+		b = a.length;
 		return 99;
 	}
 }
