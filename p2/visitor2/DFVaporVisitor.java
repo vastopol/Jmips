@@ -435,12 +435,7 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(AssignmentStatement n)
     {
-            if(cur_name != "")
-            {
-                old_name = cur_name; // get old name
-            }
-
-        n.f0.accept(this);
+        n.f0.accept(this); 
 
             String a_name = cur_name;
 
@@ -466,17 +461,6 @@ public class DFVaporVisitor implements Visitor
             String tmpid = var_name + Integer.toString(var_cnt);
             var_cnt++;
 
-            /*if( old_name != ""  && cur_name == "" )
-            {
-                System.out.println("set to old name");
-                name = old_name;
-            }
-            else
-            {
-                System.out.println("set to cur name");
-                name = cur_name;
-            }*/
-
             name = a_name; // idk wtf
 
             if(name_map_stk.peek().get(name) != null)
@@ -499,11 +483,37 @@ public class DFVaporVisitor implements Visitor
                 // MapDump();
             }
 
-            var_stk.push(tmpid);
-            
-            System.out.println();
+            // shoul know both lval && rval names...
+            // MapDump();
+            // System.out.println(a_name + " " + tmpexp);
 
-            String assign = tmpid + " = " + tmpexp + "\n";
+            String garbo = name_map_stk.peek().get(a_name);
+            String assign = "";
+            Struct class_struc = symbol_table.get("Global").get(current_class);
+            Vector<Struct> field_vec = helper.fields(class_struc, symbol_table);
+            int rec_offset = 0;
+            boolean isField = false;
+            for(Struct m: field_vec) {
+                if(m.getName() == a_name) {
+                    isField = true;
+                    break;
+                }
+                rec_offset++;
+            }
+
+            rec_offset = (rec_offset * 4) + 4;
+
+            if(garbo != null && isField)
+            {
+                assign = "[this+" + rec_offset + "] = " + tmpexp + "\n";
+
+            }
+            else {
+                assign = tmpid + " = " + tmpexp + "\n";
+                var_stk.push(tmpid);
+            }
+
+            
 
             String printdent = "";
             for(int i = 0; i < indent_cnt; i++)
@@ -530,8 +540,32 @@ public class DFVaporVisitor implements Visitor
     public void visit(ArrayAssignmentStatement n)   // NOT DONE <----------- FIXME
     {
         n.f0.accept(this);
-
+            // System.out.println("  current name in arr assign is " + cur_name);
             String arr = var_stk.pop();
+            // System.out.println("  arr is " + arr);
+            // MapDump();
+
+            String garbo = name_map_stk.peek().get(cur_name);
+            String assign = "";
+            Struct class_struc = symbol_table.get("Global").get(current_class);
+            Vector<Struct> field_vec = helper.fields(class_struc, symbol_table);
+            int rec_offset = 0;
+            boolean isField = false;
+
+            for(Struct m: field_vec) {
+                if(m.getName() == cur_name) {
+                    isField = true;
+                    break;
+                }
+                rec_offset++;
+            }
+
+            if(garbo != null && isField) {
+                var_stk.push(arr);
+                arr = garbo;
+            }
+
+
 
         n.f1.accept(this);
         n.f2.accept(this);
@@ -1492,9 +1526,79 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
 
+            // System.out.println("BEFORE " + cur_name);
+
             cur_name = n.f0.toString();
 
-            // System.out.println(cur_name);
+            // System.out.println("AFTER " + cur_name);
+
+            if(symbol_table.get(cur_name) != null ) // if exists in map then is a class/function
+            {
+                return;
+            }
+
+            if(current_class != "" && current_class != "null") {
+                Struct class_struct = symbol_table.get("Global").get(current_class);
+                Vector<Struct> class_fvec = helper.fields(class_struct, symbol_table);
+                int field_index = 0;
+                boolean isField = false;
+                for(Struct m: class_fvec) {
+                    if(m.getName() == cur_name) {
+                        isField = true;
+                        // System.out.println("Matched field is " + m.getName() + " and the curname is " + cur_name + " " + Integer.toString(field_index));
+                        // System.out.println("  Current class is " + current_class + " current function is " + current_function);
+                        break;
+                    }
+                    // System.out.println("sup " + field_index + " " + m.getName() + " curname is " + cur_name);
+                    // System.out.println("  Current class is " + current_class + " current function is " + current_function);
+                    field_index++;
+                }
+                //  if(isField) {
+                //     String tmpid1 = var_name + Integer.toString(var_cnt);
+                //     var_cnt++;
+                //     var_stk.push(tmpid1); // put new tmp int var onto the stack
+
+                    // String printdent = "";
+                    // for(int i = 0; i < indent_cnt; i++)
+                    // {
+                    //     printdent += indent;
+                    // }
+
+                //     str_buf.append(printdent + tmpid1 + " = " );
+                // }
+
+                if(isField) {
+
+                    String tmpid1 = "";
+                    int rec_offset = (field_index * 4) + 4;
+                    // System.out.println("Curname is " + cur_name);
+                    if(name_map_stk.empty()) {
+                        // MapDump();
+                    }
+                    else if(name_map_stk.peek().get(cur_name) != null) {
+                        tmpid1 = name_map_stk.peek().get(cur_name);
+                    }
+                    else {
+                        tmpid1 = var_name + Integer.toString(var_cnt);
+                        var_cnt++;
+                        var_stk.push(tmpid1);
+                        name_map_stk.peek().put(cur_name, tmpid1);
+                        // MapDump();
+                    }
+
+                    String printdent = "";
+                    for(int i = 0; i < indent_cnt; i++)
+                    {
+                        printdent += indent;
+                    }
+                    if(printdent != "") {
+                        str_buf.append(printdent + tmpid1 + " = [this+" + Integer.toString(rec_offset) + "]\n");
+                        // System.out.println(printdent + tmpid1 + " = [this+" + Integer.toString(rec_offset) + "]\n");
+                    }
+                    return;
+                }
+            }
+
 
             if(symbol_table.get(cur_name) != null ) // if exists in map then is a class/function
             {
