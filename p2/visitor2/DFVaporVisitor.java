@@ -1274,6 +1274,9 @@ public class DFVaporVisitor implements Visitor
                 }
             }
 
+            // System.out.println(tmp_obj);
+            // MapDump();
+
         n.f1.accept(this);
         n.f2.accept(this);
 
@@ -1387,6 +1390,13 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
         n.f1.accept(this);
+
+            if(!var_stk.empty())
+            {
+                // System.out.println(var_stk.peek());
+                fcall_params.add(var_stk.pop());
+            }
+
     }
 
     /**
@@ -1526,7 +1536,8 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
 
-        // probably should push the word this on stack, or maybe get the class and do that ???
+            // probably should push the word this on stack, or maybe get the class and do that ???
+            var_stk.push("this");
     }
 
     /**
