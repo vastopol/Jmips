@@ -1168,6 +1168,26 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this);
 
             String arr = var_stk.pop();
+            
+            String garbo = name_map_stk.peek().get(cur_name);
+            String assign = "";
+            Struct class_struc = symbol_table.get("Global").get(current_class);
+            Vector<Struct> field_vec = helper.fields(class_struc, symbol_table);
+            int rec_offset = 0;
+            boolean isField = false;
+
+            for(Struct m: field_vec) {
+                if(m.getName() == cur_name) {
+                    isField = true;
+                    break;
+                }
+                rec_offset++;
+            }
+
+            if(garbo != null && isField) {
+                var_stk.push(arr);
+                arr = garbo;
+            }
 
         n.f1.accept(this);
         n.f2.accept(this);
