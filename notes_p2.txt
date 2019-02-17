@@ -2,11 +2,13 @@ PUT THE DIFFERENT CASES IN
 
 tester.java
 
-so far can pass some test cases: (3/13)
+so far can pass some test cases: (5/13)
 
 1-PrintLiteral.java
 2-Add.java
 3-Call.java
+4-Vars.java
+5-OutOfBounds.java
 
 
 ----------------------------------------
