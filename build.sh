@@ -56,7 +56,7 @@ function do_p()
             p_vapor  p2  J2V  $TJAVA  $TEST2
             # p_log
             p_clean  p2
-            # p_test   p2  J2V.java  DFVaporVisitor.java  hw2  tests/Phase2Tester
+            p_test   p2  J2V.java  DFVaporVisitor.java  hw2  tests/Phase2Tester
             ;;
         3)
             echo "phase3"
