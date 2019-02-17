@@ -491,6 +491,8 @@ public class DFVaporVisitor implements Visitor
             }
 
             var_stk.push(tmpid);
+            
+            System.out.println();
 
             String assign = tmpid + " = " + tmpexp + "\n";
 
@@ -557,11 +559,11 @@ public class DFVaporVisitor implements Visitor
             lbl_cnt++;
 
             String append3 = printdent + "if " + tmp2 + " goto :" + label1 + "\n";
-            String append4 =  printdent + "  Error(\"Array index out of bounds\")\n";
+            String append4 =  printdent + "  Error(\"array index out of bounds\")\n";
             String append5 = printdent + label1 + ": \n";
             String append55 = printdent + tmp2 + " = LtS( -1" + " " + i + ")\n";
             String append6 = printdent + "  if " + tmp2 + " goto :" + label2 + "\n";
-            String append7 = printdent + "  Error(\"Array index out of bounds\")\n";
+            String append7 = printdent + "  Error(\"array index out of bounds\")\n";
             String tmp3 = var_name + var_cnt;
             var_cnt++;
             var_stk.push(tmp3);
@@ -1153,11 +1155,11 @@ public class DFVaporVisitor implements Visitor
         lbl_cnt++;
 
         String append3 = printdent + "if " + tmp2 + " goto :" + label1 + "\n";
-        String append4 =  printdent + "  Error(\"Array index out of bounds\")\n";
+        String append4 =  printdent + "  Error(\"array index out of bounds\")\n";
         String append5 = printdent + label1 + ": \n";
         String append55 = printdent + tmp2 + " = LtS(-1" + " " + i + ")\n";
         String append6 = printdent + "if " + tmp2 + " goto :" + label2 + "\n";
-        String append7 = printdent + "  Error(\"Array index out of bounds\")\n";
+        String append7 = printdent + "  Error(\"array index out of bounds\")\n";
         String tmp3 = var_name + var_cnt;
         var_cnt++;
         var_stk.push(tmp3);
@@ -1316,13 +1318,12 @@ public class DFVaporVisitor implements Visitor
                 struct_c = symbol_table.get("Global").get(lookup_name);
             }
 
-            Vector<Struct> vs1 = new Vector<Struct>();
-            Vector<Struct> vs2 = toolbox.tools.methods(struct_c, symbol_table, vs1); // probably fix this with different order for methods <---- FIXME
+            Vector<Pair> vs2 = toolbox.tools.vtable_correct(struct_c, symbol_table); // probably fix this with different order for methods <---- FIXME
             int position = 0;
 
             for(int i = 0; i < vs2.size(); i++)
             {
-                if(vs2.get(i).getName() == name_f)
+                if(vs2.get(i).getValue().getName() == name_f)
                 {
                     position = i;
                 }
