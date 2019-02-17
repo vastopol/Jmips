@@ -49,14 +49,14 @@ function do_p()
             p_check  p1  Typecheck  $TJAVA  $TEST1
             p_log
             p_clean  p1
-            p_test   p1  Typecheck.java  DFTypeCheckVisitor.java  hw1  tests/Phase1Tester
+            # p_test   p1  Typecheck.java  DFTypeCheckVisitor.java  hw1  tests/Phase1Tester
             ;;
         2)
             p_init   p2  J2V.java
             p_vapor  p2  J2V  $TJAVA  $TEST2
             # p_log
             p_clean  p2
-            # p_test   p2  J2V.java  DFVaporVisitor.java  hw2  tests/Phase2Tester
+            p_test   p2  J2V.java  DFVaporVisitor.java  hw2  tests/Phase2Tester
             ;;
         3)
             echo "phase3"

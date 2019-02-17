@@ -295,18 +295,21 @@ public class DFVaporVisitor implements Visitor
         n.f8.accept(this);
         n.f10.accept(this);
 
-            String tmp1 = "";
             // System.out.println("in fun def: " + cur_name);    // name of return item is is a variable
+            // MapDump();
+
+            String tmp1 = "";
             for(String i: name_map_stk.peek().keySet()) {  // probably not going to work for literals
                 if(i == cur_name) {
                     tmp1 = name_map_stk.peek().get(i);
+                    // System.out.println("func ret#1: " + tmp1);
                 }
             }
 
             if(tmp1 == "") // if didnt find the name then probably is return a literal or expression
             {
-                // System.out.println(var_stk.peek()); // last thing on stack probably is what should be returned
                 tmp1 = var_stk.pop();
+                // System.out.println("func ret#2: " + tmp1); // last thing on stack probably is what should be returned
             }
 
             String printdent = "";
@@ -442,6 +445,7 @@ public class DFVaporVisitor implements Visitor
             String a_name = cur_name;
 
             // System.out.println("in assign: " + a_name);
+            // MapDump();
 
         n.f1.accept(this);
         n.f2.accept(this);
@@ -452,23 +456,28 @@ public class DFVaporVisitor implements Visitor
             if(!var_stk.empty())
             {
                 tmpexp = var_stk.pop();
+                // System.out.println("in assign -- cname1: " + tmpexp);
             }
-            else
+            else // idk what should happen
             {
-                // System.out.println("cname: " + cur_name); // class name
+                // System.out.println("in assign -- cname2: " + cur_name); // class name
             }
 
             String tmpid = var_name + Integer.toString(var_cnt);
             var_cnt++;
 
-            if( old_name != ""  && cur_name == "" )
+            /*if( old_name != ""  && cur_name == "" )
             {
+                System.out.println("set to old name");
                 name = old_name;
             }
             else
             {
+                System.out.println("set to cur name");
                 name = cur_name;
-            }
+            }*/
+
+            name = a_name; // idk wtf
 
             if(name_map_stk.peek().get(name) != null)
             {
@@ -477,7 +486,7 @@ public class DFVaporVisitor implements Visitor
                 // System.out.println(var_stk.peek());
                 // System.out.println(a_name);
                 // MapDump();
-                // // name_map_stk.peek().replace(a_name,tmpid);
+                // // name_map_stk.peek().replace(a_name,tmpid); // not this probably ??
                 // MapDump();
                 tmpid = name_map_stk.peek().get(a_name);
             }
@@ -586,7 +595,7 @@ public class DFVaporVisitor implements Visitor
             str_buf.append(append9);
             str_buf.append(append10);
 
-            
+
 
     }
 
