@@ -99,6 +99,8 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(Goal n)
     {
+
+        // tools.print_map_structs(symbol_table);
         try
         {
                 // here do the vtables for the other classes before the main class
@@ -707,6 +709,7 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(WhileStatement n)
     {
+        // MapDump();
 
             String label_begin = "loop_start_" + lbl_name + Integer.toString(lbl_cnt);
             lbl_cnt++;
@@ -1334,7 +1337,7 @@ public class DFVaporVisitor implements Visitor
         n.f1.accept(this);
         n.f2.accept(this);
 
-            // System.out.println("name_f: " + cur_name); // actual function name
+            //System.out.println("name_f: " + cur_name); // actual function name
             // System.out.println(var_stk.peek());
 
             String name_f = cur_name;   // function name
@@ -1364,18 +1367,70 @@ public class DFVaporVisitor implements Visitor
             // have to lookup function inside of the class struct and then do the index * 4
 
             String lookup_name = "";
+            // System.out.println("--" + name_c);
+            // Struct f,g, h;
+
             if(name_c == "")
             {
+                // System.out.println("name_c was empty");
                 lookup_name = current_class;    // this means need to check current class
             }
             else
             {
-                lookup_name = name_c;
+                // System.out.println("name_c had something");
+
+                // set a local bool = false
+                boolean loc = false;
+                Map<String, Struct> f;
+                Map<String, Struct> i;
+                Struct g;
+                Struct h;
+                // try and lookup name_c as a local variable somewhere in a class or function
+                // if found set the lookup name to this
+                // set bool to true
+                // System.out.println("~~ in the thing " + current_class + " " + current_function);
+                String func_string = current_function + " " + current_class;
+                f = symbol_table.get(func_string);
+                
+                i = symbol_table.get(current_class);
+                if(i != null) { // class
+                    //bool to true
+                    // set lookup name
+                    // System.out.println("inside of G");
+                    g = i.get(name_c);
+                    if(g != null && g.getType() == "object"){
+                        lookup_name = g.get_className();
+                        loc = true;
+                    }
+                    else {
+                        // System.out.println("Error in G");
+                    }
+                }
+                if(f != null){ //function
+                    // System.out.println("inside of F");
+                    h = f.get(name_c);
+                    // set bool true
+                    // set lookup name
+                    if(h != null && h.getType() == "object") {
+                        lookup_name = h.get_className();
+                        loc = true;
+                    }
+                    else {
+                        // System.out.println("Error in F");
+                    }
+                }
+
+                // if bool == false assume name_c is a class name
+                if(loc == false)
+                {
+                    // System.out.println("loc was false");
+                    lookup_name = name_c; 
+                }
             }
 
             // System.out.println("lkup: " + lookup_name);
 
-            Struct struct_c = symbol_table.get("Global").get(lookup_name);
+            Struct struct_c = symbol_table.get("Global").get(lookup_name); // look for a class
 
             if(struct_c == null) // looked up an id with name_c, but since isnt a class will be null, need to relookup up by class
             {
@@ -1385,17 +1440,37 @@ public class DFVaporVisitor implements Visitor
             }
 
             Vector<Pair> vs2 = toolbox.tools.vtable_correct(struct_c, symbol_table); // probably fix this with different order for methods <---- FIXME
+            // Vector<Struct> vs1 = new Vector<>();
+            // Vector<Struct> vs2 = tools.methods(struct_c, symbol_table, vs1);
             int position = 0;
+
+            // System.out.println("----" + lookup_name);
 
             for(int i = 0; i < vs2.size(); i++)
             {
+                // if(vs2.get(i).getName() == name_f)
                 if(vs2.get(i).getValue().getName() == name_f)
                 {
                     position = i;
+                    // System.out.println(vs2.get(i).getValue().getName() + " " + name_f + " " + position);
+                }
+                else{
+                    // System.out.println("  bruh " + vs2.get(i).getValue().getName() + " " + name_f );
                 }
             }
+            
+            // System.out.println(current_class + " " + name_f);
+            
+            // for(Pair i: vs2) {
+            //     if(i.getValue().getName() == name_f)
+            //     {
+            //         // System.out.println("  " + i.getValue().getName() + " " + name_f + " " + position);
+            //         break;
+            //     }
+            //     position++;
+            // }
 
-            int offs = 0 + (4*position);
+            int offs = (4*position);
             String offset_f = Integer.toString(offs);
 
             // need to get the params for the function
@@ -1407,6 +1482,10 @@ public class DFVaporVisitor implements Visitor
                 params_f += pp;
                 params_f += " ";
             }
+
+            // System.out.println( current_function + " " +name_f  + " params: " + params_f);
+            // MapDump();
+
 
             fcall_params = new Vector<String>(); // reset and clear old params for next time
 

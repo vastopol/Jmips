@@ -44,7 +44,7 @@ public class J2V
         // HERE GET SYMBOL TABLE #1
         symbol_table1 = df_stack_visitor1.struct_map;
         // System.out.println("SYMBOL TABLE #1");
-        // print_map_structs(symbol_table1);
+        // tools.print_map_structs(symbol_table1);
 
         // FILLS IN THE PARTIAL TABLE
         DFStackVisitor2 df_stack_visitor2 = new DFStackVisitor2(symbol_table1);
@@ -53,7 +53,7 @@ public class J2V
         // HERE GET SYMBOL TABLE #2
         symbol_table2 = df_stack_visitor2.struct_map;
         // System.out.println("SYMBOL TABLE #2");
-        // print_map_structs(symbol_table2);
+        // tools.print_map_structs(symbol_table2);
 
 
         // Vector<Pair> jef = new Vector<Pair>();
@@ -146,82 +146,6 @@ public class J2V
         }
         System.out.println(tester);
         System.out.println("");
-    }
-
-    public static void print_stack_trace(Stack<String> ss)
-    {
-        System.out.println(""); // end test with newline
-        System.out.println("Print Stack Trace\n--------------------");
-        for( String s : ss )
-        {
-            System.out.println(s);
-        }
-        System.out.println("--------------------\n");
-    }
-
-    public static void print_vec_maps(Vector<Map<String,String>> vm)
-    {
-        System.out.println("Print Vector of Maps (String,String) \n--------------------");
-        for( Map<String,String> entry : vm )
-        {
-            entry.forEach( (k,v) -> System.out.println("( "+ k + " : " + v + " )") );
-            System.out.println("");
-        }
-        System.out.println("--------------------\n");
-    }
-
-    public static void print_map_maps(Map<String,Map<String,String>> mm)
-    {
-        System.out.println("Print Map of Maps (String,String) \n--------------------");
-        for( Map.Entry<String,Map<String,String>> entry : mm.entrySet() )
-        {
-            String key = entry.getKey();
-            Map<String,String> val = entry.getValue();
-            System.out.println("Map: " + key);
-            val.forEach( (k,v) -> System.out.println("( "+ k + " : " + v + " )") );
-            System.out.println("");
-        }
-        System.out.println("--------------------\n");
-
-    }
-
-    public static void print_vec_structs(Vector<Map<String,Struct>> vs)
-    {
-        System.out.println("Print Vector of Maps (String,Struct) \n--------------------");
-
-        //System.out.println(vs.size());
-        for(Map<String,Struct> i: vs)
-        {
-            for(String k1: i.keySet())
-            {
-                Struct stc = i.get(k1);
-                toolbox.tools.print(stc);
-            }
-            System.out.println("");
-        }
-
-        System.out.println("--------------------\n");
-    }
-
-    public static void print_map_structs(Map<String,Map<String,Struct>> ms)
-    {
-        System.out.println("Print Map of Maps (String,Struct) \n--------------------");
-
-        //System.out.println(ms.size());
-        for(String k : ms.keySet())
-        {
-            Map<String, Struct> m1 = ms.get(k);
-            System.out.println("Map: " + k);
-            for(String k1 : m1.keySet())
-            {
-                Struct stc = m1.get(k1);
-                System.out.println("Struct: " + k1);
-                toolbox.tools.print(stc);
-            }
-            System.out.println("");
-        }
-
-        System.out.println("--------------------\n");
     }
 };
 
