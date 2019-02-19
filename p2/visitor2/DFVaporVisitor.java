@@ -29,11 +29,10 @@ public class DFVaporVisitor implements Visitor
     String current_class;
     String current_function;
     String cur_name; // track current identifier
-    String old_name; // track the previous identifier
+    boolean magic_bool_flag = true; // this is for when use ! or && inside of an if statement's boolexpr
     boolean if_param_flag = false; // track if inside the expression argument to an if statement
     String  if_param_arg = "";  // used for branch/loops, put the name of the specific temp that goes in the argument spot: if(HERE){...} else{...}
-    Vector<String> fcall_params;
-    boolean magic_bool_flag = true;
+    Vector<String> fcall_params; // used to collect function call parameters
 
     public DFVaporVisitor(Map<String, Map<String,Struct>> m) // constructor takes in the symbol table from the DFStackVisitor2
     {
@@ -202,12 +201,12 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
         n.f1.accept(this);
-        current_class = cur_name;
+            current_class = cur_name;
         n.f2.accept(this);
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
-        current_class = "";
+            current_class = "";
     }
 
     /**
@@ -224,14 +223,14 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
         n.f1.accept(this);
-        current_class = cur_name;
+            current_class = cur_name;
         n.f2.accept(this);
         n.f3.accept(this);
         n.f4.accept(this);
         n.f5.accept(this);
         n.f6.accept(this);
         n.f7.accept(this);
-        current_class = "";
+            current_class = "";
     }
 
     /**
@@ -261,7 +260,7 @@ public class DFVaporVisitor implements Visitor
     * f11 -> ";"
     * f12 -> "}"
     */
-    public void visit(MethodDeclaration n) // Broken, cant return literals???? <---------- FIXME
+    public void visit(MethodDeclaration n)
     {
             name_map_stk.push(new HashMap<String, String>());
 
@@ -544,7 +543,7 @@ public class DFVaporVisitor implements Visitor
     * f5 -> Expression()
     * f6 -> ";"
     */
-    public void visit(ArrayAssignmentStatement n)   // NOT DONE <----------- FIXME
+    public void visit(ArrayAssignmentStatement n)
     {
         n.f0.accept(this);
             // System.out.println("  current name in arr assign is " + cur_name);
@@ -571,8 +570,6 @@ public class DFVaporVisitor implements Visitor
                 var_stk.push(arr);
                 arr = garbo;
             }
-
-
 
         n.f1.accept(this);
         n.f2.accept(this);
@@ -637,9 +634,6 @@ public class DFVaporVisitor implements Visitor
             str_buf.append(append88);
             str_buf.append(append9);
             str_buf.append(append10);
-
-
-
     }
 
     /**
@@ -798,7 +792,7 @@ public class DFVaporVisitor implements Visitor
 
             String bool_expr = if_param_arg;
 
-            // IF0 (valOf(bool_expr) == false) THEN GOTO B
+            // IF0 (valOf(bool_expr) == false) THEN GOTO END
             str_buf.append( printdent + "if0 " + bool_expr + " goto :" + label_end + "\n");
 
         n.f3.accept(this);
@@ -807,6 +801,7 @@ public class DFVaporVisitor implements Visitor
         n.f4.accept(this);
             indent_cnt--;
 
+            // GOTO BEGIN
             str_buf.append("  " + printdent + "goto :" + label_begin + "\n");
 
             // END
@@ -829,18 +824,7 @@ public class DFVaporVisitor implements Visitor
             String tmp = "";
             String name = cur_name;
 
-            // if( name_map_stk.peek().get(name) == null )
-            // {
-                // // grab the name of the last tmp variable
-                // tmp = var_stk.pop();
-            // }
-            // else
-            // {
-            //     tmp = name_map_stk.peek().get(name);
-            // }
-
-            // var_stk could be empty... DANGER CAUSES CRASH IF EMPTY
-            if(!var_stk.empty()) // Broken, idk what to do here when needs return value from a function call  <------ FIXME
+            if(!var_stk.empty())
             {
                 tmp = var_stk.pop();
             }
@@ -895,11 +879,6 @@ public class DFVaporVisitor implements Visitor
 
             // pop
             String v2 = var_stk.pop();
-
-            // here do the double if same for and/not
-            // two if0 instructions that check if each of the operands is zero,
-            // assign zero to the result and goto the end label.
-            // Before the end label, one is assigned to the result.
 
             String printdent = "";
             for(int i = 0; i < indent_cnt; i++)
@@ -1231,7 +1210,7 @@ public class DFVaporVisitor implements Visitor
     * f2 -> PrimaryExpression()
     * f3 -> "]"
     */
-    public void visit(ArrayLookup n)   // NOT DONE <----------- FIXME
+    public void visit(ArrayLookup n)
     {
         n.f0.accept(this);
 
@@ -1318,7 +1297,6 @@ public class DFVaporVisitor implements Visitor
         str_buf.append(append9);
         str_buf.append(append10);
 
-
     }
 
     /**
@@ -1326,9 +1304,10 @@ public class DFVaporVisitor implements Visitor
     * f1 -> "."
     * f2 -> "length"
     */
-    public void visit(ArrayLength n)  // NOT DONE <----------- FIXME
+    public void visit(ArrayLength n)
     {
         n.f0.accept(this);
+
             String printdent = "";
             for(int i = 0; i < indent_cnt; i++)
             {
@@ -1343,8 +1322,6 @@ public class DFVaporVisitor implements Visitor
             String append1 = printdent + tmp2 + " = [" + tmp1 + "- 4]\n";
             str_buf.append(append1);
 
-
-
         n.f1.accept(this);
         n.f2.accept(this);
 
@@ -1358,7 +1335,7 @@ public class DFVaporVisitor implements Visitor
     * f4 -> ( ExpressionList() )?
     * f5 -> ")"
     */
-    public void visit(MessageSend n)   // NOT DONE <----------- FIXME -- Function calls
+    public void visit(MessageSend n)
     {
 
             // var_stk is probably empty at this point
@@ -1376,25 +1353,6 @@ public class DFVaporVisitor implements Visitor
             {
                 tmp_obj = var_stk.pop(); // get the tmp object so can use the vtable
             }
-            // else
-            // {
-            //     tmp_obj = "this"; // looks like the "this" isnt on the stack
-            // }
-            //
-            // // System.out.println(tmp_obj);
-            // // MapDump();
-            //
-            // // weird bs here
-            // // if found a value in the name map then put value back on var_stk and set tmp_obj to "this"
-            // for(String nms : name_map_stk.peek().values())
-            // {
-            //     if(nms == tmp_obj)
-            //     {
-            //         // System.out.println("ooof");
-            //         var_stk.push(tmp_obj);
-            //         tmp_obj = "this";
-            //     }
-            // }
 
             // System.out.println(tmp_obj);
             // MapDump();
@@ -1445,53 +1403,40 @@ public class DFVaporVisitor implements Visitor
                 // System.out.println("name_c had something\nname_c: "+name_c); // ###
 
                 // set a local bool = false
-                boolean loc = false;
-                Map<String, Struct> f;
-                Map<String, Struct> i;
-                Struct g;
-                Struct h;
                 // try and lookup name_c as a local variable somewhere in a class or function
                 // if found set the lookup name to this
                 // set bool to true
                 // System.out.println("~~ in the thing " + current_class + " " + current_function);
+                boolean loc = false;
+                Map<String, Struct> f;;
+                Struct h;
                 String func_string = current_function + " " + current_class;
                 f = symbol_table.get(func_string);
-
-                // i = symbol_table.get(current_class);
                 Struct x = symbol_table.get("Global").get(current_class);
                 Vector<Struct> y = tools.rec_fields(x,symbol_table,new Vector<Struct>());
-                // if(i != null) { // class
-                if(y != null){
-                    //bool to true
-                    // set lookup name
 
+                if(y != null) // class
+                {
                     for(Struct hg : y)
                     {
                         // System.out.println(hg.getName());
                         if(hg.getName() == name_c)
                         {
+                            //bool to true
+                            // set lookup name
                             lookup_name = hg.get_className();
                             loc = true;
                         }
                     }
-
-                    // System.out.println("inside of G");
-                    // g = i.get(name_c);
-                    // if(g != null && g.getType() == "object"){
-                    //     lookup_name = g.get_className();
-                    //     System.out.println(lookup_name);
-                    //     loc = true;
-                    // }
-                    // else {
-                    //     System.out.println("Error in G");
-                    // }
                 }
-                if(f != null){ //function
+                if(f != null) //function
+                {
                     // System.out.println("inside of F");
                     h = f.get(name_c);
-                    // set bool true
-                    // set lookup name
-                    if(h != null && h.getType() == "object") {
+                    if(h != null && h.getType() == "object")
+                    {
+                        // set bool true
+                        // set lookup name
                         lookup_name = h.get_className();
                         // System.out.println(lookup_name);
                         loc = true;
@@ -1520,16 +1465,13 @@ public class DFVaporVisitor implements Visitor
                 struct_c = symbol_table.get("Global").get(lookup_name);
             }
 
-            Vector<Pair> vs2 = toolbox.tools.vtable_correct(struct_c, symbol_table); // probably fix this with different order for methods <---- FIXME
-            // Vector<Struct> vs1 = new Vector<>();
-            // Vector<Struct> vs2 = tools.methods(struct_c, symbol_table, vs1);
+            Vector<Pair> vs2 = toolbox.tools.vtable_correct(struct_c, symbol_table);
             int position = 0;
 
             // System.out.println("----" + lookup_name);
 
             for(int i = 0; i < vs2.size(); i++)
             {
-                // if(vs2.get(i).getName() == name_f)
                 if(vs2.get(i).getValue().getName() == name_f)
                 {
                     position = i;
@@ -1541,15 +1483,6 @@ public class DFVaporVisitor implements Visitor
             }
 
             // System.out.println(current_class + " " + name_f);
-
-            // for(Pair i: vs2) {
-            //     if(i.getValue().getName() == name_f)
-            //     {
-            //         // System.out.println("  " + i.getValue().getName() + " " + name_f + " " + position);
-            //         break;
-            //     }
-            //     position++;
-            // }
 
             int offs = (4*position);
             String offset_f = Integer.toString(offs);
@@ -1593,7 +1526,6 @@ public class DFVaporVisitor implements Visitor
                 // System.out.println("fun call in an if/while " + tmp_ret);
                 if_param_arg = tmp_ret;
             }
-
     }
 
     /**
@@ -1629,7 +1561,6 @@ public class DFVaporVisitor implements Visitor
                 fcall_params.add(var_stk.pop());
                 // System.out.println(var_stk.peek());
             }
-
     }
 
     /**
@@ -1725,21 +1656,6 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
 
-            // // THIS IS WRONG DONT USE
-            // if(if_param_flag == true) // maybe a special case for when single id is in the if expression
-            // {
-            //     if(name_map_stk.peek().get(n.f0.toString()) != null)
-            //     {
-            //         if_param_arg = name_map_stk.peek().get(n.f0.toString());
-            //     }
-            //
-            //     // System.out.println("TOP");
-            //     // System.out.println("if param ident: " + n.f0.toString());
-            //     // System.out.println("if param old cur_name: " + cur_name);
-            //     // System.out.println("if param Arg string: " + if_param_arg);
-            //     // MapDump();
-            // }
-
             // System.out.println("BEFORE " + cur_name);
 
             cur_name = n.f0.toString();
@@ -1767,19 +1683,6 @@ public class DFVaporVisitor implements Visitor
                     // System.out.println("  Current class is " + current_class + " current function is " + current_function);
                     field_index++;
                 }
-                //  if(isField) {
-                //     String tmpid1 = var_name + Integer.toString(var_cnt);
-                //     var_cnt++;
-                //     var_stk.push(tmpid1); // put new tmp int var onto the stack
-
-                    // String printdent = "";
-                    // for(int i = 0; i < indent_cnt; i++)
-                    // {
-                    //     printdent += indent;
-                    // }
-
-                //     str_buf.append(printdent + tmpid1 + " = " );
-                // }
 
                 if(isField) {
 
@@ -1813,7 +1716,6 @@ public class DFVaporVisitor implements Visitor
                     return;
                 }
             }
-
 
             if(symbol_table.get(cur_name) != null ) // if exists in map then is a class/function
             {
@@ -1856,7 +1758,7 @@ public class DFVaporVisitor implements Visitor
     /**
     * f0 -> "this"
     */
-    public void visit(ThisExpression n)   // NOT DONE <----------- FIXME  // maybe need to do class fetch, not sure...
+    public void visit(ThisExpression n)
     {
         n.f0.accept(this);
 
@@ -1871,7 +1773,7 @@ public class DFVaporVisitor implements Visitor
     * f3 -> Expression()
     * f4 -> "]"
     */
-    public void visit(ArrayAllocationExpression n)   // NOT DONE <----------- FIXME // DO MAKE ARRAY HERE
+    public void visit(ArrayAllocationExpression n)
     {
         n.f0.accept(this);
         n.f1.accept(this);
@@ -1919,7 +1821,7 @@ public class DFVaporVisitor implements Visitor
     * f2 -> "("
     * f3 -> ")"
     */
-    public void visit(AllocationExpression n)   // NOT DONE <----------- FIXME // DO MAKE CLASS RECORD HERE
+    public void visit(AllocationExpression n)
     {
         n.f0.accept(this);
         n.f1.accept(this);
@@ -1983,11 +1885,6 @@ public class DFVaporVisitor implements Visitor
 
             // pop
             String v1 = var_stk.pop();
-
-            // here do the double if same for and/not
-            // two if0 instructions that check if each of the operands is zero,
-            // assign zero to the result and goto the end label.
-            // Before the end label, one is assigned to the result.
 
             String tv1 = var_name + Integer.toString(var_cnt); //v1
             var_cnt++;

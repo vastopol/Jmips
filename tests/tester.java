@@ -1,376 +1,52 @@
-class LinkedList{
-    public static void main(String[] a){
-	System.out.println(new LL().Start());
-    }
-}
-
-class Element {
-    int Age ;
-    int Salary ;
-    boolean Married ;
-
-    // Initialize some class variables
-    public boolean Init(int v_Age, int v_Salary, boolean v_Married){
-	Age = v_Age ;
-	Salary = v_Salary ;
-	Married = v_Married ;
-	return true ;
-    }
-
-    public int GetAge(){
-	return Age ;
-    }
-
-    public int GetSalary(){
-	return Salary ;
-    }
-
-    public boolean GetMarried(){
-	return Married ;
-    }
-
-    // This method returns true if the object "other"
-    // has the same values for age, salary and
-    public boolean Equal(Element other){
-    	boolean ret_val ;
-    	int aux01 ;
-    	int aux02 ;
-    	int nt ;
-    	ret_val = true ;
-
-        // if(1<2)
-        // {
-        //     System.out.println(77878787878787);
-        // }
-        // else
-        // {
-        //     System.out.println(3324324234234);
-        // }
-
-    	aux01 = other.GetAge();
-    	if (!this.Compare(aux01,Age))
-        {
-            // System.out.println(10);
-             ret_val = false ;
-        }
-    	else
-        {
-            // System.out.println(11); // ages are equal
-
-            aux02 = other.GetSalary();
-    	    if (!this.Compare(aux02,Salary))
-            {
-                // System.out.println(12);
-
-                 ret_val = false ;
-             }
-    	    else
-            {
-                // System.out.println(13); // salary is equal
-
-        		if (Married) // <---------- wrong ############
-                {
-
-                  // tmp60 = [this+8]
-                  // if0 tmp60 goto :else_start_lbl14
-
-                    // System.out.println(14);
-
-        		    if (!other.GetMarried())
-                    {
-                        // System.out.println(15);
-
-                         ret_val = false;
-                     }
-        		    else
-                    {
-                        // System.out.println(16);
-
-                        nt = 0 ;
-                    }
-                }
-        		else
-                {
-                    // System.out.println(17); // not maried
-
-        		    if (other.GetMarried())
-                    {
-                        // System.out.println(18);
-
-                         ret_val = false;
-                     }
-        		    else
-                    {
-                        // System.out.println(19);
-
-                         nt = 0 ;
-                     }
-                 }
-             }
-    	}
-
-    	return ret_val ;
-    }
-
-    // This method compares two integers and
-    // returns true if they are equal and false
-    // otherwise
-    public boolean Compare(int num1 , int num2){
-	boolean retval ;
-	int aux02 ;
-	retval = false ;
-	aux02 = num2 + 1 ;
-	if (num1 < num2) retval = false ;
-	else if (!(num1 < aux02)) retval = false ;
-	else retval = true ;
-	return retval ;
-    }
-
-}
-
-class List{
-    Element elem ;
-    List next ;
-    boolean end ;
-
-    // Initialize the node list as the last node
-    public boolean Init(){
-	end = true ;
-	return true ;
-    }
-
-    // Initialize the values of a new node
-    public boolean InitNew(Element v_elem, List v_next, boolean v_end){
-	end = v_end ;
-	elem = v_elem ;
-	next = v_next ;
-	return true ;
-    }
-
-    // Insert a new node at the beginning of the list
-    public List Insert(Element new_elem){
-	boolean ret_val ;
-	List aux03 ;
-	List aux02 ;
-	aux03 = this ;
-	aux02 = new List();
-	ret_val = aux02.InitNew(new_elem,aux03,false);
-	return aux02 ;
-    }
-
-
-    // Update the the pointer to the next node
-    public boolean SetNext(List v_next){
-	next = v_next ;
-	return true ;
-    }
-
-    // Delete an element e from the list
-    public List Delete(Element e)
+class Main_Class
+{
+    public static void main(String[] str_arg)
     {
-    	List my_head ;
-    	boolean ret_val ;
-    	boolean aux05;
-    	List aux01 ;
-    	List prev ;
-    	boolean var_end ;
-    	Element var_elem ;
-    	int aux04 ;
-    	int nt ;
+        A a;
+        B b;
+        C c;
+        D d;
 
-    	my_head = this ;
-    	ret_val = false ;
-    	aux04 = 0 - 1 ;
-    	aux01 = this ;
-    	prev = this ;
-    	var_end = end;
-    	var_elem = elem ;
+        a = new A();
+        b = new B();
+        c = new C();
+        d = new D();
 
-        // while(!ret_val)
-        // {
-        //     System.out.println(545454545);
-        //     ret_val = true;
-        // }
-        // ret_val = false;
+        System.out.println(a.f(1));
 
-        // System.out.println(7654321);
-    	while ((!var_end) && (!ret_val))
-        {
-            // System.out.println(1234567);
-    	    if (e.Equal(var_elem))
-            {
-        		ret_val = true ;
-        		if (aux04 < 0)
-                {
-        		    // delete first element
-        		    my_head = aux01.GetNext() ;
-        		}
-        		else // delete a non first element
-                {
-        		    System.out.println(0-555);
-        		    aux05 = prev.SetNext(aux01.GetNext());
-        		    System.out.println(0-555);
-        		}
-            }
-            else
-            {
-                nt = 0 ;
-            }
+        System.out.println(b.f(1));
+        System.out.println(b.g(1));
 
-    	    if (!ret_val)
-            {
-        		prev = aux01 ;
-        		aux01 = aux01.GetNext() ;
-        		var_end = aux01.GetEnd();
-        		var_elem = aux01.GetElem();
-        		aux04 = 1 ;
-    	    }
-            else
-            {
-                 nt = 0 ;
-             }
-    	}
-    	return my_head ;
+        System.out.println(c.f(1));
+        System.out.println(c.g(1));
+
+        System.out.println(d.f(1));
+        System.out.println(d.g(1));
     }
-
-    public boolean GetEnd(){
-	return end ;
-    }
-
-    public Element GetElem(){
-	return elem ;
-    }
-
-    public List GetNext(){
-	return next ;
-    }
-
-
-    // Print the linked list
-    public boolean Print(){
-	List aux01 ;
-	boolean var_end ;
-	Element  var_elem ;
-
-	aux01 = this ;
-	var_end = end ;
-	var_elem = elem ;
-	while (!var_end){
-	    System.out.println(var_elem.GetAge());
-	    aux01 = aux01.GetNext() ;
-	    var_end = aux01.GetEnd();
-	    var_elem = aux01.GetElem();
-	}
-
-	return true ;
-    }
-
-    // Search for an element e on the list
-    public int Search(Element e){
-    	int int_ret_val ;
-    	List aux01 ;
-    	Element var_elem ;
-    	boolean var_end ;
-    	int nt ;
-
-    	int_ret_val = 0 ;
-    	aux01 = this ;
-    	var_end = end;
-    	var_elem = elem ;
-    	while (!var_end)
-        {
-            // System.out.println(e.GetAge());
-            // System.out.println(e.GetSalary());
-            // System.out.println(var_elem.GetAge());
-            // System.out.println(var_elem.GetSalary());
-
-    	    if (e.Equal(var_elem))
-            {
-		         int_ret_val = 1 ;
-                 // System.out.println(int_ret_val); // #
-    	    }
-    	    else
-            {
-                 nt = 0 ;
-                 // System.out.println(nt); // #
-            }
-
-    	    aux01 = aux01.GetNext() ;
-    	    var_end = aux01.GetEnd();
-    	    var_elem = aux01.GetElem();
-    	}
-    	return int_ret_val ;
-    }
-
 }
 
-
-// this class invokes the methods to insert, delete,
-// search and print the linked list
-class LL{
-
-    public int Start(){
-
-	List head ;
-	List last_elem ;
-	boolean aux01 ;
-	Element el01 ;
-	Element el02 ;
-	Element el03 ;
-
-	last_elem = new List();
-	aux01 = last_elem.Init();
-	head = last_elem ;
-	aux01 = head.Init();
-	aux01 = head.Print();
-
-	// inserting first element
-	el01 = new Element();
-	aux01 = el01.Init(25,37000,false);
-	head = head.Insert(el01);
-	aux01 = head.Print();
-	System.out.println(10000000);
-	// inserting second  element
-	el01 = new Element();
-	aux01 = el01.Init(39,42000,true);
-	el02 = el01 ;
-	head = head.Insert(el01);
-	aux01 = head.Print();
-	System.out.println(10000000);
-	// inserting third element
-	el01 = new Element();
-	aux01 = el01.Init(22,34000,false);
-	head = head.Insert(el01);
-	aux01 = head.Print();
-	el03 = new Element();
-	aux01 = el03.Init(27,34000,false);
-    System.out.println(10000000);
-    // System.out.println(88888888);
-	System.out.println(head.Search(el02));  /// broken should be 1
-    // System.out.println(88888888);
-    // System.out.println(99999999);
-	System.out.println(head.Search(el03));
-    // System.out.println(99999999);
-    System.out.println(10000000);
-	// inserting fourth element
-	el01 = new Element();
-	aux01 = el01.Init(28,35000,false);
-	head = head.Insert(el01);
-	aux01 = head.Print();
-	System.out.println(2220000);
-
-	head = head.Delete(el02);
-	aux01 = head.Print();
-	System.out.println(33300000);
-
-
-	head = head.Delete(el01);
-	aux01 = head.Print();
-	System.out.println(44440000);
-
-	return 0 ;
-
-
+class A {
+    int x;
+    public int f(int a){
+        return a;
     }
+}
 
+class B extends A {
+    public int g(int b){
+        return b;
+    }
+}
+
+class C extends B {
+    public int g(int c){
+        return c+1;
+    }
+}
+
+class D extends C {
+    int y;
+    public int f(int a){
+        return a+1;
+    }
 }
