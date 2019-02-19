@@ -1488,12 +1488,17 @@ public class DFVaporVisitor implements Visitor
 
 
             fcall_params = new Vector<String>(); // reset and clear old params for next time
+            String lbl_tmp = lbl_name + lbl_cnt;
+            lbl_cnt++;
 
+            String check = printdent + "if " + tmp_obj + " goto :" + lbl_tmp + "\n";
+            String error = printdent + "  Error(\"null pointer\") \n";
+            String lbl_start = printdent + lbl_tmp + ":\n";
             String a = printdent + tmp_val + " = [" + tmp_obj + "]\n";
             String b = printdent + tmp_val + " = [" + tmp_val + "+" + offset_f + "]\n";
             String c = printdent + tmp_ret + " = call " + tmp_val + "(" + tmp_obj + params_f + ")\n";
 
-            str_buf.append(a+b+c);
+            str_buf.append(a+check+error+lbl_start+b+c);
 
             var_stk.push(tmp_ret);
     }
