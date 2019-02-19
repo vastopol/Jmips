@@ -186,10 +186,17 @@ class List{
     	var_end = end;
     	var_elem = elem ;
 
+        // while(!ret_val)
+        // {
+        //     System.out.println(545454545);
+        //     ret_val = true;
+        // }
+        // ret_val = false;
+
         // System.out.println(7654321);
     	while ((!var_end) && (!ret_val))
         {
-            System.out.println(1234567);
+            // System.out.println(1234567);
     	    if (e.Equal(var_elem))
             {
         		ret_val = true ;

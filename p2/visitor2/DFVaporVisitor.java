@@ -768,28 +768,28 @@ public class DFVaporVisitor implements Visitor
 
             // if(magic_bool_flag == true) // maybe a special case for when single id is in the if expression
             // {
-            //     System.out.println("#3");
-            //     System.out.println("old if param Arg string: " + if_param_arg);
+            //     // System.out.println("#3");
+            //     // System.out.println("old if param Arg string: " + if_param_arg);
             //
             //     if(name_map_stk.peek().get(cur_name) != null)
             //     {
             //         if_param_arg = name_map_stk.peek().get(cur_name);
             //     }
             //
-            //     System.out.println("IN WHILE AFTER n.f2");
-            //     System.out.println("if param cur_name: " + cur_name);
-            //     System.out.println("new if param Arg string: " + if_param_arg);
-            //     MapDump();
+            //     // System.out.println("IN WHILE AFTER n.f2");
+            //     // System.out.println("if param cur_name: " + cur_name);
+            //     // System.out.println("new if param Arg string: " + if_param_arg);
+            //     // MapDump();
             //
             //     magic_bool_flag = false;
             // }
             // else
             // {
-            //     System.out.println("#4");
-            //     System.out.println("IN WHILE AFTER n.f2");
-            //     System.out.println("if param cur_name: " + cur_name);
-            //     System.out.println("old if param Arg string: " + if_param_arg);
-            //     MapDump();
+            //     // System.out.println("#4");
+            //     // System.out.println("IN WHILE AFTER n.f2");
+            //     // System.out.println("if param cur_name: " + cur_name);
+            //     // System.out.println("old if param Arg string: " + if_param_arg);
+            //     // MapDump();
             //
             //     magic_bool_flag = true;
             // }
@@ -2031,6 +2031,9 @@ public class DFVaporVisitor implements Visitor
 
             // END
             str_buf.append(printdent + lb2 + ":\n"); // else label - both were true
+
+            // put the vars on the stack?
+            var_stk.push(tv4);
 
             if(if_param_flag == true)
             {
