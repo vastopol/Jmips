@@ -33,6 +33,7 @@ public class DFVaporVisitor implements Visitor
     boolean if_param_flag = false; // track if inside the expression argument to an if statement
     String  if_param_arg = "";  // used for branch/loops, put the name of the specific temp that goes in the argument spot: if(HERE){...} else{...}
     Vector<String> fcall_params;
+    boolean magic_bool_flag = true;
 
     public DFVaporVisitor(Map<String, Map<String,Struct>> m) // constructor takes in the symbol table from the DFStackVisitor2
     {
@@ -46,6 +47,10 @@ public class DFVaporVisitor implements Visitor
     // helpers
     void MapDump() // print the top map on stack
     {
+        if(name_map_stk.empty())
+        {
+            return;
+        }
         name_map_stk.peek().forEach( (k,v) -> System.out.println("( "+ k + " : " + v + " )") ); // dump map
         System.out.println("");
     }
@@ -667,6 +672,35 @@ public class DFVaporVisitor implements Visitor
 
             if_param_flag = true;
         n.f2.accept(this); // code for the bool_expr
+
+            if(magic_bool_flag == true) // maybe a special case for when single id is in the if expression
+            {
+                // System.out.println("#1");
+                // System.out.println("old if param Arg string: " + if_param_arg);
+
+                if(name_map_stk.peek().get(cur_name) != null)
+                {
+                    if_param_arg = name_map_stk.peek().get(cur_name);
+                }
+
+                // System.out.println("IN IF AFTER n.f2");
+                // System.out.println("if param cur_name: " + cur_name);
+                // System.out.println("new if param Arg string: " + if_param_arg);
+                // MapDump();
+
+                magic_bool_flag = false;
+            }
+            else
+            {
+                // System.out.println("#2");
+                // System.out.println("IN IF AFTER n.f2");
+                // System.out.println("if param cur_name: " + cur_name);
+                // System.out.println("old if param Arg string: " + if_param_arg);
+                // MapDump();
+
+                magic_bool_flag = true;
+            }
+
             if_param_flag = false;
 
             String bool_expr = if_param_arg;
@@ -731,6 +765,35 @@ public class DFVaporVisitor implements Visitor
 
             if_param_flag = true;
         n.f2.accept(this);  // code for bool expr
+
+            // if(magic_bool_flag == true) // maybe a special case for when single id is in the if expression
+            // {
+            //     System.out.println("#3");
+            //     System.out.println("old if param Arg string: " + if_param_arg);
+            //
+            //     if(name_map_stk.peek().get(cur_name) != null)
+            //     {
+            //         if_param_arg = name_map_stk.peek().get(cur_name);
+            //     }
+            //
+            //     System.out.println("IN WHILE AFTER n.f2");
+            //     System.out.println("if param cur_name: " + cur_name);
+            //     System.out.println("new if param Arg string: " + if_param_arg);
+            //     MapDump();
+            //
+            //     magic_bool_flag = false;
+            // }
+            // else
+            // {
+            //     System.out.println("#4");
+            //     System.out.println("IN WHILE AFTER n.f2");
+            //     System.out.println("if param cur_name: " + cur_name);
+            //     System.out.println("old if param Arg string: " + if_param_arg);
+            //     MapDump();
+            //
+            //     magic_bool_flag = true;
+            // }
+
             if_param_flag = false;
 
             String bool_expr = if_param_arg;
@@ -865,10 +928,10 @@ public class DFVaporVisitor implements Visitor
             String tv7 = var_name + Integer.toString(var_cnt); // result value of the and, set to either 0 or 1
             var_cnt++;
 
-            String lb1 = lbl_name + Integer.toString(lbl_cnt);
+            String lb1 = "and_a_" + lbl_name + Integer.toString(lbl_cnt);
             lbl_cnt++;
 
-            String lb2 = lbl_name + Integer.toString(lbl_cnt);
+            String lb2 = "and_b_" + lbl_name + Integer.toString(lbl_cnt);
             lbl_cnt++;
 
             // str_buf.append(printdent + "in && Expression !!!!!!!!!!!"+ "\n");
@@ -910,6 +973,7 @@ public class DFVaporVisitor implements Visitor
             if(if_param_flag == true)
             {
                 if_param_arg = tv7;
+                magic_bool_flag = false;
             }
 
             // str_buf.append(printdent + "End of the && expression !!!!!!!!!!!!!!!\n");
@@ -977,6 +1041,7 @@ public class DFVaporVisitor implements Visitor
             if(if_param_flag == true) // maybe a special case for when less than
             {
                 if_param_arg = tmpres;
+                magic_bool_flag = false;
             }
     }
 
@@ -1660,6 +1725,21 @@ public class DFVaporVisitor implements Visitor
     {
         n.f0.accept(this);
 
+            // // THIS IS WRONG DONT USE
+            // if(if_param_flag == true) // maybe a special case for when single id is in the if expression
+            // {
+            //     if(name_map_stk.peek().get(n.f0.toString()) != null)
+            //     {
+            //         if_param_arg = name_map_stk.peek().get(n.f0.toString());
+            //     }
+            //
+            //     // System.out.println("TOP");
+            //     // System.out.println("if param ident: " + n.f0.toString());
+            //     // System.out.println("if param old cur_name: " + cur_name);
+            //     // System.out.println("if param Arg string: " + if_param_arg);
+            //     // MapDump();
+            // }
+
             // System.out.println("BEFORE " + cur_name);
 
             cur_name = n.f0.toString();
@@ -1765,6 +1845,11 @@ public class DFVaporVisitor implements Visitor
             if(if_param_flag == true) // maybe a special case for when single id is in the if expression
             {
                 if_param_arg = name_map_stk.peek().get(cur_name); // might break if empty stack?
+
+                // System.out.println("BOTTOM");
+                // System.out.println("if param cur_name: " + cur_name);
+                // System.out.println("if param Arg string: " + if_param_arg);
+                // MapDump();
             }
     }
 
@@ -1844,12 +1929,12 @@ public class DFVaporVisitor implements Visitor
             Vector<Struct> vs = helper.fields(cstruct, symbol_table);   // weirdly ordered ...
 
             // System.out.println("alloc: " + cur_name);
-            // System.out.println("here");
+            // System.out.println("---here---");
             // for( Struct s : vs )
             // {
             //     System.out.println(s.getName());
             // }
-            // System.out.println("there");
+            // System.out.println("---there---");
 
             String printdent = "";
             for(int i = 0; i < indent_cnt; i++)
@@ -1916,10 +2001,10 @@ public class DFVaporVisitor implements Visitor
             String tv4 = var_name + Integer.toString(var_cnt); // result value of the and, set to either 0 or 1
             var_cnt++;
 
-            String lb1 = lbl_name + Integer.toString(lbl_cnt);
+            String lb1 = "not_a_" + lbl_name + Integer.toString(lbl_cnt);
             lbl_cnt++;
 
-            String lb2 = lbl_name + Integer.toString(lbl_cnt);
+            String lb2 = "not_b_" + lbl_name + Integer.toString(lbl_cnt);
             lbl_cnt++;
 
             // str_buf.append(printdent + "in NOT Expression !!!!!!!!!!!"+ "\n");
@@ -1950,6 +2035,7 @@ public class DFVaporVisitor implements Visitor
             if(if_param_flag == true)
             {
                 if_param_arg = tv4;
+                magic_bool_flag = false; // for the ifs
             }
 
             // str_buf.append(printdent + "End of the NOT expression !!!!!!!!!!!!!!!\n");
