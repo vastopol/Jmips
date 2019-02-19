@@ -437,7 +437,7 @@ public class DFVaporVisitor implements Visitor
     */
     public void visit(AssignmentStatement n)
     {
-        n.f0.accept(this); 
+        n.f0.accept(this);
 
             String a_name = cur_name;
 
@@ -515,7 +515,7 @@ public class DFVaporVisitor implements Visitor
                 var_stk.push(tmpid);
             }
 
-            
+
 
             String printdent = "";
             for(int i = 0; i < indent_cnt; i++)
@@ -1171,7 +1171,7 @@ public class DFVaporVisitor implements Visitor
         n.f0.accept(this);
 
             String arr = var_stk.pop();
-            
+
             String garbo = name_map_stk.peek().get(cur_name);
             String assign = "";
             Struct class_struc = symbol_table.get("Global").get(current_class);
@@ -1391,7 +1391,7 @@ public class DFVaporVisitor implements Visitor
                 // System.out.println("~~ in the thing " + current_class + " " + current_function);
                 String func_string = current_function + " " + current_class;
                 f = symbol_table.get(func_string);
-                
+
                 i = symbol_table.get(current_class);
                 if(i != null) { // class
                     //bool to true
@@ -1424,7 +1424,7 @@ public class DFVaporVisitor implements Visitor
                 if(loc == false)
                 {
                     // System.out.println("loc was false");
-                    lookup_name = name_c; 
+                    lookup_name = name_c;
                 }
             }
 
@@ -1458,9 +1458,9 @@ public class DFVaporVisitor implements Visitor
                     // System.out.println("  bruh " + vs2.get(i).getValue().getName() + " " + name_f );
                 }
             }
-            
+
             // System.out.println(current_class + " " + name_f);
-            
+
             // for(Pair i: vs2) {
             //     if(i.getValue().getName() == name_f)
             //     {
@@ -1501,6 +1501,13 @@ public class DFVaporVisitor implements Visitor
             str_buf.append(a+check+error+lbl_start+b+c);
 
             var_stk.push(tmp_ret);
+
+            if(if_param_flag == true)
+            {
+                // System.out.println("fun call in an if/while " + tmp_ret);
+                if_param_arg = tmp_ret;
+            }
+
     }
 
     /**
