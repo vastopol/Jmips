@@ -1311,25 +1311,25 @@ public class DFVaporVisitor implements Visitor
             {
                 tmp_obj = var_stk.pop(); // get the tmp object so can use the vtable
             }
-            else
-            {
-                tmp_obj = "this"; // looks like the "this" isnt on the stack
-            }
-
-            // System.out.println(tmp_obj);
-            // MapDump();
-
-            // weird bs here
-            // if found a value in the name map then put value back on var_stk and set tmp_obj to "this"
-            for(String nms : name_map_stk.peek().values())
-            {
-                if(nms == tmp_obj)
-                {
-                    // System.out.println("ooof");
-                    var_stk.push(tmp_obj);
-                    tmp_obj = "this";
-                }
-            }
+            // else
+            // {
+            //     tmp_obj = "this"; // looks like the "this" isnt on the stack
+            // }
+            //
+            // // System.out.println(tmp_obj);
+            // // MapDump();
+            //
+            // // weird bs here
+            // // if found a value in the name map then put value back on var_stk and set tmp_obj to "this"
+            // for(String nms : name_map_stk.peek().values())
+            // {
+            //     if(nms == tmp_obj)
+            //     {
+            //         // System.out.println("ooof");
+            //         var_stk.push(tmp_obj);
+            //         tmp_obj = "this";
+            //     }
+            // }
 
             // System.out.println(tmp_obj);
             // MapDump();
@@ -1337,7 +1337,7 @@ public class DFVaporVisitor implements Visitor
         n.f1.accept(this);
         n.f2.accept(this);
 
-            //System.out.println("name_f: " + cur_name); // actual function name
+            // System.out.println("name_f: " + cur_name); // actual function name  ###
             // System.out.println(var_stk.peek());
 
             String name_f = cur_name;   // function name
@@ -1349,7 +1349,7 @@ public class DFVaporVisitor implements Visitor
 
         n.f5.accept(this);
 
-            // System.out.println( name_c + " " + name_f + " " + tmp_obj );
+            // System.out.println( name_c + " " + name_f + " " + tmp_obj ); // ###
 
             String printdent = "";
             for(int i = 0; i < indent_cnt; i++)
@@ -1372,12 +1372,12 @@ public class DFVaporVisitor implements Visitor
 
             if(name_c == "")
             {
-                // System.out.println("name_c was empty");
+                // System.out.println("name_c was empty"); // ###
                 lookup_name = current_class;    // this means need to check current class
             }
             else
             {
-                // System.out.println("name_c had something");
+                // System.out.println("name_c had something\nname_c: "+name_c); // ###
 
                 // set a local bool = false
                 boolean loc = false;
@@ -1392,19 +1392,34 @@ public class DFVaporVisitor implements Visitor
                 String func_string = current_function + " " + current_class;
                 f = symbol_table.get(func_string);
 
-                i = symbol_table.get(current_class);
-                if(i != null) { // class
+                // i = symbol_table.get(current_class);
+                Struct x = symbol_table.get("Global").get(current_class);
+                Vector<Struct> y = tools.rec_fields(x,symbol_table,new Vector<Struct>());
+                // if(i != null) { // class
+                if(y != null){
                     //bool to true
                     // set lookup name
+
+                    for(Struct hg : y)
+                    {
+                        // System.out.println(hg.getName());
+                        if(hg.getName() == name_c)
+                        {
+                            lookup_name = hg.get_className();
+                            loc = true;
+                        }
+                    }
+
                     // System.out.println("inside of G");
-                    g = i.get(name_c);
-                    if(g != null && g.getType() == "object"){
-                        lookup_name = g.get_className();
-                        loc = true;
-                    }
-                    else {
-                        // System.out.println("Error in G");
-                    }
+                    // g = i.get(name_c);
+                    // if(g != null && g.getType() == "object"){
+                    //     lookup_name = g.get_className();
+                    //     System.out.println(lookup_name);
+                    //     loc = true;
+                    // }
+                    // else {
+                    //     System.out.println("Error in G");
+                    // }
                 }
                 if(f != null){ //function
                     // System.out.println("inside of F");
@@ -1413,6 +1428,7 @@ public class DFVaporVisitor implements Visitor
                     // set lookup name
                     if(h != null && h.getType() == "object") {
                         lookup_name = h.get_className();
+                        // System.out.println(lookup_name);
                         loc = true;
                     }
                     else {
@@ -1473,6 +1489,11 @@ public class DFVaporVisitor implements Visitor
             int offs = (4*position);
             String offset_f = Integer.toString(offs);
 
+            // System.out.println("offset: " + offset_f + "\n");
+
+            // MapDump();
+            // tools.print_map_structs(symbol_table);
+
             // need to get the params for the function
             String params_f = "";
             for(String pp : fcall_params)
@@ -1522,6 +1543,7 @@ public class DFVaporVisitor implements Visitor
             {
                 // System.out.println(var_stk.peek());
                 fcall_params.add(var_stk.pop());
+                // System.out.println(var_stk.peek());
             }
 
         n.f1.accept(this);
@@ -1540,6 +1562,7 @@ public class DFVaporVisitor implements Visitor
             {
                 // System.out.println(var_stk.peek());
                 fcall_params.add(var_stk.pop());
+                // System.out.println(var_stk.peek());
             }
 
     }
@@ -1817,7 +1840,7 @@ public class DFVaporVisitor implements Visitor
 
             Struct cstruct = symbol_table.get("Global").get(cur_name);
 
-            Vector<Struct> vs = helper.fields(cstruct, symbol_table);   // alphabetic ordered ...
+            Vector<Struct> vs = helper.fields(cstruct, symbol_table);   // weirdly ordered ...
 
             // System.out.println("alloc: " + cur_name);
             // System.out.println("here");

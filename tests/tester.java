@@ -1,4 +1,4 @@
-// The classes are basically the same as the BinaryTree 
+// The classes are basically the same as the BinaryTree
 // file except the visitor classes and the accept method
 // in the Tree class
 
@@ -61,7 +61,7 @@ class Tree{
     //Tree new_node ;
     //Tree current_node ;
     //Tree parent_node ;
-    
+
    // boolean ntb ;
     //boolean cont ;
     //boolean found ;
@@ -193,20 +193,20 @@ class Tree{
 		    current_node = current_node.GetLeft() ;
 		}
 		else cont = false ;
-	    else 
+	    else
 		if (key_aux < v_key)
 		    if (current_node.GetHas_Right()){
 			parent_node = current_node ;
 			current_node = current_node.GetRight() ;
 		    }
 		    else cont = false ;
-		else { 
-		    if (is_root) 
-			if (!current_node.GetHas_Right() && 
+		else {
+		    if (is_root)
+			if (!current_node.GetHas_Right() &&
 			    !current_node.GetHas_Left() )
 			    ntb = true ;
-			else 
-			    ntb = this.Remove(parent_node,current_node); 
+			else
+			    ntb = this.Remove(parent_node,current_node);
 		    else ntb = this.Remove(parent_node,current_node);
 		    found = true ;
 		    cont = false ;
@@ -220,10 +220,10 @@ class Tree{
 	boolean ntb ;
 	int auxkey1 ;
 	int auxkey2 ;
-	
-	if (c_node.GetHas_Left()) 
+
+	if (c_node.GetHas_Left())
 	    ntb = this.RemoveLeft(p_node,c_node) ;
-	else 
+	else
 	    if (c_node.GetHas_Right())
 		ntb = this.RemoveRight(p_node,c_node) ;
 	    else {
@@ -281,12 +281,12 @@ class Tree{
 		if (current_node.GetHas_Left())
 		    current_node = current_node.GetLeft() ;
 		else cont = false ;
-	    else 
+	    else
 		if (key_aux < v_key)
 		    if (current_node.GetHas_Right())
 			current_node = current_node.GetRight() ;
 		    else cont = false ;
-		else { 
+		else {
 		    ifound = 1 ;
 		    cont = false ;
 		}
@@ -315,7 +315,7 @@ class Tree{
 	} else ntb = true ;
 	return true ;
     }
-    
+
     public int accept(Visitor v){
 	int nti ;
 
@@ -326,7 +326,7 @@ class Tree{
 
 }
 
-  
+
 
 class Visitor {
     Tree l ;
@@ -341,7 +341,7 @@ class Visitor {
 	else nti = 0 ;
 
 	if (n.GetHas_Left()) {
-	    l = n.GetLeft(); 
+	    l = n.GetLeft();
 	    nti = l.accept(this) ; }
 	else nti = 0 ;
 
@@ -356,15 +356,119 @@ class MyVisitor extends Visitor {
     public int visit(Tree n){
 	int nti ;
 
+    // Tree b;
+    // Tree c;
+    // Tree d;
+    // Tree e;
+    // Tree f;
+    // Tree g;
+    // Tree h;
+    // Tree i;
+    // Tree j;
+    // Tree k;
+    // Tree l;
+    // Tree m;
+    // Tree n;
+    // Tree o;
+    //
+    // System.out.println(n.GetKey()); // root
+    // System.out.println(n.GetHas_Left());
+    // System.out.println(n.GetHas_Right());
+    //
+    // b = n.GetLeft() ;
+    // c = n.GetRight() ;
+    //
+    // System.out.println(b.GetKey()); // root->left
+    // System.out.println(b.GetHas_Left());
+    // System.out.println(b.GetHas_Right());
+    //
+    // System.out.println(c.GetKey()); // root->right
+    // System.out.println(c.GetHas_Left());
+    // System.out.println(c.GetHas_Right());
+    //
+    // d = b.GetLeft() ;
+    // e = b.GetRight() ;
+    //
+    // System.out.println(d.GetKey()); // root->left->left
+    // System.out.println(d.GetHas_Left());
+    // System.out.println(d.GetHas_Right());
+    //
+    // System.out.println(e.GetKey()); // root->left->right
+    // System.out.println(e.GetHas_Left());
+    // System.out.println(e.GetHas_Right());
+    //
+    // f = c.GetLeft() ;
+    // g = c.GetRight() ;
+    //
+    // System.out.println(f.GetKey()); // root->right->left
+    // System.out.println(f.GetHas_Left());
+    // System.out.println(f.GetHas_Right());
+    //
+    // System.out.println(g.GetKey()); // root->right->right
+    // System.out.println(g.GetHas_Left());
+    // System.out.println(g.GetHas_Right());
+    //
+    //
+    // // h = d.GetLeft() ;
+    // // i = d.GetRight() ;
+    //
+    // // System.out.println(h.GetKey()); // root->left->left->left
+    // // System.out.println(i.GetKey()); // root->left->left->right
+    //
+    // // j = e.GetLeft() ;
+    // k = e.GetRight() ;
+    //
+    // // System.out.println(j.GetKey()); // root->left->right->left
+    // System.out.println(k.GetKey()); // root->left->right->right
+    // System.out.println(k.GetHas_Left());
+    // System.out.println(k.GetHas_Right());
+    //
+    // // l = f.GetLeft() ;
+    // // m = f.GetRight() ;
+    //
+    // // System.out.println(l.GetKey()); // root->right->left->left
+    // // System.out.println(m.GetKey()); // root->right->left->right
+    //
+    // // n = g.GetLeft() ;
+    // // o = g.GetRight() ;
+    //
+    // // System.out.println(n.GetKey()); // root->right->right->left
+    // // System.out.println(o.GetKey()); // root->right->right->right
+
 	if (n.GetHas_Right()){
 	    r = n.GetRight() ;
 	    nti = r.accept(this) ; }
 	else nti = 0 ;
 
+    // change 1231 tmp615 = [tmp610]
+    // change 1235 tmp615 = [tmp615+76]
+    // change 1236 tmp616 = call tmp615(tmp610 this)
+
+    // tmp610 = [this+4]
+    // tmp615 = [tmp610]
+    // if this goto :lbl155
+    //   Error("null pointer")
+    // lbl155:
+    // tmp615 = [tmp615+76]
+    // tmp616 = call tmp615(tmp610 this)
+
+    // change 1271 change tmp632 to tmp627
+    // change 1272 change tmp632 to tmp627
+    // change 1275 change the +0 to +76
+    // change 1276 change tmp632 to tmp627
+
+    // tmp627 = [this+8]
+    // tmp633 = [tmp627]
+    // if tmp627 goto :lbl161
+    //   Error("null pointer")
+    // lbl161:
+    // tmp633 = [tmp633+76]
+    // tmp634 = call tmp633(tmp627 this )
+
 	System.out.println(n.GetKey());
 
 	if (n.GetHas_Left()) {
-	    l = n.GetLeft(); 
+	    l = n.GetLeft();
 	    nti =l.accept(this) ; }
 	else nti = 0 ;
 
@@ -372,3 +476,5 @@ class MyVisitor extends Visitor {
     }
 
 }
+
+

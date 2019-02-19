@@ -14,7 +14,7 @@ public class tools {
             case "int[]":
                 System.out.println(s.getType() + " " + s.getName() + " " + s.getArr());
                 break;
-        
+
             case "boolean":
                 System.out.println(s.getType() + " " + s.getName() + " " + s.getBool());
                 break;
@@ -34,7 +34,7 @@ public class tools {
                     System.out.println("");
                 }
                 break;
-            
+
             case "function":
                 System.out.println(s.get_returnType() + " " + s.getType() + " " + s.getName());
                 // System.out.println(s.getName() + " parameters: ");
@@ -80,6 +80,30 @@ public class tools {
         return f;
     }
 
+    public static Vector<Struct> rec_fields(Struct c, Map<String,Map<String,Struct>> m , Vector<Struct> f) {
+        if(c.getType() != "class") {
+            System.out.println("XXXXXXXXXXXXXXXXXXXX");
+        }
+        for(Struct i: c.getFields()) {
+            f.add(i);
+        }
+        if(c.getParent() != "") {
+            Struct cp = m.get("Global").get(c.getParent());
+            // for(Struct i: cp.getFields()) {
+            //     f.add(i);
+            // }
+            if(loop_exist(c, m)){
+                return f;
+            }
+            return rec_fields(cp, m, f);
+            // for(Struct i: parent_methods) {
+            //     f.add(i);
+            // }
+
+        }
+        return f;
+    }
+
     public static boolean loop_exist(Struct c, Map<String, Map<String, Struct>> m) {
         Vector<String> seen = new Vector<String>();
         boolean retval = false;
@@ -115,7 +139,7 @@ public class tools {
             if(loop_exist(c, m)){
                 return f;
             }
-            
+
             Vector<Pair> inter = new Vector<Pair>();
              f = vtable_create(cp, m, f);
         }
@@ -190,7 +214,7 @@ public class tools {
         public static void print_map_structs(Map<String,Map<String,Struct>> ms)
         {
             System.out.println("Print Map of Maps (String,Struct) \n--------------------");
-    
+
             //System.out.println(ms.size());
             for(String k : ms.keySet())
             {
@@ -204,10 +228,10 @@ public class tools {
                 }
                 System.out.println("");
             }
-    
+
             System.out.println("--------------------\n");
         }
-        
+
 
     public static void print_vec_structs(Vector<Map<String,Struct>> vs)
     {
