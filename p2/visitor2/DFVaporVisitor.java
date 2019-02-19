@@ -1711,6 +1711,7 @@ public class DFVaporVisitor implements Visitor
                     }
                     else if(name_map_stk.peek().get(cur_name) != null) {
                         tmpid1 = name_map_stk.peek().get(cur_name);
+                        var_stk.push(tmpid1);
                     }
                     else {
                         tmpid1 = var_name + Integer.toString(var_cnt);
