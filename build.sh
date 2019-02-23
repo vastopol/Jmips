@@ -30,7 +30,8 @@ TEST2="../tests/Phase2Tester/SelfTestCases/*.java"
 function main()
 {
     # do_p  1
-    do_p  2
+    # do_p  2
+    do_p  3
     p_wipe
 }
 
@@ -47,19 +48,17 @@ function do_p()
         1)
             p_init   p1  Typecheck.java
             p_check  p1  Typecheck  $TJAVA  $TEST1
-            p_log
             p_clean  p1
             p_test   p1  Typecheck.java  DFTypeCheckVisitor.java  hw1  tests/Phase1Tester
             ;;
         2)
             p_init   p2  J2V.java
             p_vapor  p2  J2V  $TJAVA  $TEST2
-            # p_log
             p_clean  p2
             p_test   p2  J2V.java  DFVaporVisitor.java  hw2  tests/Phase2Tester
             ;;
         3)
-            echo "phase3"
+            echo; echo "phase3: not started yet"; echo
             ;;
         4)
             echo "phase4"
@@ -131,12 +130,12 @@ function p_clean()
 function p_wipe()
 {
     echo "wiping out the extras"; echo
-    rm -rf hw*
-    rm *logfile.*
-    rm -rf tests/Phase1Tester/Output
-    rm -rf tests/Phase2Tester/Output
-    rm -rf tests/Phase3Tester/Output
-    rm -rf tests/Phase4Tester/Output
+    rm -rf hw*     > /dev/null 2>&1
+    rm *logfile.*  > /dev/null 2>&1
+    rm -rf tests/Phase1Tester/Output  > /dev/null 2>&1
+    rm -rf tests/Phase2Tester/Output  > /dev/null 2>&1
+    rm -rf tests/Phase3Tester/Output  > /dev/null 2>&1
+    rm -rf tests/Phase4Tester/Output  > /dev/null 2>&1
 }
 
 # PHASE 1 typecheck
@@ -168,6 +167,8 @@ function p_check()
     done
 
     cd ..
+
+    p_log   # optional log print
 }
 
 # PHASE 2 vapor
@@ -189,18 +190,21 @@ function p_vapor()
     echo "Code test "$3; echo
     java -jar $VAPOR_I run $LOG1; echo
 
-    # echo "Manually testing all the Test cases"; echo
-    # echo "See manual_logfile.txt for trace"; echo
-    #
-    # echo "" > $LOG2
-    # for FILE in $4 ;
-    # do
-    #     echo "Code Generate: "$FILE >> $LOG2
-    #     if ! java $2 < $FILE >> $LOG2; then
-    #         continue
-    #     fi
-    #     echo "" >> $LOG2
-    # done
+    echo "Manually testing all the Test cases"; echo
+    echo "See manual_logfile.txt for trace"; echo
+
+    for FILE in $4 ;
+    do
+        echo "" > $LOG2
+        if ! java $2 < $FILE &> $LOG2; then
+            echo "Error with vapor generate: ""$FILE"
+            continue
+        fi
+        echo "code print out: ""$FILE"; echo
+        cat $LOG1
+        echo "Code test "$FILE; echo
+        java -jar $VAPOR_I run $LOG2; echo
+    done
 
     cd ..
 }
