@@ -58,7 +58,13 @@ function do_p()
             p_test   p2  J2V.java  DFVaporVisitor.java  hw2  tests/Phase2Tester
             ;;
         3)
+            # FIXME HERE  <------------------------- !!!!!!!!!!!
+
             echo; echo "phase3: not started yet"; echo
+            cd p3
+            javac V2VM.java
+            echo
+
             ;;
         4)
             echo "phase4"
