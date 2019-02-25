@@ -3,18 +3,32 @@ import cs132.vapor.parser.VaporParser;
 import cs132.vapor.ast.VaporProgram;
 import cs132.vapor.ast.VBuiltIn.Op;
 
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;   // InputStreamReader, IOException, PrintStream
+
+/*
+    see build script
+    File has to be compiled using class path to include vapor-parser.jar
+    CLASSPATH=$VAPOR_P
+    javac -classpath ${CLASSPATH} V2VM.java
+*/
 
 class V2VM
 {
     public static void main(String[] args)
+        throws IOException
     {
-        System.out.println("hi");
+        InputStream in = System.in;
+        PrintStream err = System.err;
+        VaporProgram prog = parseVapor(in,err);  // should be the tree
+
+        // figure out how to traverse the tree?
+        System.out.println(prog);
+
+        return;
     }
 
-    public static VaporProgram parseVapor(InputStream in, PrintStream err) throws IOException
+    public static VaporProgram parseVapor(InputStream in, PrintStream err)
+        throws IOException
     {
         boolean allowLocals = true;
         String[] registers = null;
@@ -42,30 +56,3 @@ class V2VM
 
 }
 
-/*
-
-wtf
-
-does not exist?
-
-import cs132.util.SourcePos;
-import cs132.util.ProblemException;
-import cs132.vapor.parser.VaporParser;
-
-
-*/
-
-
-/*
-
-Your main file should be called V2VM.java, and if P.vapor contains a syntactically correct Vapor program, then
-
-    $ java V2VM < P.vapor > P.vaporm
-
-creates a Vapor-M program P.vaporm with the same behavior as P.vapor
-
-A Vapor-M program p.vaporm can be run using the Vapor interpreter vapor.jar as follows:
-
-    $ java -jar vapor.jar run -mips p.vaporm
-
-*/

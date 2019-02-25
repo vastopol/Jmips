@@ -58,13 +58,7 @@ function do_p()
             p_test   p2  J2V.java  DFVaporVisitor.java  hw2  tests/Phase2Tester
             ;;
         3)
-            # FIXME HERE  <------------------------- !!!!!!!!!!!
-
-            echo; echo "phase3: not started yet"; echo
-            cd p3
-            javac V2VM.java
-            echo
-
+            p3_builder
             ;;
         4)
             echo "phase4"
@@ -75,6 +69,19 @@ function do_p()
     esac
 
     return
+}
+
+# remove all the auto generated stuff from above
+# should be a universal cleanup helper
+function p_wipe()
+{
+    echo "wiping out the extras"; echo
+    rm -rf hw*     > /dev/null 2>&1
+    rm *logfile.*  > /dev/null 2>&1
+    rm -rf tests/Phase1Tester/Output  > /dev/null 2>&1
+    rm -rf tests/Phase2Tester/Output  > /dev/null 2>&1
+    rm -rf tests/Phase3Tester/Output  > /dev/null 2>&1
+    rm -rf tests/Phase4Tester/Output  > /dev/null 2>&1
 }
 
 #============================================================
@@ -129,19 +136,6 @@ function p_clean()
     cd struct;     rm *.class; cd ..
     cd toolbox;    rm *.class; cd ..
     cd ..
-}
-
-# remove all the auto generated stuff from above
-# should be a universal cleanup helper
-function p_wipe()
-{
-    echo "wiping out the extras"; echo
-    rm -rf hw*     > /dev/null 2>&1
-    rm *logfile.*  > /dev/null 2>&1
-    rm -rf tests/Phase1Tester/Output  > /dev/null 2>&1
-    rm -rf tests/Phase2Tester/Output  > /dev/null 2>&1
-    rm -rf tests/Phase3Tester/Output  > /dev/null 2>&1
-    rm -rf tests/Phase4Tester/Output  > /dev/null 2>&1
 }
 
 # PHASE 1 typecheck
@@ -256,6 +250,42 @@ function p_test()
     echo;
 
     cd ../..
+}
+
+#============================================================
+# PHASE 3 BUILD TESTER
+#============================================================
+
+function p3_builder()
+{
+    # to compile have to include .jar file because source is incomplete
+    # to run need the .jar file and location of the .class file
+    CLASSPATH=$VAPOR_P
+    CLASSPATH2="$VAPOR_P:../p3"
+    VFILE="../tests/Factorial.vapor"
+
+    cd p3
+    echo
+
+    echo "compile phase3"; echo
+
+    javac -classpath ${CLASSPATH} V2VM.java
+
+    echo "run vaporm tests"; echo
+
+    java -classpath ${CLASSPATH2} V2VM < $VFILE
+
+    # vapor to vaporm
+    # java V2VM < P.vapor > P.vaporm
+
+    # run the vaporm file
+    # java -jar $VAPOR_I run -mips p.vaporm
+
+    echo
+
+    rm *.class > /dev/null 2>&1
+
+    cd ..
 }
 
 #============================================================
