@@ -250,9 +250,8 @@ function p_test()
 function p3_builder()
 {
     # to compile have to include .jar file because source is incomplete
-    # to run need the .jar file and location of the .class file
-    CLASSPATH=$VAPOR_P
-    CLASSPATH2="$VAPOR_P:../p3"
+    # to run need the .jar file and location of the project folder for the .class files
+    CLASSPATH="$VAPOR_P:../p3"
     VFILE="../tests/vtester.vapor"
 
     cd p3
@@ -263,7 +262,7 @@ function p3_builder()
 
     echo "output vapor to vaporm"; echo
 
-    java -classpath ${CLASSPATH2} V2VM < $VFILE > $LOG1
+    java -classpath ${CLASSPATH} V2VM < $VFILE > $LOG1
 
     cat $LOG1
 
@@ -274,6 +273,7 @@ function p3_builder()
     echo
 
     rm *.class > /dev/null 2>&1
+    rm cs132/vapor/ast/*.class > /dev/null 2>&1
 
     cd ..
 }
