@@ -21,6 +21,8 @@ VAPOR_P="../stuff/vapor-parser.jar" # Vapor Parser
 MARS="../stuff/mars.jar"            # MIPS Interpreter
 
 # GLOBALS - tests
+LOG1="../custom_logfile.txt"
+LOG2="../manual_logfile.txt"
 TJAVA="../tests/tester.java"
 TEST1="../tests/Phase1Tester/SelfTestCases/*"
 TEST2="../tests/Phase2Tester/SelfTestCases/*.java"
@@ -112,17 +114,6 @@ function p_init()
     cd ..
 }
 
-# print the log files
-function p_log()
-{
-    echo "Printing Logs"; echo
-    echo "custom_logfile.txt"; echo
-    cat custom_logfile.txt; echo
-    echo "manual_logfile.txt"
-    cat manual_logfile.txt
-    echo
-}
-
 # REMOVE CLASS FILES
 # remove any .class files from the build
 # also used because cant submit .class files in the tarball
@@ -144,9 +135,6 @@ function p_clean()
 # arg1 = folder, arg 2 = java main class, arg3 = customtest, arg4 = multifile test
 function p_check()
 {
-    LOG1="../custom_logfile.txt"
-    LOG2="../manual_logfile.txt"
-
     cd $1
 
     echo "Checking "$3; echo
@@ -166,9 +154,15 @@ function p_check()
         echo "" >> $LOG2
     done
 
-    cd ..
+    # optional log print
+    echo "Printing Logs"; echo
+    echo "custom_logfile.txt"; echo
+    cat $LOG1; echo
+    echo "manual_logfile.txt"
+    cat $LOG2
+    echo
 
-    p_log   # optional log print
+    cd ..
 }
 
 # PHASE 2 vapor
@@ -177,9 +171,6 @@ function p_check()
 # arg1 = folder, arg 2 = java main class, arg3 = customtest, arg4 = multifile test
 function p_vapor()
 {
-    LOG1="../custom_logfile.txt"
-    LOG2="../manual_logfile.txt"
-
     cd $1
 
     echo "Code Generate "$3; echo
@@ -262,24 +253,23 @@ function p3_builder()
     # to run need the .jar file and location of the .class file
     CLASSPATH=$VAPOR_P
     CLASSPATH2="$VAPOR_P:../p3"
-    VFILE="../tests/Factorial.vapor"
+    VFILE="../tests/vtester.vapor"
 
     cd p3
-    echo
 
-    echo "compile phase3"; echo
+    echo; echo "compile phase3"; echo
 
     javac -classpath ${CLASSPATH} V2VM.java
 
-    echo "run vaporm tests"; echo
+    echo "output vapor to vaporm"; echo
 
-    java -classpath ${CLASSPATH2} V2VM < $VFILE
+    java -classpath ${CLASSPATH2} V2VM < $VFILE > $LOG1
 
-    # vapor to vaporm
-    # java V2VM < P.vapor > P.vaporm
+    cat $LOG1
 
-    # run the vaporm file
-    # java -jar $VAPOR_I run -mips p.vaporm
+    echo; echo "test run vaporm"; echo
+
+    java -jar $VAPOR_I run -mips $LOG1
 
     echo
 
