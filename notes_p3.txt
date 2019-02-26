@@ -1,0 +1,32 @@
+cs132.vapor.ast layout
+
+The visitor is based on the VInstr interface
+The VInstr nodes have visit functions
+
+VaporProgram
+Node
+    VMemRef
+        Global
+        Stack
+    VOperand
+        Static
+            VLitInt
+            VLabelRef
+        VLitStr
+        VVarRef
+            Register
+            Local
+    VInstr **
+        VAssign
+        VBranch
+        VBuiltIn
+        VCall
+        VGoto
+        VMemRead
+        VMemWrite
+        VReturn
+    VTarget
+        VAddr
+        VCodeLabel
+        VDataSegment
+        VFunction
