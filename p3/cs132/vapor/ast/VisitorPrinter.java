@@ -41,43 +41,69 @@ public class VisitorPrinter<Throwable> extends VInstr.Visitor
     public void visit(VBranch b)
         throws java.lang.Throwable
     {
-        // System.out.println(dubtab + "aha");
+        System.out.println(dubtab + "cmp: " + b.positive);
+        System.out.println(dubtab + "val: " + b.value.toString());
+        System.out.println(dubtab + "jmp: " + b.target.toString());
     }
 
     public void visit(VBuiltIn c)
         throws java.lang.Throwable
     {
-        // System.out.println(dubtab + "aha");
+        // dest might be null
+        if(c.dest != null)
+        {
+            System.out.println(dubtab + "dst: " + c.dest);
+        }
+        System.out.println(dubtab +  "op:  " + c.op.name);
+        for(VOperand oper : c.args)
+        {
+            System.out.println(dubtab + "arg: " + oper);
+        }
     }
 
 	public void visit(VCall c)
         throws java.lang.Throwable
     {
-        // System.out.println(dubtab + "aha");
+        // dest might be null
+        if(c.dest != null)
+        {
+            System.out.println(dubtab + "dst: " + c.dest);
+        }
+        System.out.println(dubtab +  "fun:  " + c.addr.toString());
+        for(VOperand oper : c.args)
+        {
+            System.out.println(dubtab + "arg: " + oper);
+        }
     }
 
     public void visit(VGoto g)
         throws java.lang.Throwable
     {
-        // System.out.println(dubtab + "aha");
+        System.out.println(dubtab +  "dst:  " + g.target.toString());
     }
 
     public void visit(VMemRead r)
         throws java.lang.Throwable
     {
-        // System.out.println(dubtab + "aha");
+        System.out.println(dubtab + "dst: " + r.dest.toString());
+        System.out.println(dubtab + "src: " + r.source.toString());
     }
 
     public void visit(VMemWrite w)
         throws java.lang.Throwable
     {
-        // System.out.println(dubtab + "aha");
+        System.out.println(dubtab + "dst: " + w.dest.toString());
+        System.out.println(dubtab + "src: " + w.source.toString());
     }
 
     public void visit(VReturn r)
         throws java.lang.Throwable
     {
-        // System.out.println(dubtab + "aha");
+        // dest might be null
+        if(r.value != null)
+        {
+            System.out.println(dubtab + "val: " + r.value);
+        }
     }
 
 }
