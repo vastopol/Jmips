@@ -8,6 +8,7 @@ import cs132.vapor.ast.*;
 import cs132.vapor.parser.*;
 
 import java.io.*;
+import java.util.*;
 
 /*
     see build script
@@ -27,11 +28,15 @@ class V2VM
 
         // figure out how to traverse the vapor program tree?
         VisitorPrinter v_instr_visitor = new VisitorPrinter();
+        VisitorData v_data_visitor = new VisitorData();
 
         info_printer(prog,v_instr_visitor);
 
+        data_grab(prog,v_data_visitor);
+
         return;
     }
+    //----------------------------------------
 
     public static VaporProgram parseVapor(InputStream in, PrintStream err)
         throws IOException
@@ -59,6 +64,51 @@ class V2VM
 
         return tree;
     }
+    //----------------------------------------
+
+    public static void go_visit(VInstr.Visitor v,VInstr vi)
+        throws Throwable
+    {
+        String classy = vi.getClass().toString();
+        System.out.println("\t" + classy);
+        if(classy.equals("class cs132.vapor.ast.VAssign"))
+        {
+            v.visit((cs132.vapor.ast.VAssign)vi);
+        }
+        else if(classy.equals("class cs132.vapor.ast.VBranch"))
+        {
+            v.visit((cs132.vapor.ast.VBranch)vi);
+        }
+        else if(classy.equals("class cs132.vapor.ast.VBuiltIn"))
+        {
+            v.visit((cs132.vapor.ast.VBuiltIn)vi);
+        }
+        else if(classy.equals("class cs132.vapor.ast.VCall"))
+        {
+            v.visit((cs132.vapor.ast.VCall)vi);
+        }
+        else if(classy.equals("class cs132.vapor.ast.VGoto"))
+        {
+            v.visit((cs132.vapor.ast.VGoto)vi);
+        }
+        else if(classy.equals("class cs132.vapor.ast.VMemRead"))
+        {
+            v.visit((cs132.vapor.ast.VMemRead)vi);
+        }
+        else if(classy.equals("class cs132.vapor.ast.VMemWrite"))
+        {
+            v.visit((cs132.vapor.ast.VMemWrite)vi);
+        }
+        else if(classy.equals("class cs132.vapor.ast.VReturn"))
+        {
+            v.visit((cs132.vapor.ast.VReturn)vi);
+        }
+        else
+        {
+            System.out.println("error: '" + vi.getClass().toString() + "'");
+        }
+    }
+    //----------------------------------------
 
     public static void info_printer(VaporProgram  prog, VisitorPrinter vprinter)
         throws Throwable
@@ -68,12 +118,25 @@ class V2VM
         String[] reg = prog.registers;          // registers allowed to use
         String tab = "\t";
 
-        // PROGRAM: VaporProgram
-        // System.out.println(prog);
+        // Data Segment
+        System.out.println("Data Segments:\n");
+        for (VDataSegment d : dat)
+        {
+            VOperand.Static[] vals = d.values;
+
+            // VDataSegment
+            System.out.println("data name: " + d.ident);
+            System.out.println("data idx: " + d.index);
+            System.out.println("mutable: " + d.mutable);
+            for(VOperand v : vals)
+            {
+                System.out.println("val: " + v);
+            }
+            System.out.println("");
+        }
 
         // FUNCTION: Vfunction
-        // System.out.println(fns);
-
+        System.out.println("Functions:\n");
         for (VFunction f : fns)
         {
             VVarRef.Local[] pms = f.params;   // function parameters
@@ -82,7 +145,7 @@ class V2VM
             VInstr[] bdy = f.body;            // instructions
 
             System.out.println("function name: " + f.ident);    // see VTarget
-            System.out.println("function num: " + f.index);
+            System.out.println("function idx: " + f.index);
             System.out.println("function params:");
             for (VVarRef.Local p : pms)
             {
@@ -106,62 +169,139 @@ class V2VM
             System.out.println("");
         }
 
-        // DATA SEGMENTS: VDataSegment
-        System.out.println(dat);
-
-        for (VDataSegment d : dat)
-        {
-            System.out.println(d);
-        }
-
+        // Resgisters
         System.out.println(reg);
         for (String s : reg)
         {
             System.out.println(s);
         }
+        System.out.println("");
     }
+    //----------------------------------------
 
-    public static void go_visit(VisitorPrinter vprinter,VInstr vi)
+    public static void data_grab(VaporProgram  prog, VisitorData vdatav)
         throws Throwable
     {
-        String classy = vi.getClass().toString();
-        System.out.println("\t" + classy);
-        if(classy.equals("class cs132.vapor.ast.VAssign"))
+        VFunction[] fns = prog.functions;       // All the functions in this program
+        VDataSegment[] dat = prog.dataSegments; // All the data segments in this program
+        String[] reg = prog.registers;          // registers allowed to use
+
+        HashMap<String,ArrayList<String>> vtabs = new HashMap<String,ArrayList<String>>();
+
+        // DATA SEGMENT
+        for (VDataSegment d : dat)
         {
-            vprinter.visit((cs132.vapor.ast.VAssign)vi);
+            VOperand.Static[] vals = d.values;
+
+            ArrayList<String> arlst = new ArrayList<String>();
+
+            for(VOperand v : vals) // add to the map
+            {
+                arlst.add(v.toString());
+            }
+
+            if(!arlst.isEmpty())
+            {
+                vtabs.put(d.ident,arlst);
+            }
         }
-        else if(classy.equals("class cs132.vapor.ast.VBranch"))
+
+        // print vtable
+        for (Map.Entry<String,ArrayList<String>> entry : vtabs.entrySet())
         {
-            vprinter.visit((cs132.vapor.ast.VBranch)vi);
+            System.out.println("const " + entry.getKey());
+            ArrayList<String> l = entry.getValue();
+            for( String s : l )
+            {
+                System.out.println("  " + s);
+            }
+            System.out.println("");
         }
-        else if(classy.equals("class cs132.vapor.ast.VBuiltIn"))
+
+        // FUNCTION: Vfunction
+        for (VFunction f : fns)
         {
-            vprinter.visit((cs132.vapor.ast.VBuiltIn)vi);
+            String tab = "\t";
+            VVarRef.Local[] pms = f.params;   // function parameters
+            String[] vs = f.vars;             // function local variables
+            VCodeLabel[] lbl = f.labels;      // code labels
+            VInstr[] bdy = f.body;            // instructions
+
+            ArrayList<String> diflst = new ArrayList<String>();
+            ArrayList<String> loclst = new ArrayList<String>();
+
+            System.out.println(f.ident);
+            System.out.println("Params: ");
+            for (VVarRef.Local p : pms)
+            {
+                System.out.println(tab + p.ident);
+                diflst.add(p.ident);
+            }
+            System.out.println("Locals:");
+            for (String v : vs)
+            {
+                System.out.println(tab + v);
+                loclst.add(v);
+            }
+            // System.out.println("Labels:");
+            // for (VCodeLabel l : lbl)
+            // {
+            //     System.out.println(tab + l.ident);
+            // }
+            // System.out.println("Instructions");
+            // for (VInstr vi : bdy)
+            // {
+            //     go_visit(vdatav,vi);
+            // }
+            System.out.println("");
+
+
+            // calculate the in/out/locals
+
+            int in,out,local;
+            int argno;
+            in = 0; out = 0; local = 0;
+            argno = 0;
+
+            argno = diflst.size();
+            local = loclst.size();
+
+            System.out.println("func " + f.ident + " [in " + Integer.toString(in)   // function interface
+                                + ", out " + Integer.toString(out) + ", local "
+                                + Integer.toString(local) + "]");
+
+            if(local >= 1) // save on enter
+            {
+                for(int i = 0; i < local; i++)
+                {
+                    System.out.println("  " + "local[" + Integer.toString(i) + "] = $s" + Integer.toString(i));
+                }
+            }
+
+            if(argno >= 1) // get the parameters
+            {
+                for(int i = 0; i < argno; i++)
+                {
+                    System.out.println("  " + "t" + Integer.toString(i) + " = $a" + Integer.toString(i));
+                }
+            }
+
+            if(local >= 1) // restore before return
+            {
+                for(int i = 0; i < local; i++)
+                {
+                    System.out.println("  " + "$s" + Integer.toString(i) + " = local[" + Integer.toString(i) + "]");
+                }
+            }
+
+            System.out.println("");
         }
-        else if(classy.equals("class cs132.vapor.ast.VCall"))
-        {
-            vprinter.visit((cs132.vapor.ast.VCall)vi);
-        }
-        else if(classy.equals("class cs132.vapor.ast.VGoto"))
-        {
-            vprinter.visit((cs132.vapor.ast.VGoto)vi);
-        }
-        else if(classy.equals("class cs132.vapor.ast.VMemRead"))
-        {
-            vprinter.visit((cs132.vapor.ast.VMemRead)vi);
-        }
-        else if(classy.equals("class cs132.vapor.ast.VMemWrite"))
-        {
-            vprinter.visit((cs132.vapor.ast.VMemWrite)vi);
-        }
-        else if(classy.equals("class cs132.vapor.ast.VReturn"))
-        {
-            vprinter.visit((cs132.vapor.ast.VReturn)vi);
-        }
-        else
-        {
-            System.out.println("error: '" + vi.getClass().toString() + "'");
-        }
+
+        System.out.println("");
     }
+
+    //----------------------------------------
+
+
 }
 

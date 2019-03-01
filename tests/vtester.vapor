@@ -1,9 +1,15 @@
+func Main()
+	x = 4
+	y = Add(x 2)
+	PrintIntS(y)
+	ret
+
 
 const vmt_Fac
   :Fac.ComputeFac
 
 
-func Main()
+func Mainn()
   t.0 = HeapAllocZ(4)
   [t.0] = :vmt_Fac
   if t.0 goto :null1

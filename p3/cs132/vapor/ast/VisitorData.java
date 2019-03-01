@@ -20,13 +20,13 @@ import java.io.*;
  *     exceptions here, use {@link java.lang.Throwable}.
  */
 
-public class VisitorPrinter<Throwable> extends VInstr.Visitor
+public class VisitorData<Throwable> extends VInstr.Visitor
 // public class VisitorPrinter<P,R,E extends java.lang.Throwable> extends VInstr.VisitorPR
 {
 
     String dubtab = "\t\t";
 
-    public VisitorPrinter()
+    public VisitorData()
     {
         ;
     }
