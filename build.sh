@@ -61,6 +61,7 @@ function do_p()
             ;;
         3)
             p3_builder
+            p3_tester  p3  V2VM.java  hw3  tests/Phase3Tester
             ;;
         4)
             echo "phase4"
@@ -277,6 +278,49 @@ function p3_builder()
     rm Graph/*.class > /dev/null 2>&1
 
     cd ..
+}
+
+# TEST With Grading Script (different)
+# run the grading script with all the included test cases
+# it expects a tar file named "hw[1-4].tgz" to be used with the "run" script
+# args: $1 = code directory, $2 = main file, $3 = HomeworkName, $4 = testcases
+function p3_tester()
+{
+    if [ -e $3 ] ; then
+        echo "Deleteing old folder"
+        rm -rf $3
+    fi
+
+    if [ -e $3.tgz ] ; then
+        echo "Deleteing old tarball"
+        rm -rf $3.tgz
+    fi
+
+    echo "Making new tar file for submission"; echo
+
+    mkdir $3
+    mkdir $3/Graph
+
+    cp $1/Graph/*   $3/Graph
+    cp $1/$2  $3                            # <--- main file
+
+    mkdir $3/cs132
+    mkdir $3/cs132/vapor
+    mkdir $3/cs132/vapor/ast
+
+    cp $1/cs132/vapor/ast/*  $3/cs132/vapor/ast
+
+    tar zcvf $3.tgz $3 > /dev/null
+
+    echo "Running Tester Script"; echo
+
+    cd $4                                   # <--- test directory
+
+    source run SelfTestCases ../../$3.tgz
+
+    echo;
+
+    cd ../..
 }
 
 #============================================================

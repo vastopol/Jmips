@@ -33,9 +33,9 @@ class V2VM
         VisitorData v_data_visitor = new VisitorData();
         VisitorGraphBuilder v_graph = new VisitorGraphBuilder();
 
-        graph_tester();
+        // graph_tester();
 
-        info_printer(prog,v_instr_visitor);
+        // info_printer(prog,v_instr_visitor);
 
         data_grab(prog,v_data_visitor);
 
@@ -75,7 +75,6 @@ class V2VM
         throws Throwable
     {
         String classy = vi.getClass().toString();
-        System.out.println("\t" + classy);
         if(classy.equals("class cs132.vapor.ast.VAssign"))
         {
             v.visit((cs132.vapor.ast.VAssign)vi);
@@ -248,16 +247,16 @@ class V2VM
                 System.out.println(tab + v);
                 loclst.add(v);
             }
-            // System.out.println("Labels:");
-            // for (VCodeLabel l : lbl)
-            // {
-            //     System.out.println(tab + l.ident);
-            // }
-            // System.out.println("Instructions");
-            // for (VInstr vi : bdy)
-            // {
-            //     go_visit(vdatav,vi);
-            // }
+            System.out.println("Labels:");
+            for (VCodeLabel l : lbl)
+            {
+                System.out.println(tab + l.ident);
+            }
+            System.out.println("Instructions");
+            for (VInstr vi : bdy)
+            {
+                go_visit(vdatav,vi);
+            }
             System.out.println("");
 
 
