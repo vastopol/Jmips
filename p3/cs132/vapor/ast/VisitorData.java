@@ -24,7 +24,11 @@ public class VisitorData<Throwable> extends VInstr.Visitor
 // public class VisitorPrinter<P,R,E extends java.lang.Throwable> extends VInstr.VisitorPR
 {
 
-    String dubtab = "\t\t";
+    String dubtab = "  ";
+    // jank
+    static int rnum = 0;
+    static String rname = "$t";
+    String lastreg = "";
 
     public VisitorData()
     {
@@ -35,18 +39,24 @@ public class VisitorData<Throwable> extends VInstr.Visitor
 	public void visit(VAssign a)
         throws java.lang.Throwable
     {
-        System.out.println("\tAssign");
+        // System.out.println("\tAssign");
+
         // System.out.println(dubtab + "dst: " + a.dest.toString());
         // System.out.println(dubtab + "src: " + a.source.toString());
 
-        System.out.println(dubtab + a.dest.toString() + " = " + a.source.toString() );
+        // System.out.println(dubtab + a.dest.toString() + " = " + a.source.toString() );
+
+        lastreg = rname + Integer.toString(rnum);
+        System.out.println(dubtab + rname + Integer.toString(rnum) + " = " + a.source.toString() );    // jank
+        rnum++;
     }
     //----------------------------------------
 
     public void visit(VBranch b)
         throws java.lang.Throwable
     {
-        System.out.println("\tBranch");
+        // System.out.println("\tBranch");
+
         // System.out.println(dubtab + "cmp: " + b.positive);
         // System.out.println(dubtab + "val: " + b.value.toString());
         // System.out.println(dubtab + "jmp: " + b.target.toString());
@@ -65,21 +75,30 @@ public class VisitorData<Throwable> extends VInstr.Visitor
     {
         String str = "";
 
-        System.out.println("\tBuiltIn");
-        // dest might be null
-        if(c.dest != null)
-        {
-            // System.out.println(dubtab + "dst: " + c.dest);
-            str = c.dest + " = ";
-        }
+        // System.out.println("\tBuiltIn");
         // System.out.println(dubtab +  "op:  " + c.op.name);
         str += c.op.name + "(";
         for(VOperand oper : c.args)
         {
             // System.out.println(dubtab + "arg: " + oper);
-            str = str + oper + " ";
+            // str = str + oper + " ";
+
+            str = str + lastreg + " ";  // jank
         }
         str+=")";
+
+        // dest might be null
+        if(c.dest != null)
+        {
+            // System.out.println(dubtab + "dst: " + c.dest);
+            // str = c.dest + " = ";
+
+            lastreg = rname + Integer.toString(rnum);   // jank
+            // System.out.println(dubtab + rname + Integer.toString(rnum) + " = " );  // jank
+            str = rname + Integer.toString(rnum) + " = " + str;  // jank
+            rnum++;
+        }
+
         System.out.println(dubtab + str);
     }
     //----------------------------------------
@@ -87,16 +106,17 @@ public class VisitorData<Throwable> extends VInstr.Visitor
 	public void visit(VCall c)
         throws java.lang.Throwable
     {
-        System.out.println("\tCall");
+        // System.out.println("\tCall");
         // dest might be null
         if(c.dest != null)
         {
-            System.out.println(dubtab + "dst: " + c.dest);
+            // System.out.println(dubtab + "dst: " + c.dest);
         }
-        System.out.println(dubtab +  "fun:  " + c.addr.toString());
+        // System.out.println(dubtab +  "fun:  " + c.addr.toString());
+
         for(VOperand oper : c.args)
         {
-            System.out.println(dubtab + "arg: " + oper);
+            // System.out.println(dubtab + "arg: " + oper);
         }
     }
     //----------------------------------------
@@ -104,33 +124,38 @@ public class VisitorData<Throwable> extends VInstr.Visitor
     public void visit(VGoto g)
         throws java.lang.Throwable
     {
-        System.out.println("\tGoto");
-        System.out.println(dubtab +  "dst:  " + g.target.toString());
+        // System.out.println("\tGoto");
+
+        // System.out.println(dubtab +  "dst:  " + g.target.toString());
+
+        System.out.println(dubtab + "goto " + g.target.toString());
     }
     //----------------------------------------
 
     public void visit(VMemRead r)   // ?? Source
         throws java.lang.Throwable
     {
-        System.out.println("\tMemRead");
-        System.out.println(dubtab + "dst: " + r.dest.toString());
-        System.out.println(dubtab + "src: " + r.source.toString());
+        // System.out.println("\tMemRead");
+
+        // System.out.println(dubtab + "dst: " + r.dest.toString());
+        // System.out.println(dubtab + "src: " + r.source.toString());
     }
     //----------------------------------------
 
     public void visit(VMemWrite w)  // ?? Destination
         throws java.lang.Throwable
     {
-        System.out.println("\tMemWrite");
-        System.out.println(dubtab + "dst: " + w.dest.toString());
-        System.out.println(dubtab + "src: " + w.source.toString());
+        // System.out.println("\tMemWrite");
+
+        // System.out.println(dubtab + "dst: " + w.dest.toString());
+        // System.out.println(dubtab + "src: " + w.source.toString());
     }
     //----------------------------------------
 
     public void visit(VReturn r)
         throws java.lang.Throwable
     {
-        System.out.println("\tReturn");
+        // System.out.println("\tReturn");
         // dest might be null
         if(r.value != null)
         {

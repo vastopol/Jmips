@@ -53,20 +53,21 @@ function do_p()
             p_clean  p1
             p_test   p1  Typecheck.java  DFTypeCheckVisitor.java  hw1  tests/Phase1Tester
             ;;
-        2)
+        2)  #----------------------------------------
             p_init   p2  J2V.java
             p_vapor  p2  J2V  $TJAVA  $TEST2
             p_clean  p2
             p_test   p2  J2V.java  DFVaporVisitor.java  hw2  tests/Phase2Tester
             ;;
-        3)
+        3)  #----------------------------------------
             p3_builder
             p3_tester  p3  V2VM.java  hw3  tests/Phase3Tester
             ;;
-        4)
+        4)  #----------------------------------------
             echo "phase4"
             ;;
-        *)  echo "invalid option"
+        *)  #----------------------------------------
+            echo "invalid option"
             exit 1
             ;;
     esac

@@ -30,3 +30,25 @@ Node
         VCodeLabel
         VDataSegment
         VFunction
+
+//----------------------------------------
+
+
+
+success:
+
+func Main()
+	x = 4
+	PrintIntS(x)
+	ret
+
+
+
+fail:
+
+func Main()
+	x = 4
+	y = 5
+	z = Add(x y)
+	PrintIntS(z)
+	ret
