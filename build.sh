@@ -274,6 +274,7 @@ function p3_builder()
 
     rm *.class > /dev/null 2>&1
     rm cs132/vapor/ast/*.class > /dev/null 2>&1
+    rm Graph/*.class > /dev/null 2>&1
 
     cd ..
 }
