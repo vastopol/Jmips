@@ -1,6 +1,5 @@
 func Main()
 	x = 4
-	y = 5
-	z = Add(x y)
-	PrintIntS(z)
+	y = Add(x 2)
+	PrintIntS(y)
 	ret

@@ -4,6 +4,7 @@ import cs132.util.SourcePos;
 import java.lang.Throwable; // need for each visit function
 
 import java.io.*;
+import java.util.*;
 
 // SEE THE VInstr.java file
 
@@ -30,6 +31,8 @@ public class VisitorData<Throwable> extends VInstr.Visitor
     static String rname = "$t";
     String lastreg = "";
 
+    Stack<String> stk = new Stack<String>();
+
     public VisitorData()
     {
         ;
@@ -46,7 +49,13 @@ public class VisitorData<Throwable> extends VInstr.Visitor
 
         // System.out.println(dubtab + a.dest.toString() + " = " + a.source.toString() );
 
+        // System.out.println("a" + lastreg);
         lastreg = rname + Integer.toString(rnum);
+        // System.out.println("a" + lastreg);
+        if(lastreg != "")
+        {
+            stk.push(lastreg);
+        }
         System.out.println(dubtab + rname + Integer.toString(rnum) + " = " + a.source.toString() );    // jank
         rnum++;
     }
@@ -83,7 +92,25 @@ public class VisitorData<Throwable> extends VInstr.Visitor
             // System.out.println(dubtab + "arg: " + oper);
             // str = str + oper + " ";
 
-            str = str + lastreg + " ";  // jank
+            // str = str + lastreg + " ";  // jank1
+
+            if(!stk.empty())
+            {
+                String treg = stk.pop();
+                str = str + treg + " ";  // jank2
+            }
+            else
+            {
+                lastreg = rname + Integer.toString(rnum);   // jank
+                String astr = lastreg + " = " + oper + "\n";
+                System.out.print(dubtab + astr);  // declare tmp reg for immediate
+
+                // System.out.print("b " + str + "\n");
+                rnum++;
+                stk.push(lastreg);
+                str = str + " " + lastreg ;  // jank2
+                // System.out.print("c " + str + "\n");
+            }
         }
         str+=")";
 
@@ -93,9 +120,14 @@ public class VisitorData<Throwable> extends VInstr.Visitor
             // System.out.println(dubtab + "dst: " + c.dest);
             // str = c.dest + " = ";
 
+            // System.out.println("b" + lastreg);
             lastreg = rname + Integer.toString(rnum);   // jank
-            // System.out.println(dubtab + rname + Integer.toString(rnum) + " = " );  // jank
-            str = rname + Integer.toString(rnum) + " = " + str;  // jank
+            // System.out.println("b" + lastreg);
+            stk.push(lastreg);
+            // System.out.println(dubtab + rname + Integer.toString(rnum) + " = " );  // jank1
+
+            // str = rname + Integer.toString(rnum) + " = " + str;  // jank2
+            str = lastreg + " = " + str;  // jank2
             rnum++;
         }
 
