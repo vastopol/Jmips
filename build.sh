@@ -179,7 +179,7 @@ function p_vapor()
     echo "See custom_logfile.txt for trace"; echo
     java $2 < $3 &> $LOG1
     echo "code print out"; echo
-    cat $LOG1
+    cat -n $LOG1
     echo "Code test "$3; echo
     java -jar $VAPOR_I run $LOG1; echo
 
@@ -194,7 +194,7 @@ function p_vapor()
             continue
         fi
         echo "code print out: ""$FILE"; echo
-        cat $LOG1
+        cat -n $LOG2
         echo "Code test "$FILE; echo
         java -jar $VAPOR_I run $LOG2; echo
     done
@@ -266,7 +266,7 @@ function p3_builder()
 
     java -classpath ${CLASSPATH} V2VM < $VFILE > $LOG1
 
-    cat $LOG1
+    cat -n $LOG1
 
     echo; echo "test run vaporm"; echo
 

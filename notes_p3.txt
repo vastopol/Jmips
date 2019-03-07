@@ -34,7 +34,6 @@ Node
 //----------------------------------------
 
 
-
 success:
 
 func Main()
@@ -43,12 +42,34 @@ func Main()
 	ret
 
 
-
-success: but vars are backwards
+success: but vars are backwards ***
 
 func Main()
 	x = 4
 	y = 5
 	z = Add(x y)
 	PrintIntS(z)
+	ret
+
+
+success: 1-Basic.vapor
+
+func Main()
+	x = 4
+	y = Add(x 2)
+	PrintIntS(y)
+	ret
+
+
+fail: 2-Loop.vapor ***
+
+func Main()
+	x = 1
+	goto :end
+	begin:
+		PrintIntS(x)
+		x = MulS(x 2)
+	end:
+		diff = LtS(x 100)
+		if diff goto :begin
 	ret

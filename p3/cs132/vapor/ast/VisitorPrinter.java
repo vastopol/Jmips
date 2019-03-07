@@ -23,7 +23,7 @@ import java.io.*;
 public class VisitorPrinter<Throwable> extends VInstr.Visitor
 // public class VisitorPrinter<P,R,E extends java.lang.Throwable> extends VInstr.VisitorPR
 {
-
+//System.out.println("\t" + a.instrIndex + "    " + a.sourcePos + "    " + a.ident );
     String dubtab = "\t\t";
 
     public VisitorPrinter()
@@ -36,6 +36,7 @@ public class VisitorPrinter<Throwable> extends VInstr.Visitor
         throws java.lang.Throwable
     {
         System.out.println("\tAssign");
+        System.out.println(dubtab + "pos: " + a.sourcePos );
         System.out.println(dubtab + "dst: " + a.dest.toString());
         System.out.println(dubtab + "src: " + a.source.toString());
     }
@@ -45,6 +46,7 @@ public class VisitorPrinter<Throwable> extends VInstr.Visitor
         throws java.lang.Throwable
     {
         System.out.println("\tBranch");
+        System.out.println(dubtab + "pos: " + b.sourcePos );
         System.out.println(dubtab + "cmp: " + b.positive);
         System.out.println(dubtab + "val: " + b.value.toString());
         System.out.println(dubtab + "jmp: " + b.target.toString());
@@ -55,6 +57,7 @@ public class VisitorPrinter<Throwable> extends VInstr.Visitor
         throws java.lang.Throwable
     {
         System.out.println("\tBuiltIn");
+        System.out.println(dubtab + "pos: " + c.sourcePos );
         // dest might be null
         if(c.dest != null)
         {
@@ -72,6 +75,7 @@ public class VisitorPrinter<Throwable> extends VInstr.Visitor
         throws java.lang.Throwable
     {
         System.out.println("\tCall");
+        System.out.println(dubtab + "pos: " + c.sourcePos );
         // dest might be null
         if(c.dest != null)
         {
@@ -89,6 +93,7 @@ public class VisitorPrinter<Throwable> extends VInstr.Visitor
         throws java.lang.Throwable
     {
         System.out.println("\tGoto");
+        System.out.println(dubtab +  "pos: "  + g.sourcePos );
         System.out.println(dubtab +  "dst:  " + g.target.toString());
     }
     //----------------------------------------
@@ -97,6 +102,7 @@ public class VisitorPrinter<Throwable> extends VInstr.Visitor
         throws java.lang.Throwable
     {
         System.out.println("\tMemRead");
+        System.out.println(dubtab + "pos: " + r.sourcePos );
         System.out.println(dubtab + "dst: " + r.dest.toString());
         System.out.println(dubtab + "src: " + r.source.toString());
     }
@@ -106,6 +112,7 @@ public class VisitorPrinter<Throwable> extends VInstr.Visitor
         throws java.lang.Throwable
     {
         System.out.println("\tMemWrite");
+        System.out.println(dubtab + "pos: " + w.sourcePos );
         System.out.println(dubtab + "dst: " + w.dest.toString());
         System.out.println(dubtab + "src: " + w.source.toString());
     }
@@ -115,6 +122,7 @@ public class VisitorPrinter<Throwable> extends VInstr.Visitor
         throws java.lang.Throwable
     {
         System.out.println("\tReturn");
+        System.out.println(dubtab + "pos: " + r.sourcePos );
         // dest might be null
         if(r.value != null)
         {
