@@ -27,7 +27,7 @@ public class VisitorData<Throwable> extends VInstr.Visitor
 
     String dubtab = "  ";
     // jank
-    static int rnum = 0;
+    public static int rnum = 0;
     static String rname = "$t";
     String lastreg = "";
 
@@ -57,14 +57,11 @@ public class VisitorData<Throwable> extends VInstr.Visitor
         //printme();
         // System.out.println("\tAssign");
         // System.out.println(dubtab + "pos: " + a.sourcePos );
-
         // System.out.println(dubtab + "dst: " + a.dest.toString());
         // System.out.println(dubtab + "src: " + a.source.toString());
 
         // System.out.println(dubtab + a.dest.toString() + " = " + a.source.toString() );
-
         // System.out.println("a" + lastreg);
-
 
         String dst = a.dest.toString();
         if(vartoreg.containsKey(dst) && vartoreg.get(dst) != "" ) // not used ??
@@ -95,20 +92,19 @@ public class VisitorData<Throwable> extends VInstr.Visitor
     public void visit(VBranch b)
         throws java.lang.Throwable
     {
-        //printme();
         // System.out.println(dubtab + "pos: " + b.sourcePos );
+        // System.out.println("\tBranch");
+        // System.out.println(dubtab + "cmp: " + b.positive);
+        // System.out.println(dubtab + "val: " + b.value.toString());
+        // System.out.println(dubtab + "jmp: " + b.target.toString());
+        // System.out.println(dubtab + brnch + " " + b.value.toString() + " goto " + b.target.toString());
+        //printme();
 
         String brnch = "if";
         if(b.positive == false)
         {
             brnch += "0";
         }
-
-        // System.out.println("\tBranch");
-        // System.out.println(dubtab + "cmp: " + b.positive);
-        // System.out.println(dubtab + "val: " + b.value.toString());
-        // System.out.println(dubtab + "jmp: " + b.target.toString());
-        // System.out.println(dubtab + brnch + " " + b.value.toString() + " goto " + b.target.toString());
 
         String val = b.value.toString();
         String bbb = "";
@@ -128,14 +124,30 @@ public class VisitorData<Throwable> extends VInstr.Visitor
     public void visit(VBuiltIn c)
         throws java.lang.Throwable
     {
-        //printme();
-
         String str = "";
 
         // System.out.println("\tBuiltIn");
+        // printme();
         // System.out.println(dubtab + "pos: " + c.sourcePos );
-
         // System.out.println(dubtab +  "op:  " + c.op.name);
+
+        if(c.op.name.equals("Error")) //  handle the error function special case
+        {
+            System.out.println("  Error(" + c.args[0] + ")");
+            return;
+        }
+
+        if(c.op.name.equals("HeapAllocZ")) //  handle the error function special case
+        {
+            lastreg = rname + Integer.toString(rnum);   // jank
+            rnum++;
+            String dst = c.dest.toString();
+            vartoreg.replace(dst,lastreg);
+            System.out.println("  " + lastreg + " = HeapAllocZ(" + c.args[0] + ")");
+            stk.push(lastreg);  // push on stack probably used by the memwrite
+            return;
+        }
+
         str += c.op.name + "(";
         for(VOperand oper : c.args)
         {
@@ -147,14 +159,14 @@ public class VisitorData<Throwable> extends VInstr.Visitor
             String dst = c.op.name;
             if(!stk.empty())
             {
-                // System.out.println("clapper");
+                // System.out.println("clapper"); // common
 
                 String treg = stk.pop();
                 str = str + treg + " ";  // jank2
             }
             else if(vartoreg.containsKey(dst) && vartoreg.get(dst) != "")   // ??? not used??
             {
-                System.out.println("slapper");  // never goe here
+                System.out.println("slapper");  // never goes here
                 System.out.print("d " + str + "\n");
                 System.out.print("e " + oper + "\n");
 
@@ -170,7 +182,7 @@ public class VisitorData<Throwable> extends VInstr.Visitor
             }
             else
             {
-                // System.out.println("flapper");
+                // System.out.println("flapper"); // common
                 // System.out.print("f " + str + "\n");
                 // System.out.print("g " + oper + "\n");
                 // printme();
@@ -183,28 +195,34 @@ public class VisitorData<Throwable> extends VInstr.Visitor
                     // System.out.println("jankolator");
 
                     lastreg = rname + Integer.toString(rnum);   // jank
+
+                    // System.out.println(lastreg);
+                    // System.out.println(((VVarRef.Local)oper).ident);
+                    // printme();
+
                     String nameo = vartoreg.get(((VVarRef.Local)oper).ident);
-
-                    String astr = lastreg + " = " + nameo + "\n";
+                    String astr = lastreg + " = " + nameo + "\n";  // ????????
+                    rnum++;
                     System.out.print(dubtab + astr);  // declare tmp reg for immediate
 
                     // System.out.print("b " + str + "\n");
-                    rnum++;
-                    // stk.push(lastreg); // ?
-                    str = str + " " + lastreg + " ";  // jank2
-                    //
-                }
-                else
-                {
-                    lastreg = rname + Integer.toString(rnum);   // jank
-                    String astr = lastreg + " = " + oper + "\n";
-                    System.out.print(dubtab + astr);  // declare tmp reg for immediate
-
-                    // System.out.print("b " + str + "\n");
-                    rnum++;
                     // stk.push(lastreg); // ?
                     str = str + " " + lastreg + " ";  // jank2
                     // System.out.print("c " + str + "\n");
+                }
+                else    // integer literal
+                {
+                    // lastreg = rname + Integer.toString(rnum);   // jank
+                    // String astr = lastreg + " = " + oper + "\n";
+                    // rnum++;
+                    // System.out.print(dubtab + astr);  // declare tmp reg for immediate
+                    //
+                    // // System.out.print("b " + str + "\n");
+                    // // stk.push(lastreg); // ?
+                    // str = str + " " + lastreg + " ";  // jank2
+                    // // System.out.print("c " + str + "\n");
+
+                    str = str + " " + oper.toString() + " "; // put the integer directly in the call
                 }
             }
         }
@@ -239,7 +257,6 @@ public class VisitorData<Throwable> extends VInstr.Visitor
             }
 
             str = lastreg + " = " + str;  // jank2
-
         }
 
         System.out.println(dubtab + str);
@@ -249,34 +266,55 @@ public class VisitorData<Throwable> extends VInstr.Visitor
 	public void visit(VCall c)
         throws java.lang.Throwable
     {
-        //printme();
-
-        // System.out.println("\tCall");
-        // System.out.println(dubtab + "pos: " + c.sourcePos );
+        System.out.println("<<<<<<<<<<<<<<<<<<<<");
+        System.out.println(dubtab + "Call");
+        System.out.println(dubtab + "pos: " + c.sourcePos );
 
         // dest might be null
         if(c.dest != null)
         {
-            // System.out.println(dubtab + "dst: " + c.dest);
+            System.out.println(dubtab + "dst: " + c.dest);
         }
-        // System.out.println(dubtab +  "fun:  " + c.addr.toString());
+        System.out.println(dubtab +  "fun:  " + c.addr.toString());
 
+        printme();
+
+        int argi = 0;
         for(VOperand oper : c.args)
         {
-            // System.out.println(dubtab + "arg: " + oper);
+            System.out.println(dubtab + "arg: " + oper);
+            String argv = vartoreg.get(oper.toString());
+            if(argv == null)
+            {
+                argv = oper.toString();
+            }
+            System.out.println( "  $a" + Integer.toString(argi) + " = " + argv );
+            argi++;
         }
+
+        String freg = "";
+        String retreg = "";
+
+        retreg = rname + Integer.toString(rnum);
+        rnum++;
+        stk.push(retreg);   // put ret val on the stack
+
+        System.out.println(dubtab + "call " + freg);
+        System.out.println(dubtab + retreg + " = $v0");  // set a reg to the special return register
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>");
     }
     //----------------------------------------
 
     public void visit(VGoto g)
         throws java.lang.Throwable
     {
-        //printme();
-
         // System.out.println("\tGoto");
         // System.out.println(dubtab + "pos: " + g.sourcePos );
 
         // System.out.println(dubtab +  "dst:  " + g.target.toString());
+
+        //printme();
 
         System.out.println(dubtab + "goto " + g.target.toString());
     }
@@ -285,47 +323,52 @@ public class VisitorData<Throwable> extends VInstr.Visitor
     public void visit(VMemRead r)   // ?? Source
         throws java.lang.Throwable
     {
-        //printme();
-
         // System.out.println("\tMemRead");
         // System.out.println(dubtab + "pos: " + r.sourcePos );
-
+        //
         // System.out.println(dubtab + "dst: " + r.dest.toString());
         // System.out.println(dubtab + "src: " + r.source.toString());
+        //
+        // printme();
     }
     //----------------------------------------
 
     public void visit(VMemWrite w)  // ?? Destination
         throws java.lang.Throwable
     {
-        //printme();
-
         // System.out.println("\tMemWrite");
         // System.out.println(dubtab + "pos: " + w.sourcePos );
-
+        //
         // System.out.println(dubtab + "dst: " + w.dest.toString());
         // System.out.println(dubtab + "src: " + w.source.toString());
+
+        String memoref = "";
+        if(!stk.empty())
+        {
+            // System.out.println(stk.peek());
+            memoref = stk.pop();
+        }
+
+        // printme();
+
+        System.out.println(dubtab + "[" + memoref  + "] = " + w.source.toString());
     }
     //----------------------------------------
 
     public void visit(VReturn r)
         throws java.lang.Throwable
     {
-        //printme();
-
-        // System.out.println("\tReturn");
+        // System.out.println(dubtab + "Return");
         // System.out.println(dubtab + "pos: " + r.sourcePos );
 
-        // dest might be null
-        if(r.value != null)
-        {
-            // System.out.println(dubtab + "val: " + r.value);
-            System.out.println(dubtab + "ret " + r.value);
-        }
-        else
-        {
-            System.out.println(dubtab + "ret");
-        }
+        // if(r.value != null) // dest might be null
+        // {
+        //     System.out.println(dubtab + "val: " + r.value);
+        // }
+
+        //printme();
+
+        System.out.println(dubtab + "ret");
     }
     //----------------------------------------
 

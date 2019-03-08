@@ -58,8 +58,8 @@ class V2VM
         try
         {
             tree = VaporParser.run(new InputStreamReader(in), 1, 1,
-            java.util.Arrays.asList(ops),
-            allowLocals, registers, allowStack);
+                                    java.util.Arrays.asList(ops),
+                                    allowLocals, registers, allowStack);
         }
         catch (ProblemException ex)
         {
@@ -216,11 +216,31 @@ class V2VM
                 for(int i = 0; i < argno; i++)
                 {
                     System.out.println("  " + "$t" + Integer.toString(i) + " = $a" + Integer.toString(i));
+                    vdatav.rnum++;  // inc reg cnt
                 }
             }
 
             for (VInstr vi : bdy)   // visit the instructions && print labelas
             {
+                String classy = vi.getClass().toString();
+                if(classy.equals("class cs132.vapor.ast.VReturn"))
+                {
+                    VReturn vr = (VReturn)vi;   // put ret val into $v0
+                    if(vr.value != null)
+                    {
+                        String retv = vdatav.vartoreg.get(vr.value.toString());
+                        System.out.println( "  $v0 = " + retv );
+                    }
+
+                //     if(local >= 1) // restore regs before return
+                //     {
+                //         for(int i = 0; i < local; i++)
+                //         {
+                //             System.out.println("  " + "$s" + Integer.toString(i) + " = local[" + Integer.toString(i) + "]");
+                //         }
+                //     }
+                }
+
                 go_visit(vdatav,vi);
 
                 int i = vi.sourcePos.line;
@@ -231,15 +251,9 @@ class V2VM
                 }
             }
 
-            // if(local >= 1) // restore regs before return, currently prints after return
-            // {
-            //     for(int i = 0; i < local; i++)
-            //     {
-            //         System.out.println("  " + "$s" + Integer.toString(i) + " = local[" + Integer.toString(i) + "]");
-            //     }
-            // }
-
             System.out.println("");
+
+            vdatav.rnum = 0; // reset reg count for each function
         }
 
         System.out.println("");
@@ -305,14 +319,6 @@ class V2VM
             }
             System.out.println("");
         }
-
-        // // Resgisters
-        // System.out.println(reg);
-        // for (String s : reg)
-        // {
-        //     System.out.println(s);
-        // }
-        // System.out.println("");
 
         System.out.println("----------------------------------------\n");
     }
