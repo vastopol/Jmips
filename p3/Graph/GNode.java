@@ -24,7 +24,8 @@ public class GNode {
     Vector<GNode> adj;
     public int out_degree;
     public int in_degree;
-        
+    public SourcePos line;
+
     public GNode(Graph g) {
         node_id = g.node_count;
         pred = new Vector<>();
@@ -32,7 +33,19 @@ public class GNode {
         adj = new Vector<>();
         out_degree = 0;
         in_degree = 0;
-        System.out.println(node_id + " GNode created");
+        line = null;
+        // System.out.println(node_id + " GNode created");
+    }
+        
+    public GNode(Graph g, SourcePos s) {
+        node_id = g.node_count;
+        pred = new Vector<>();
+        succ = new Vector<>();
+        adj = new Vector<>();
+        out_degree = 0;
+        in_degree = 0;
+        line = s;
+        // System.out.println(node_id + " GNode created");
     }
 
     public boolean goes_to(GNode n) {

@@ -13,7 +13,9 @@ import cs132.util.SourcePos;
  */
 public abstract class VMemRef extends Node
 {
-	protected VMemRef(SourcePos sourcePos)
+	protected void name() {
+		
+	} VMemRef(SourcePos sourcePos)
 	{
 		super(sourcePos);
 	}
