@@ -124,11 +124,12 @@ class V2VM
             scans.add(ll);
         }
 
-        // for(LinearScan lscan: scans) {
-        //     System.out.println("New Function");
-        //     lscan.print_reg_map();
-        //     lscan.print_local_map();
-        // }
+        for(LinearScan lscan: scans) {
+            System.out.println("New Function");
+            lscan.print_reg_map();
+            lscan.print_local_map();
+            System.out.println(lscan.local_list.size());
+        }
 
         return;
     }

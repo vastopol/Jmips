@@ -61,7 +61,7 @@ function do_p()
             ;;
         3)  #----------------------------------------
             p3_builder
-            p3_tester  p3  V2VM.java  hw3  tests/Phase3Tester
+            # p3_tester  p3  V2VM.java  hw3  tests/Phase3Tester
             ;;
         4)  #----------------------------------------
             echo "phase4"

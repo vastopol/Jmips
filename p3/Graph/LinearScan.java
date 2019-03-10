@@ -21,8 +21,8 @@ public class LinearScan {
     public Vector<String> register_list;
     public Vector<String> local_list;
 
-    Map<Integer, Vector<String>> registers;
-    Map<Integer, Vector<String>> locals;
+    public Map<Integer, Vector<String>> registers;
+    public Map<Integer, Vector<String>> locals;
 
 
     public LinearScan() {
@@ -133,14 +133,14 @@ public class LinearScan {
                 // System.out.println("2");
             }
 
-
-            if(locals.containsKey(all_intervals.get(i).value.start.line)) {
-                locals.replace(all_intervals.get(i).value.start.line, new_local_list);
+            if(local_list.size() > 0) {
+                if(locals.containsKey(all_intervals.get(i).value.start.line)) {
+                    locals.replace(all_intervals.get(i).value.start.line, new_local_list);
+                }
+                else {
+                    locals.put(all_intervals.get(i).value.start.line, new_local_list);
+                }
             }
-            else {
-                locals.put(all_intervals.get(i).value.start.line, new_local_list);
-            }
-
         }
 
     }
