@@ -48,7 +48,7 @@ class V2VM
         VisitorVaporM vapor_m_visitor = new VisitorVaporM();
         Vector<VisitorGraphBuilder> all_graphs = infoo_printer(prog);
 
-        vaporm_grab(prog,v_data_visitor);
+        vaporm_grab(prog,vapor_m_visitor);
 
         //PRINT ALL THE FLOW_GRAPHS:
 
@@ -700,12 +700,12 @@ class V2VM
         return ret;
     }
 
-}
+
 
     //----------------------------------------
 
     // VAPOR-M CODE GENERATOR
-    public static void vaporm_grab(VaporProgram  prog, VisitorData vdatav)
+    public static void vaporm_grab(VaporProgram  prog, VisitorVaporM vdatav)
         throws Throwable
     {
         VFunction[] fns = prog.functions;       // All the functions in this program
@@ -850,3 +850,4 @@ class V2VM
     }
 
     //----------------------------------------
+}
