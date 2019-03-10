@@ -32,11 +32,31 @@ public class Graph {
         all_nodes = new Vector<>();
         head = null;
         adj_matrix = new HashMap();
-        System.out.println("Setup graph");
+        // System.out.println("Setup graph");
     }
 
     public Vector<GNode> nodes() {
         return all_nodes;
+    }
+
+    public GNode new_node(VInstr vin) {
+        node_count++;
+        // System.out.println(node_count + " is the new node_count in Graph::new_node()"); 
+
+        GNode temp = new GNode(this, vin.sourcePos);
+        // System.out.println(temp.node_id + " created in Graph::new_node()"); 
+
+        vertices++;
+        // System.out.println(vertices);
+        adj_matrix.put(node_count, temp.adj);
+        all_nodes.add(temp);
+        // System.out.println(all_nodes.size() + " is all_nodes size in new_node()"); 
+
+        if(head == null) {
+            head = temp;
+        }
+
+        return temp;
     }
 
     public GNode new_node() {
@@ -44,7 +64,7 @@ public class Graph {
         // System.out.println(node_count + " is the new node_count in Graph::new_node()"); 
 
         GNode temp = new GNode(this);
-        System.out.println(temp.node_id + " created in Graph::new_node()"); 
+        // System.out.println(temp.node_id + " created in Graph::new_node()"); 
 
         vertices++;
         // System.out.println(vertices);
