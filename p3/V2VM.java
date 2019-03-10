@@ -86,10 +86,10 @@ class V2VM
 
         //BUILD INTERVAL MAP BUILD
         // for(VisitorGraphBuilder i: all_graphs) {
-        //     Map<String, Interval> tmp_pair_vec = build_intervals(i.flow_graph.nodes(), i.def, i.use);  
+        //     Map<String, Interval> tmp_pair_vec = build_intervals(i.flow_graph.nodes(), i.def, i.use);
         //     for(String xy: tmp_pair_vec.keySet()) {
         //         System.out.println("outside function " + xy);
-        //     } 
+        //     }
         //     interval_vec.add(tmp_pair_vec);
         // }
 
@@ -141,7 +141,7 @@ class V2VM
             // System.out.println("Inside Node " + i.node_id + " line: " + i.line.line);
             // System.out.println();
             // System.out.println("    defs:");
-    
+
             if(def_temp != null){
                 for(String j: def_temp) {
                     int cont = 0;
@@ -163,7 +163,7 @@ class V2VM
                         intervals.put(j, new_var);
                         new_var.end = i.line;
                         // System.out.println("        ~ " + j + " " + new_var.start.line);
-                        cont = 2; 
+                        cont = 2;
                     }
                     // System.out.println("        def " + j + " " + intervals.get(j).start.line + " " + cont);
                 }
@@ -605,7 +605,7 @@ class V2VM
 
     //----------------------------------------
 
-<<<<<<< HEAD
+// <<<<<<< HEAD
     public static void info_printer(VaporProgram  prog, VisitorPrinter vprinter)
         throws Throwable
     {
@@ -669,54 +669,6 @@ class V2VM
     }
     //----------------------------------------
 
-    public static void graph_tester()
-    {
-        System.out.println("====================== Testing GRAPH ====================== Testing GRAPH ====================== Testing GRAPH ======================");
-        Graph g = new Graph();
-        GNode n_1 = g.new_node();
-        g.show();
-        GNode n_2 = g.new_node();
-        g.show();
-        g.add_edge(n_1, n_2);
-        System.out.println("~~add edge from 1 and 2~~");
-        // g.show();
-
-        // if(n_1.goes_to(n_2)) {
-        //     System.out.println("supposed to be true 1");
-        // }
-        // else if(n_1.comes_from(n_2)) {
-        //     System.out.println("not supposed to be true 2");
-        // }
-
-        // if(n_2.goes_to(n_1)) {
-        //     System.out.println("not supposed to be true");
-        // }
-        // else if(n_2.comes_from(n_1)) {
-        //     System.out.println("supposed to be true 2");
-        // }
-
-        for(GNode j: g.nodes()) {
-            System.out.println("Inside " + j.node_id);
-            for(GNode k: j.succ) {
-                System.out.println("    Head: " + g.head.node_id + ", " + j.node_id + "'s successor is " + k.node_id);
-            }
-        }
-
-        GNode n_3 = g.new_node();
-        g.add_edge(n_2, n_3);
-        System.out.println("~~add edge from 2 to 3~~");
-
-        for(GNode j: g.nodes()) {
-            System.out.println("Inside " + j.node_id);
-            for(GNode k: j.succ) {
-                System.out.println("    Head: " + g.head.node_id + ", " + j.node_id + "'s successor is " + k.node_id);
-            }
-        }
-        // g.show();
-=======
->>>>>>> master
-
-
     public static Vector<VisitorGraphBuilder> infoo_printer(VaporProgram  prog)
         throws Throwable
     {
@@ -744,7 +696,7 @@ class V2VM
 
         return ret;
     }
-    
+
 }
 
 
