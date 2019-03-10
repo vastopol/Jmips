@@ -21,7 +21,8 @@ import java.util.*;
  *     exceptions here, use {@link java.lang.Throwable}.
  */
 
-public class VisitorData<Throwable> extends VInstr.Visitor
+public class VisitorVaporM<Throwable> extends VInstr.Visitor
+// public class VisitorVaporM<P,R,E extends java.lang.Throwable> extends VInstr.VisitorPR
 {
 
     String dubtab = "  ";
@@ -34,7 +35,7 @@ public class VisitorData<Throwable> extends VInstr.Visitor
 
     public static HashMap<String,String> vartoreg; // currently set inside of the data_grab() in main()
 
-    public VisitorData()
+    public VisitorVaporM()
     {
         ;
     }
