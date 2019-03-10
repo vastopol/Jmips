@@ -77,7 +77,7 @@ public class VisitorData<Throwable> extends VInstr.Visitor
             rnum++;
         }
 
-        // System.out.println("a" + lastreg);
+        // System.out.println("a " + lastreg);
 
         if(lastreg != "")
         {
@@ -110,8 +110,8 @@ public class VisitorData<Throwable> extends VInstr.Visitor
         String bbb = "";
         if(!stk.empty())
         {
-            System.out.println(stk.peek());
-            bbb = stk.pop();
+            // System.out.println(stk.peek());
+            bbb = stk.peek(); // change from pop
         }
         else if(vartoreg.containsKey(val) && vartoreg.get(val) != "" )
         {
@@ -212,6 +212,7 @@ public class VisitorData<Throwable> extends VInstr.Visitor
                 }
                 else    // integer literal
                 {
+
                     // lastreg = rname + Integer.toString(rnum);   // jank
                     // String astr = lastreg + " = " + oper + "\n";
                     // rnum++;
@@ -266,23 +267,23 @@ public class VisitorData<Throwable> extends VInstr.Visitor
 	public void visit(VCall c)
         throws java.lang.Throwable
     {
-        System.out.println("<<<<<<<<<<<<<<<<<<<<");
-        System.out.println(dubtab + "Call");
-        System.out.println(dubtab + "pos: " + c.sourcePos );
+        // System.out.println("<<<<<<<<<<<<<<<<<<<<");
+        // System.out.println(dubtab + "Call");
+        // System.out.println(dubtab + "pos: " + c.sourcePos );
 
         // dest might be null
         if(c.dest != null)
         {
-            System.out.println(dubtab + "dst: " + c.dest);
+            // System.out.println(dubtab + "dst: " + c.dest);
         }
-        System.out.println(dubtab +  "fun:  " + c.addr.toString());
+        // System.out.println(dubtab +  "fun:  " + c.addr.toString());
 
-        printme();
+        // printme();
 
         int argi = 0;
         for(VOperand oper : c.args)
         {
-            System.out.println(dubtab + "arg: " + oper);
+            // System.out.println(dubtab + "arg: " + oper);
             String argv = vartoreg.get(oper.toString());
             if(argv == null)
             {
@@ -292,17 +293,22 @@ public class VisitorData<Throwable> extends VInstr.Visitor
             argi++;
         }
 
-        String freg = "";
-        String retreg = "";
 
-        retreg = rname + Integer.toString(rnum);
+        String freg = "";
+        if(!stk.empty())
+        {
+            // System.out.println(stk.peek());
+            freg = stk.peek();
+        }
+
+        String retreg = rname + Integer.toString(rnum);
         rnum++;
         stk.push(retreg);   // put ret val on the stack
 
         System.out.println(dubtab + "call " + freg);
         System.out.println(dubtab + retreg + " = $v0");  // set a reg to the special return register
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>");
+        // System.out.println(">>>>>>>>>>>>>>>>>>>>");
     }
     //----------------------------------------
 
@@ -323,13 +329,34 @@ public class VisitorData<Throwable> extends VInstr.Visitor
     public void visit(VMemRead r)   // ?? Source
         throws java.lang.Throwable
     {
+        // System.out.println("<<<<<<<<<<<<<<<<<<<<");
         // System.out.println("\tMemRead");
         // System.out.println(dubtab + "pos: " + r.sourcePos );
         //
         // System.out.println(dubtab + "dst: " + r.dest.toString());
         // System.out.println(dubtab + "src: " + r.source.toString());
-        //
+
+        String memoref = "";
+        if(!stk.empty())
+        {
+            // System.out.println("stk");
+            // System.out.println(stk.peek());
+            memoref = stk.peek(); // change from pop
+        }
+
+
         // printme();
+
+
+        String retreg = rname + Integer.toString(rnum);
+        rnum++;
+        stk.push(retreg);   // put ret val on the stack
+        System.out.println(dubtab +  retreg + " = [ " + memoref  + "]");
+
+        String dst = r.dest.toString();
+        vartoreg.replace(dst,retreg);
+
+        // System.out.println(">>>>>>>>>>>>>>>>>>>>");
     }
     //----------------------------------------
 
@@ -346,7 +373,7 @@ public class VisitorData<Throwable> extends VInstr.Visitor
         if(!stk.empty())
         {
             // System.out.println(stk.peek());
-            memoref = stk.pop();
+            memoref = stk.peek(); // changed from pop
         }
 
         // printme();
