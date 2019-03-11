@@ -60,6 +60,55 @@ public class LinearScan {
         }
     }
 
+    public String get_first_mapping(String k, int start_line, int end_line, Map<String, String> args) {
+        String ret = "_";
+        boolean found = false;
+
+        if(local_list.size() > 0) {
+            for(int i = 0; i < local_list.size(); i++) {
+                if(local_list.get(i) == k) {
+                    ret = "local[" + i + "]";
+                    found = true;
+                    break;
+                }
+            }
+        }
+        
+        if(start_line < end_line && !found) {
+            // System.out.println("  " + k + " checks Map registers ");
+            for(int i = start_line; i < end_line; i++) {
+                if(registers.containsKey(i)) {
+                    Vector<String> mappings = registers.get(i);
+                    // System.out.println("    Line " + i + " exists in Map registers");
+                    for(int j = 0; j < mappings.size(); j++) {
+                        if(mappings.get(j).equals(k)) {
+                            ret = "$t" + j;
+                            // System.out.println("      " + k + " has been found at " + ret);
+                            found = true;
+                            break;
+                        }
+                        else {
+                            // System.out.println("      " + k + " has not been found at $t" + j + " which holds " + mappings.get(j) + " intstead.");
+                        }
+                    }
+                }
+            }
+        }
+
+        if(!found) {
+            if(args.containsKey(k)) {
+                ret = args.get(k);
+                found = true;
+            }
+        }
+        
+        if(!found) {
+            System.out.println("error in get_first_mapping for " + k + " around line " + start_line);
+        }
+
+        return ret;
+    }
+
     public void print_local_map() {
         for(int i: locals.keySet()) {
             Vector<String> locs = locals.get(i);

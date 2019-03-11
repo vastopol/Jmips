@@ -102,9 +102,6 @@ public class VisitorGraphBuilder<Throwable> //extends VInstr.Visitor
         last_node = n1;
         
         // System.out.println("        address of function being called:" + c.addr.getClass().toString() + " " + n1.line.toString());
-        for(VOperand i: c.args) {
-            // System.out.println("        argument being passed to function: " + i);
-        }
         // System.out.println("        return value of the function: " + c.dest);
 
 

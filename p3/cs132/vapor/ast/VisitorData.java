@@ -22,6 +22,7 @@ import java.util.*;
  */
 
 public class VisitorData<Throwable> extends VInstr.Visitor
+// public class VisitorPrinter<P,R,E extends java.lang.Throwable> extends VInstr.VisitorPR
 {
 
     String dubtab = "  ";

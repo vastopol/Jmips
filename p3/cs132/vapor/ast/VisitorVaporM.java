@@ -5,6 +5,7 @@ import java.lang.Throwable; // need for each visit function
 
 import java.io.*;
 import java.util.*;
+import Graph.*;
 
 // SEE THE VInstr.java file
 
@@ -35,8 +36,17 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
 
     public static HashMap<String,String> vartoreg; // currently set inside of the data_grab() in main()
 
+    public LinearScan all_mappings;
+    public Map<String, String> curr_vartoreg_mappings;
+    public Vector<String> func_args;
+    public int end_line;
+
     public VisitorVaporM()
     {
+        all_mappings = null;
+        curr_vartoreg_mappings = null;
+        func_args = null;
+        end_line = 0;
         ;
     }
 
@@ -47,6 +57,28 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         {
             System.out.println(name + " -> " + vartoreg.get(name));
         }
+    }
+
+    public String register_allocate(String k, int start_line) {
+        //Find register within current_vartoreg_mappings
+        String lastreg = "^";
+
+        if(curr_vartoreg_mappings.containsKey(k)) {
+            lastreg = curr_vartoreg_mappings.get(k);
+            if(lastreg.indexOf("$t") == -1) {
+                String var_reg = all_mappings.get_first_mapping(k, start_line, this.end_line, curr_vartoreg_mappings);
+                System.out.println("  " + var_reg + " = " + lastreg);
+                curr_vartoreg_mappings.replace(k, var_reg);
+                lastreg = var_reg;
+            }
+        } //If not found, retrieve the mapping within LinearScan and put the mapping into current_vartoreg_mappings
+        else {
+            String var_reg = all_mappings.get_first_mapping(k, start_line, this.end_line, curr_vartoreg_mappings);
+            curr_vartoreg_mappings.put(k, var_reg);
+            lastreg = var_reg;
+        }
+
+        return lastreg;
     }
 
     //----------------------------------------
@@ -66,7 +98,7 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         String dst = a.dest.toString();
         if(vartoreg.containsKey(dst) && vartoreg.get(dst) != "" ) // not used ??
         {
-            System.out.println("aaha!!!!");
+            // System.out.println("aaha!!!!");
             lastreg = vartoreg.get(dst);
         }
         else
@@ -84,7 +116,16 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
             stk.push(lastreg);
         }
 
-        System.out.println(dubtab + lastreg + " = " + a.source.toString() );    // jank
+        lastreg = register_allocate(dst, a.dest.sourcePos.line);
+
+        String source_reg = a.source.toString();
+        String source_class = a.source.getClass().toString();
+        
+        if(!source_class.equals("class cs132.vapor.ast.VLitInt") && !source_class.equals("class cs132.vapor.ast.VLabelRef")) {
+            source_reg = register_allocate(a.source.toString(), a.source.sourcePos.line);
+        }
+
+        System.out.println(dubtab + lastreg + " = " + source_reg );    // jank
 
     }
     //----------------------------------------
@@ -108,15 +149,17 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
 
         String val = b.value.toString();
         String bbb = "";
-        if(!stk.empty())
-        {
-            // System.out.println(stk.peek());
-            bbb = stk.peek(); // change from pop
-        }
-        else if(vartoreg.containsKey(val) && vartoreg.get(val) != "" )
-        {
-            bbb = vartoreg.get(val);
-        }
+        // if(!stk.empty())
+        // {
+        //     // System.out.println(stk.peek());
+        //     bbb = stk.peek(); // change from pop
+        // }
+        // else if(vartoreg.containsKey(val) && vartoreg.get(val) != "" )
+        // {
+        //     bbb = vartoreg.get(val);
+        // }
+
+        bbb = register_allocate(val, b.sourcePos.line);
         System.out.println(dubtab + brnch + " " + bbb + " goto " + b.target.toString());
     }
     //----------------------------------------
@@ -143,89 +186,38 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
             rnum++;
             String dst = c.dest.toString();
             vartoreg.replace(dst,lastreg);
-            System.out.println("  " + lastreg + " = HeapAllocZ(" + c.args[0] + ")");
+
+            lastreg = register_allocate(dst, c.sourcePos.line);
+            String heap_arg = c.args[0].toString();
+            String heap_arg_class = c.args[0].getClass().toString();
+
+            if(!heap_arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+                heap_arg = register_allocate(heap_arg, c.sourcePos.line);
+            }
+            System.out.println("  " + lastreg + " = HeapAllocZ(" + heap_arg + ")");
             stk.push(lastreg);  // push on stack probably used by the memwrite
             return;
         }
 
+
         str += c.op.name + "(";
-        for(VOperand oper : c.args)
+        for(int arg_num = 0; arg_num < c.args.length; arg_num++)
         {
+            VOperand oper = c.args[arg_num];
             // System.out.println(dubtab + "arg: " + oper);
             // str = str + oper + " ";
+            String c_name = oper.getClass().toString();
+            String builtin_arg = oper.toString();
+            if(!c_name.equals("class cs132.vapor.ast.VLitInt") && !c_name.equals("class cs132.vapor.ast.VLabelRef")) {
+                builtin_arg = register_allocate(oper.toString(), oper.sourcePos.line);
+            }
+            str += builtin_arg;
 
+            if(arg_num < c.args.length - 1) {
+                str+= " ";
+            }
             // str = str + lastreg + " ";  // jank1
 
-            String dst = c.op.name;
-            if(!stk.empty())
-            {
-                // System.out.println("clapper"); // common
-
-                String treg = stk.pop();
-                str = str + treg + " ";  // jank2
-            }
-            else if(vartoreg.containsKey(dst) && vartoreg.get(dst) != "")   // ??? not used??
-            {
-                System.out.println("slapper");  // never goes here
-                System.out.print("d " + str + "\n");
-                System.out.print("e " + oper + "\n");
-
-                lastreg = rname + Integer.toString(rnum);   // jank
-                String astr = lastreg + " = " + oper + "\n";
-                System.out.print(dubtab + astr);  // declare tmp reg for immediate
-
-                // System.out.print("b " + str + "\n");
-                rnum++;
-                // stk.push(lastreg); // ?
-                str = str + " " + lastreg + " ";  // jank2
-                // System.out.print("c " + str + "\n");
-            }
-            else
-            {
-                // System.out.println("flapper"); // common
-                // System.out.print("f " + str + "\n");
-                // System.out.print("g " + oper + "\n");
-                // printme();
-                //
-                // System.out.println(oper.getClass()); // can be either a litInt or vvarreflocal
-
-                String classy = oper.getClass().toString();
-                if(classy.equals("class cs132.vapor.ast.VVarRef$Local"))
-                {
-                    // System.out.println("jankolator");
-
-                    lastreg = rname + Integer.toString(rnum);   // jank
-
-                    // System.out.println(lastreg);
-                    // System.out.println(((VVarRef.Local)oper).ident);
-                    // printme();
-
-                    String nameo = vartoreg.get(((VVarRef.Local)oper).ident);
-                    String astr = lastreg + " = " + nameo + "\n";  // ????????
-                    rnum++;
-                    System.out.print(dubtab + astr);  // declare tmp reg for immediate
-
-                    // System.out.print("b " + str + "\n");
-                    // stk.push(lastreg); // ?
-                    str = str + " " + lastreg + " ";  // jank2
-                    // System.out.print("c " + str + "\n");
-                }
-                else    // integer literal
-                {
-
-                    // lastreg = rname + Integer.toString(rnum);   // jank
-                    // String astr = lastreg + " = " + oper + "\n";
-                    // rnum++;
-                    // System.out.print(dubtab + astr);  // declare tmp reg for immediate
-                    //
-                    // // System.out.print("b " + str + "\n");
-                    // // stk.push(lastreg); // ?
-                    // str = str + " " + lastreg + " ";  // jank2
-                    // // System.out.print("c " + str + "\n");
-
-                    str = str + " " + oper.toString() + " "; // put the integer directly in the call
-                }
-            }
         }
         str+=")";
 
@@ -257,6 +249,8 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
                 rnum++;
             }
 
+            lastreg = register_allocate(dst, c.dest.sourcePos.line);
+
             str = lastreg + " = " + str;  // jank2
         }
 
@@ -272,41 +266,69 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         // System.out.println(dubtab + "pos: " + c.sourcePos );
 
         // dest might be null
-        if(c.dest != null)
-        {
-            // System.out.println(dubtab + "dst: " + c.dest);
-        }
         // System.out.println(dubtab +  "fun:  " + c.addr.toString());
 
         // printme();
+        String calling_reg = c.addr.toString();
+        String calling_class = c.addr.getClass().toString();
+        
+        //calling_reg.indexOf(":") == -1
+        //!calling_class.equals("class cs132.vapor.ast.VAddr$Label")
+        if(!calling_class.equals("class cs132.vapor.ast.VAddr$Label")) {
+            calling_reg = register_allocate(c.addr.toString(), c.sourcePos.line);
+        }
 
-        int argi = 0;
-        for(VOperand oper : c.args)
+        for(int argi = 0; argi < c.args.length; argi++)
         {
+            VOperand oper = c.args[argi];
             // System.out.println(dubtab + "arg: " + oper);
-            String argv = vartoreg.get(oper.toString());
-            if(argv == null)
-            {
-                argv = oper.toString();
+            // String argv = vartoreg.get(oper.toString());
+            String arg_class = oper.getClass().toString();
+            String arg_reg = "";
+
+            if(arg_class.equals("class cs132.vapor.ast.VLitInt") || arg_class.equals("class cs132.vapor.ast.VLabelRef")){
+                arg_reg = oper.toString();
             }
-            System.out.println( "  $a" + Integer.toString(argi) + " = " + argv );
-            argi++;
+            else {
+                arg_reg  = register_allocate(oper.toString(), oper.sourcePos.line);
+            }
+
+
+            if(argi < 4) {
+
+                System.out.println("  $a" + argi + " = " + arg_reg);
+            }
+            else {
+                int out_ind = argi - 4;
+                System.out.println("  out[" + out_ind + "] = " + arg_reg);
+            }
+            // System.out.println( "  $a" + Integer.toString(argi) + " = " + argv );
         }
 
 
-        String freg = "";
-        if(!stk.empty())
-        {
-            // System.out.println(stk.peek());
-            freg = stk.peek();
-        }
+        // String freg = "";
+        // if(!stk.empty())
+        // {
+        //     // System.out.println(stk.peek());
+        //     freg = stk.peek();
+        // }
 
         String retreg = rname + Integer.toString(rnum);
         rnum++;
         stk.push(retreg);   // put ret val on the stack
 
-        System.out.println(dubtab + "call " + freg);
-        System.out.println(dubtab + retreg + " = $v0");  // set a reg to the special return register
+        System.out.println("  call " + calling_reg );
+
+        String dest_reg = "";
+        if(c.dest != null)
+        {
+            dest_reg = register_allocate(c.dest.toString(), c.sourcePos.line);
+            System.out.println("  " + dest_reg + " = $v0");
+            // System.out.println(dubtab + "dst: " + c.dest);
+        }
+
+        // System.out.println(dubtab + "call " + freg);
+        // System.out.println(dubtab + retreg + " = $v0");  // set a reg to the special return register
 
         // System.out.println(">>>>>>>>>>>>>>>>>>>>");
     }
@@ -344,6 +366,23 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
             memoref = stk.peek(); // change from pop
         }
 
+        String r_cast = "";
+        int r_offset = 0;
+        String c_name = "";
+
+        if(r.source instanceof VMemRef.Global) {
+            r_cast = ((VMemRef.Global)r.source).base.toString();
+            r_offset = ((VMemRef.Global)r.source).byteOffset;
+            c_name = "Global";
+            // System.out.println("            $mem ref is " + r_cast);
+        }
+        else if(r.source instanceof VMemRef.Stack) {
+            r_cast = ((VMemRef.Stack)r.source).region.toString();
+            r_offset = ((VMemRef.Global)r.source).byteOffset;
+            c_name = "Stack";
+            // System.out.println("            $array ref is " + r_cast);
+        }
+
 
         // printme();
 
@@ -351,10 +390,23 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         String retreg = rname + Integer.toString(rnum);
         rnum++;
         stk.push(retreg);   // put ret val on the stack
-        System.out.println(dubtab +  retreg + " = [ " + memoref  + "]");
+        // System.out.println(dubtab +  retreg + " = [ " + memoref  + "]");
 
         String dst = r.dest.toString();
         vartoreg.replace(dst,retreg);
+
+        memoref = r_cast;
+
+        if(!c_name.equals("Stack")) {
+            memoref = register_allocate(r_cast, r.sourcePos.line);
+        }
+
+        if(r_offset > 0) {
+            memoref = memoref + "+" + r_offset;
+        } 
+
+        retreg = register_allocate(dst, r.sourcePos.line);
+        System.out.println("  " + retreg + " = [" + memoref + "]");
 
         // System.out.println(">>>>>>>>>>>>>>>>>>>>");
     }
@@ -368,6 +420,17 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         //
         // System.out.println(dubtab + "dst: " + w.dest.toString());
         // System.out.println(dubtab + "src: " + w.source.toString());
+        String w_cast = "";
+
+        if(w.dest instanceof VMemRef.Global) {
+            w_cast = ((VMemRef.Global)w.dest).base.toString();
+
+            // System.out.println("            $mem ref is " + w_cast);
+        }
+        else if(w.dest instanceof VMemRef.Stack) {
+            w_cast = ((VMemRef.Stack)w.dest).region.toString();
+            // System.out.println("            $array ref is " + w_cast);
+        }
 
         String memoref = "";
         if(!stk.empty())
@@ -377,8 +440,15 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         }
 
         // printme();
+        memoref = register_allocate(w_cast, w.sourcePos.line);
+        String c_name = w.source.getClass().toString();
+        String source_reg = w.source.toString();
 
-        System.out.println(dubtab + "[" + memoref  + "] = " + w.source.toString());
+        if(!c_name.equals("class cs132.vapor.ast.VLitInt") && !c_name.equals("class cs132.vapor.ast.VLabelRef")) {
+            source_reg = register_allocate(w.source.toString(), w.sourcePos.line);
+        }
+
+        System.out.println("  " + "[" + memoref  + "] = " + source_reg);
     }
     //----------------------------------------
 

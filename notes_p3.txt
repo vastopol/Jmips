@@ -110,3 +110,6 @@ func Fac.ComputeFac(this num)
     num_aux = MulS(num t.3)
   if1_end:
   ret num_aux
+
+
+  java -jar stuff/vapor.jar run -mips custom_logfile.txt

@@ -48,7 +48,6 @@ class V2VM
         VisitorVaporM vapor_m_visitor = new VisitorVaporM();
         Vector<VisitorGraphBuilder> all_graphs = infoo_printer(prog);
 
-        vaporm_grab(prog,vapor_m_visitor);
 
         //PRINT ALL THE FLOW_GRAPHS:
 
@@ -124,12 +123,14 @@ class V2VM
             scans.add(ll);
         }
 
-        for(LinearScan lscan: scans) {
-            System.out.println("New Function");
-            lscan.print_reg_map();
-            lscan.print_local_map();
-            System.out.println(lscan.local_list.size());
-        }
+        vaporm_grab(prog,vapor_m_visitor, scans);
+
+        // for(LinearScan lscan: scans) {
+        //     System.out.println("New Function");
+        //     lscan.print_reg_map();
+        //     lscan.print_local_map();
+        //     System.out.println(lscan.local_list.size());
+        // }
 
         return;
     }
@@ -706,7 +707,7 @@ class V2VM
     //----------------------------------------
 
     // VAPOR-M CODE GENERATOR
-    public static void vaporm_grab(VaporProgram  prog, VisitorVaporM vdatav)
+    public static void vaporm_grab(VaporProgram  prog, VisitorVaporM vdatav, Vector<LinearScan> scans)
         throws Throwable
     {
         VFunction[] fns = prog.functions;       // All the functions in this program
@@ -742,14 +743,52 @@ class V2VM
             System.out.println("");
         }
 
+        Vector<Integer> function_locals = new Vector<>();
+        Vector<Integer> function_outs = new Vector<>();
+
+        for(int k = 0; k < fns.length; k++) {
+            VFunction f = fns[k];
+            VInstr[] bdy = f.body;
+            int out_num = 0;
+            int locals_num = 0;
+            VVarRef.Local[] pms = f.params;
+            int curr_func_params = pms.length;
+
+            for(VInstr vi: bdy) {
+                String instr_class = vi.getClass().toString();
+                if(instr_class.equals("class cs132.vapor.ast.VCall")) {
+                    int vcall_args = ((VCall)vi).args.length;
+
+                    if(vcall_args > 4 && vcall_args > out_num) {
+                        out_num = vcall_args;
+                    }
+
+                    if(curr_func_params > 1) {
+                        locals_num = curr_func_params - 1;
+                    }
+                }
+            }
+
+            function_outs.add(out_num);
+            function_locals.add(locals_num);
+
+        }
+
         // FUNCTION: Vfunction
-        for (VFunction f : fns)
+        for (int k = 0; k < fns.length; k++)
         {
-            String tab = "\t";
+            VFunction f = fns[k];
+            vdatav.all_mappings = scans.get(k);
+            String tab = "  ";
             VVarRef.Local[] pms = f.params;   // function parameters
             String[] vs = f.vars;             // function local variables
             VCodeLabel[] lbl = f.labels;      // code labels
             VInstr[] bdy = f.body;            // instructions
+
+            int func_start_line = f.sourcePos.line;
+            int func_end_line = bdy[bdy.length - 1].sourcePos.line;
+
+            vdatav.end_line = func_end_line;
 
             ArrayList<String> diflst = new ArrayList<String>();
             ArrayList<String> loclst = new ArrayList<String>();
@@ -759,10 +798,12 @@ class V2VM
 
             // System.out.println(f.ident);
             // System.out.println("Params: ");
+            vdatav.func_args = new Vector<>();
             for (VVarRef.Local p : pms)
             {
                 // System.out.println(tab + p.ident);
                 diflst.add(p.ident);
+                vdatav.func_args.add(p.ident.toString());
             }
             // System.out.println("Locals:");
             for (String v : vs)
@@ -788,57 +829,129 @@ class V2VM
             argno = 0;
 
             argno = diflst.size();
-            local = loclst.size();
+            local = vdatav.all_mappings.local_list.size() + function_locals.get(k);
 
-            System.out.println("func " + f.ident + " [in " + Integer.toString(in)   // function interface
-                                + ", out " + Integer.toString(out) + ", local "
-                                + Integer.toString(local) + "]");
+            if(function_outs.get(k) > 4) {
+                out = function_outs.get(k) - 4;
+            }
 
-            // if(local >= 1) // save regs on enter
-            // {
-            //     for(int i = 0; i < local; i++)
-            //     {
-            //         System.out.println("  " + "local[" + Integer.toString(i) + "] = $s" + Integer.toString(i));
-            //     }
-            // }
+            //inside visitor, keeps track of what register each variable encountered is mapped to
+            vdatav.curr_vartoreg_mappings = new HashMap();
 
             if(argno >= 1) // get the parameters
             {
                 for(int i = 0; i < argno; i++)
                 {
-                    System.out.println("  " + "$t" + Integer.toString(i) + " = $a" + Integer.toString(i));
+                    // System.out.println("  " + "$t" + Integer.toString(i) + " = $a" + Integer.toString(i));
+                    if(i < 4) {
+                        String arg_reg = "$a" + i;
+                        vdatav.curr_vartoreg_mappings.put(diflst.get(i).toString(), arg_reg);
+                        // System.out.println(" " + var_loc + " = " + arg_reg);
+                    }
+                    else {
+                        int in_index = i - 4;
+                        String in_stack = "in[" + in_index + "]";
+                        vdatav.curr_vartoreg_mappings.put(diflst.get(i), in_stack);
+                        // System.out.println(" " + diflst.get(i).toString() + " = "+ in_stack);
+                        in++;
+                    }
                     vdatav.rnum++;  // inc reg cnt
                 }
             }
 
+            System.out.println("func " + f.ident + " [in " + Integer.toString(in)   // function interface
+            + ", out " + Integer.toString(out) + ", local "
+            + Integer.toString(local) + "]");
+
+            
+
+            //CODE FOR ALLOCATING REGISTERS ALL AT THE TOP
+            String last_reg = "";
+            for(int l = 0; l < argno; l++) {
+                String arg_var = diflst.get(l).toString();
+                String actual_var_reg = vdatav.all_mappings.get_first_mapping(arg_var, func_start_line, func_end_line, vdatav.curr_vartoreg_mappings);
+
+                if(!actual_var_reg.equals("_") ) {
+                    String arg_reg = vdatav.curr_vartoreg_mappings.get(arg_var).toString();
+
+                    if(!arg_reg.equals(actual_var_reg) && !last_reg.equals(actual_var_reg)) {
+                        last_reg = actual_var_reg;
+                        System.out.println(tab + actual_var_reg + " = " + arg_reg);
+                        vdatav.curr_vartoreg_mappings.replace(arg_var, actual_var_reg);
+                    }
+                }
+            }
+
+            // if(local >= 1) // save regs on enter
+            // {
+            //     int spill_index = vdatav.all_mappings.local_list.size();
+            //     int arg_index = 0;
+            //     for(String curr_arg: vdatav.func_args)
+            //     {
+            //         if(curr_arg.equals("this")) {
+            //             int local_index = arg_index + spill_index;
+            //             String store_reg = vdatav.curr_vartoreg_mappings.get(curr_arg).toString();
+            //             System.out.println(tab + "local[" + local_index + "] = " + store_reg);
+            //         }
+            //     }
+            // }
+
+            //CODE FOR PRINTING VARIABLES ASSOCIATED TO THEIR ARG LOCATIONS
+            // for(int l = 0; l < argno; l++) {
+            //     String arg_var = diflst.get(l).toString();
+            //     String actual_var_reg = vdatav.all_mappings.get_first_mapping(arg_var, func_start_line, func_end_line);
+            //     System.out.println(tab + arg_var + " = " + vdatav.curr_vartoreg_mappings.get(arg_var));
+            // }
+
+            Vector<String> current_line_reg_mappings = null;
+
             for (VInstr vi : bdy)   // visit the instructions && print labelas
             {
                 String classy = vi.getClass().toString();
+                int current_line = vi.sourcePos.line;
+
+                if(vdatav.all_mappings.registers.containsKey(current_line)) {
+                    current_line_reg_mappings = vdatav.all_mappings.registers.get(current_line);
+                }
+
                 if(classy.equals("class cs132.vapor.ast.VReturn"))
                 {
                     VReturn vr = (VReturn)vi;   // put ret val into $v0
                     if(vr.value != null)
                     {
-                        String retv = vdatav.vartoreg.get(vr.value.toString());
-                        System.out.println( "  $v0 = " + retv );
+                        classy = vr.value.getClass().toString();
+                        String retv = vr.value.toString();
+                        if(!classy.equals("class cs132.vapor.ast.VLitInt")) {
+                            for(int n = 0; n < current_line_reg_mappings.size(); n++) {
+                                if(current_line_reg_mappings.get(n).equals(retv)) {
+                                    retv = "$t" + n;
+                                }
+                            }
+                        }
+                        // String retv = vdatav.vartoreg.get(vr.value.toString());
+                        System.out.println( tab + "$v0 = " + retv );
                     }
 
-                //     if(local >= 1) // restore regs before return
-                //     {
-                //         for(int i = 0; i < local; i++)
-                //         {
-                //             System.out.println("  " + "$s" + Integer.toString(i) + " = local[" + Integer.toString(i) + "]");
-                //         }
-                //     }
+                    // if(local >= 1) // restore regs before return
+                    // {
+                    //     int spill_index = vdatav.all_mappings.local_list.size();
+                    //     for(int i = 1; i < vdatav.func_args.size(); i++)
+                    //     {
+                    //         String curr_arg = vdatav.func_args.get(i).toString();
+                    //         int local_index = i + spill_index;
+                    //         String store_reg = vdatav.curr_vartoreg_mappings.get(curr_arg).toString();
+                    //         System.out.println(tab + "local[" + local_index + "] = " + store_reg);
+                    //     }
+                    // }
                 }
 
                 go_visit(vdatav,vi);
-
-                int i = vi.sourcePos.line;
+                int t = vi.sourcePos.line+1;
                 // System.out.println(i);
-                if(lmap.containsKey(vi.sourcePos.line+1))  // if the sourcePos + 1 = sourcePos of a label then print the label
+                while(lmap.containsKey(t))  // if the sourcePos + 1 = sourcePos of a label then print the label
                 {
-                    System.out.println(lmap.get(i+1)+":");
+                    System.out.println(lmap.get(t)+":");
+                    t++;
                 }
             }
 
