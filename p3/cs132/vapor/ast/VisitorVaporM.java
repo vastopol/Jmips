@@ -40,6 +40,7 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
     public Map<String, String> curr_vartoreg_mappings;
     public Vector<String> func_args;
     public int end_line;
+    public String current_func_name;
 
     public VisitorVaporM()
     {
@@ -47,6 +48,7 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         curr_vartoreg_mappings = null;
         func_args = null;
         end_line = 0;
+        current_func_name = null;
         ;
     }
 
@@ -116,7 +118,7 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
             stk.push(lastreg);
         }
 
-        lastreg = register_allocate(dst, a.dest.sourcePos.line);
+        lastreg = register_allocate(a.dest.toString(), a.dest.sourcePos.line);
 
         String source_reg = a.source.toString();
         String source_class = a.source.getClass().toString();
@@ -159,7 +161,7 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         //     bbb = vartoreg.get(val);
         // }
 
-        bbb = register_allocate(val, b.sourcePos.line);
+        bbb = register_allocate(b.value.toString(), b.sourcePos.line);
         System.out.println(dubtab + brnch + " " + bbb + " goto " + b.target.toString());
     }
     //----------------------------------------
@@ -187,7 +189,7 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
             String dst = c.dest.toString();
             vartoreg.replace(dst,lastreg);
 
-            lastreg = register_allocate(dst, c.sourcePos.line);
+            lastreg = register_allocate(c.dest.toString(), c.sourcePos.line);
             String heap_arg = c.args[0].toString();
             String heap_arg_class = c.args[0].getClass().toString();
 
@@ -249,7 +251,7 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
                 rnum++;
             }
 
-            lastreg = register_allocate(dst, c.dest.sourcePos.line);
+            lastreg = register_allocate(c.dest.toString(), c.dest.sourcePos.line);
 
             str = lastreg + " = " + str;  // jank2
         }
@@ -276,6 +278,37 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         //!calling_class.equals("class cs132.vapor.ast.VAddr$Label")
         if(!calling_class.equals("class cs132.vapor.ast.VAddr$Label")) {
             calling_reg = register_allocate(c.addr.toString(), c.sourcePos.line);
+        }
+
+        if(!current_func_name.equals("Main")) {
+            int local_index = all_mappings.local_list.size();
+
+            System.out.println("  local[" + local_index + "] = $t0");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $t1");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $t2");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $t3");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $t4");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $t5");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $t6");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $t7");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $t8");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $a0");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $a1");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $a2");
+            local_index++;
+            System.out.println("  local[" + local_index + "] = $a3");
+            local_index++;
         }
 
         for(int argi = 0; argi < c.args.length; argi++)
@@ -319,6 +352,37 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
 
         System.out.println("  call " + calling_reg );
 
+        if(!current_func_name.equals("Main")) {
+            int local_index = all_mappings.local_list.size();
+
+            System.out.println("  $t0 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $t1 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $t2 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $t3 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $t4 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $t5 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $t6 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $t7 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $t8 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $a0 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $a1 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $a2 = local[" + local_index + "]");
+            local_index++;
+            System.out.println("  $a3 = local[" + local_index + "]");
+            local_index++;
+        }
+
         String dest_reg = "";
         if(c.dest != null)
         {
@@ -326,6 +390,7 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
             System.out.println("  " + dest_reg + " = $v0");
             // System.out.println(dubtab + "dst: " + c.dest);
         }
+
 
         // System.out.println(dubtab + "call " + freg);
         // System.out.println(dubtab + retreg + " = $v0");  // set a reg to the special return register
@@ -405,7 +470,7 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
             memoref = memoref + "+" + r_offset;
         } 
 
-        retreg = register_allocate(dst, r.sourcePos.line);
+        retreg = register_allocate(r.dest.toString(), r.sourcePos.line);
         System.out.println("  " + retreg + " = [" + memoref + "]");
 
         // System.out.println(">>>>>>>>>>>>>>>>>>>>");
@@ -421,14 +486,16 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         // System.out.println(dubtab + "dst: " + w.dest.toString());
         // System.out.println(dubtab + "src: " + w.source.toString());
         String w_cast = "";
-
+        int w_offset = 0;
         if(w.dest instanceof VMemRef.Global) {
             w_cast = ((VMemRef.Global)w.dest).base.toString();
+            w_offset = ((VMemRef.Global)w.dest).byteOffset;
 
             // System.out.println("            $mem ref is " + w_cast);
         }
         else if(w.dest instanceof VMemRef.Stack) {
             w_cast = ((VMemRef.Stack)w.dest).region.toString();
+            w_offset = ((VMemRef.Global)w.dest).byteOffset;
             // System.out.println("            $array ref is " + w_cast);
         }
 
@@ -447,6 +514,13 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         if(!c_name.equals("class cs132.vapor.ast.VLitInt") && !c_name.equals("class cs132.vapor.ast.VLabelRef")) {
             source_reg = register_allocate(w.source.toString(), w.sourcePos.line);
         }
+
+        if(w_offset > 0) {
+            memoref = memoref + "+" + w_offset;
+        } 
+
+
+
 
         System.out.println("  " + "[" + memoref  + "] = " + source_reg);
     }

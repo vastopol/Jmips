@@ -199,14 +199,14 @@ public class VisitorGraphBuilder<Throwable> //extends VInstr.Visitor
     public String graph_visit(VMemWrite w, String s)
         throws java.lang.Throwable
     {
-        int ind = s.indexOf(" ");
-        String dest = "";
-        if(ind != -1) {
-            dest = s.substring(0, ind);
-        }
-        else{
-            dest = s;
-        }
+        // int ind = s.indexOf(" ");
+        // String dest = "";
+        // if(ind != -1) {
+        //     dest = s.substring(0, ind);
+        // }
+        // else{
+        //     dest = s;
+        // }
 
         String w_cast = "";
 
@@ -242,7 +242,7 @@ public class VisitorGraphBuilder<Throwable> //extends VInstr.Visitor
         last_node = n1;
         Vector<String> tmp_vec = new Vector<>();
 
-        tmp_vec.add(dest);
+        // tmp_vec.add(dest);
         use.put(n1.node_id, tmp_vec);
     
         
@@ -259,7 +259,7 @@ public class VisitorGraphBuilder<Throwable> //extends VInstr.Visitor
             use.put(n1.node_id, tmp_vec);
         }
         else if(c.equals("class cs132.vapor.ast.VLabelRef")) {
-            ret = dest;
+            // ret = dest;
         }
         ;
 
@@ -269,14 +269,14 @@ public class VisitorGraphBuilder<Throwable> //extends VInstr.Visitor
     public String graph_visit(VMemRead r, String s)
         throws java.lang.Throwable
     {
-        int ind = s.indexOf(" ");
-        String source = "";
-        if(ind != -1) {
-            source = s.substring(0, ind);
-        }
-        else{
-            source = s;
-        }
+        // int ind = s.indexOf(" ");
+        // String source = "";
+        // if(ind != -1) {
+        //     source = s.substring(0, ind);
+        // }
+        // else{
+        //     source = s;
+        // }
         String r_cast = "";
 
         if(r.source instanceof VMemRef.Global) {

@@ -825,7 +825,11 @@ class V2VM
                                     String a1 = after_reg_mappings.get(lmn).toString();
 
                                     if(a1.equals(b1) && a1 != "") {
-                                        save_reg.elementAt(k).add(a1);
+
+                                        if(save_reg.elementAt(k).indexOf(a1.toString()) == -1) {
+                                            // System.out.println("        Adding " + a1 + " at the " + k + " function");
+                                            save_reg.elementAt(k).add(a1);
+                                        }
                                     }
                                 }
 
@@ -850,6 +854,7 @@ class V2VM
         {
             VFunction f = fns[k];
             vdatav.all_mappings = scans.get(k);
+            vdatav.current_func_name = f.ident.toString();
             String tab = "  ";
             VVarRef.Local[] pms = f.params;   // function parameters
             String[] vs = f.vars;             // function local variables
@@ -900,7 +905,8 @@ class V2VM
             argno = 0;
 
             argno = diflst.size();
-            local = vdatav.all_mappings.local_list.size() + function_locals.get(k);
+            // local = vdatav.all_mappings.local_list.size() + function_locals.get(k);
+            local = vdatav.all_mappings.local_list.size() + 13;
 
             if(function_outs.get(k) > 4) {
                 out = function_outs.get(k) - 4;
@@ -934,19 +940,19 @@ class V2VM
             + ", out " + Integer.toString(out) + ", local "
             + Integer.toString(local) + "]");
 
-            if(local >= 1) // save regs on enter
-            {
-                int spill_index = vdatav.all_mappings.local_list.size();
-                Vector<String> current_locals = save_reg.get(k);
-                for(int arg_index = 0; arg_index < current_locals.size(); arg_index++)
-                {
-                        String curr_arg = current_locals.get(arg_index).toString();
-                        String store_reg = vdatav.all_mappings.get_first_mapping(curr_arg, func_start_line, func_end_line, vdatav.curr_vartoreg_mappings);
-                        // if(curr_arg.equals(anObject))
-                        System.out.println(tab + "local[" + spill_index + "] = " + store_reg);
-                        spill_index++;
-                }
-            }
+            // if(local >= 1) // save regs on enter
+            // {
+            //     int spill_index = vdatav.all_mappings.local_list.size();
+            //     Vector<String> current_locals = save_reg.get(k);
+            //     for(int arg_index = 0; arg_index < current_locals.size(); arg_index++)
+            //     {
+            //             String curr_arg = current_locals.get(arg_index).toString();
+            //             String store_reg = vdatav.all_mappings.get_first_mapping(curr_arg, func_start_line, func_end_line, vdatav.curr_vartoreg_mappings);
+            //             // if(curr_arg.equals(anObject))
+            //             System.out.println(tab + "local[" + spill_index + "] = " + store_reg);
+            //             spill_index++;
+            //     }
+            // }
 
             
 
@@ -1004,19 +1010,19 @@ class V2VM
                         System.out.println( tab + "$v0 = " + retv );
                     }
 
-                    if(local >= 1) // save regs on enter
-                    {
-                        int spill_index = vdatav.all_mappings.local_list.size();
-                        Vector<String> current_locals = save_reg.get(k);
-                        for(int arg_index = 0; arg_index < current_locals.size(); arg_index++)
-                        {
-                                String curr_arg = current_locals.get(arg_index).toString();
-                                String store_reg = vdatav.all_mappings.get_first_mapping(curr_arg, func_start_line, func_end_line, vdatav.curr_vartoreg_mappings);
-                                // if(curr_arg.equals(anObject))
-                                System.out.println(tab + store_reg + " = local[" + spill_index + "]" );
-                                spill_index++;
-                        }
-                    }
+                    // if(local >= 1) // save regs on enter
+                    // {
+                    //     int spill_index = vdatav.all_mappings.local_list.size();
+                    //     Vector<String> current_locals = save_reg.get(k);
+                    //     for(int arg_index = 0; arg_index < current_locals.size(); arg_index++)
+                    //     {
+                    //             String curr_arg = current_locals.get(arg_index).toString();
+                    //             String store_reg = vdatav.all_mappings.get_first_mapping(curr_arg, func_start_line, func_end_line, vdatav.curr_vartoreg_mappings);
+                    //             // if(curr_arg.equals(anObject))
+                    //             System.out.println(tab + store_reg + " = local[" + spill_index + "]" );
+                    //             spill_index++;
+                    //     }
+                    // }
                 }
 
 
