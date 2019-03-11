@@ -954,6 +954,37 @@ class V2VM
             //     }
             // }
 
+            if(!f.ident.toString().equals("Main")) {
+                int local_index = vdatav.all_mappings.local_list.size();
+    
+                System.out.println("  local[" + local_index + "] = $t0");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $t1");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $t2");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $t3");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $t4");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $t5");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $t6");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $t7");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $t8");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $a0");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $a1");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $a2");
+                local_index++;
+                System.out.println("  local[" + local_index + "] = $a3");
+                local_index++;
+            }
+
             
 
             //CODE FOR ALLOCATING REGISTERS ALL AT THE TOP
@@ -1008,6 +1039,37 @@ class V2VM
                         }
                         // String retv = vdatav.vartoreg.get(vr.value.toString());
                         System.out.println( tab + "$v0 = " + retv );
+                    }
+
+                    if(!f.ident.toString().equals("Main")) {
+                        int local_index = vdatav.all_mappings.local_list.size();
+            
+                        System.out.println("  $t0 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $t1 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $t2 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $t3 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $t4 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $t5 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $t6 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $t7 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $t8 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $a0 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $a1 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $a2 = local[" + local_index + "]");
+                        local_index++;
+                        System.out.println("  $a3 = local[" + local_index + "]");
+                        local_index++;
                     }
 
                     // if(local >= 1) // save regs on enter

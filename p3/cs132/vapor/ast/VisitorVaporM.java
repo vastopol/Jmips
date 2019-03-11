@@ -280,37 +280,6 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
             calling_reg = register_allocate(c.addr.toString(), c.sourcePos.line);
         }
 
-        if(!current_func_name.equals("Main")) {
-            int local_index = all_mappings.local_list.size();
-
-            System.out.println("  local[" + local_index + "] = $t0");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $t1");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $t2");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $t3");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $t4");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $t5");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $t6");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $t7");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $t8");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $a0");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $a1");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $a2");
-            local_index++;
-            System.out.println("  local[" + local_index + "] = $a3");
-            local_index++;
-        }
-
         for(int argi = 0; argi < c.args.length; argi++)
         {
             VOperand oper = c.args[argi];
@@ -351,37 +320,6 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
         stk.push(retreg);   // put ret val on the stack
 
         System.out.println("  call " + calling_reg );
-
-        if(!current_func_name.equals("Main")) {
-            int local_index = all_mappings.local_list.size();
-
-            System.out.println("  $t0 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $t1 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $t2 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $t3 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $t4 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $t5 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $t6 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $t7 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $t8 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $a0 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $a1 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $a2 = local[" + local_index + "]");
-            local_index++;
-            System.out.println("  $a3 = local[" + local_index + "]");
-            local_index++;
-        }
 
         String dest_reg = "";
         if(c.dest != null)
