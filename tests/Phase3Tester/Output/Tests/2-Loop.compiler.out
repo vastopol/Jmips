@@ -1,0 +1,12 @@
+func Main [in 0, out 0, local 0]
+  $t8 = 1
+  goto :end
+begin:
+  PrintIntS($t8)
+  $t8 = MulS($t8 2)
+end:
+  $t7 = LtS($t8 100)
+  if $t7 goto :begin
+  ret
+
+

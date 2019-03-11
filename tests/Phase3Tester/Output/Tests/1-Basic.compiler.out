@@ -1,0 +1,7 @@
+func Main [in 0, out 0, local 0]
+  $t8 = 4
+  $t7 = Add($t8 2)
+  PrintIntS($t7)
+  ret
+
+

@@ -1,0 +1,5 @@
+--- Error (ProgramFault) ---
+require data address, found integer44
+  Main() line 17
+  LS.Start() line 29
+  LS.Init() line 146

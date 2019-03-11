@@ -1,0 +1,3 @@
+221.9: index too large: 1; stack region "local" has size 1
+222.9: index too large: 2; stack region "local" has size 1
+260.3: syntax error

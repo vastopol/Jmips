@@ -1,0 +1,23 @@
+--- SelfTestCases/LinearSearch.opt.out	2019-02-02 14:36:13.000000000 -0800
++++ ./Output/Tests/LinearSearch.opt.out	2019-03-11 00:03:09.000000000 -0700
+@@ -1,15 +1,5 @@
+-10
+-11
+-12
+-13
+-14
+-15
+-16
+-17
+-18
+-9999
+-0
+-1
+-1
+-0
+-55
++--- Error (ProgramFault) ---
++require data address, found integer44
++  Main() line 10
++  LS.Start() line 20
++  LS.Init() line 126
