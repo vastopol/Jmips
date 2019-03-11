@@ -1,5 +1,0 @@
---- Error (ProgramFault) ---
-require data address, found integer44
-  Main() line 10
-  BBS.Start() line 20
-  BBS.Init() line 170

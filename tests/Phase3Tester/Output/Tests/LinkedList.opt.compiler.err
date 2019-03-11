@@ -1,5 +1,0 @@
-Exception in thread "main" java.lang.NullPointerException
-	at cs132.vapor.ast.VisitorGraphBuilder.graph_visit(VisitorGraphBuilder.java:202)
-	at V2VM.goat_visit(V2VM.java:451)
-	at V2VM.infoo_printer(V2VM.java:695)
-	at V2VM.main(V2VM.java:49)

@@ -1,5 +1,0 @@
---- SelfTestCases/Factorial.opt.out	2019-02-02 14:36:13.000000000 -0800
-+++ ./Output/Tests/Factorial.opt.out	2019-03-11 00:03:07.000000000 -0700
-@@ -1 +1 @@
--3628800
-+0
