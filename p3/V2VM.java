@@ -75,8 +75,8 @@ class V2VM
         //     }
         // }
 
-        //BUILD THE INTERVALS FROM THE FLOW GRAPH
 
+        //BUILD THE INTERVALS FROM THE FLOW GRAPH
         Vector<Vector<Pair>> interval_vector = new Vector<>();
         // Vector<Map<String, Interval>> interval_vec = new Vector<>();
 
@@ -84,6 +84,51 @@ class V2VM
         for(VisitorGraphBuilder i: all_graphs) {
             Vector<Pair> tmp_pair_vec = build_intervals(i.flow_graph.nodes(), i.def, i.use);
             interval_vector.add(tmp_pair_vec);
+        }
+
+        Vector<Vector<Loop_pair>> all_loops = new Vector<>();
+        for(VFunction f: prog.functions) {
+            Vector<Loop_pair> tmp1 = check_loops(f);
+            all_loops.add(tmp1);
+        }
+
+        // for(Vector<Pair> j: interval_vector) {
+        //     System.out.println("new function");
+        //     System.out.println(interval_vector.size());
+        //     for(Pair n: j) {
+        //         System.out.println("    " + n.key + " is live from line: " + n.value.start + " to line: " + n.value.end);
+        //     }
+        // }
+
+        //COMMENT THIS OUT TO UNDO THE INTERVAL PATCHING
+        VFunction[] funcs = prog.functions;
+
+        for(int j = 0; j < interval_vector.size(); j++) {
+            VFunction ftemp = funcs[j];
+            for(int k = 0; k < interval_vector.get(j).size(); k++) {
+                Pair curr_pair = interval_vector.get(j).get(k);
+
+                for(VVarRef.Local arg_tmp: ftemp.params) {
+                    if(curr_pair.key.equals(arg_tmp.ident.toString())) {
+                        // System.out.println(arg_tmp.ident + " " + curr_pair.key + " " + ftemp.sourcePos.line);
+                        curr_pair.value.start = ftemp.sourcePos.line;
+                    }
+                }
+                
+                if(all_loops.get(j).size() > 0) {
+                    for(int l = 0; l < all_loops.get(j).size(); l++) {
+                        Loop_pair curr_loop = all_loops.get(j).get(l);
+
+                        if(curr_pair.value.start <= curr_loop.loop_start_line && curr_pair.value.end >= curr_loop.loop_start_line && curr_pair.value.end <= curr_loop.loop_end_line) {
+                            // System.out.println("Need to patch " + curr_pair.key);
+                            curr_pair.value.end = curr_loop.loop_end_line;
+
+                        }
+                    }
+                }
+
+                interval_vector.get(j).set(k, curr_pair);
+            }
         }
 
         //BUILD INTERVAL MAP BUILD
@@ -94,13 +139,14 @@ class V2VM
         //     }
         //     interval_vec.add(tmp_pair_vec);
         // }
+        
 
         // PRINT ALL THE INTERVALS
         // for(Vector<Pair> j: interval_vector) {
         //     System.out.println("new function");
         //     System.out.println(interval_vector.size());
         //     for(Pair n: j) {
-        //         System.out.println("    " + n.key + " is live from line: " + n.value.start.line + " to line: " + n.value.end.line);
+        //         System.out.println("    " + n.key + " is live from line: " + n.value.start + " to line: " + n.value.end);
         //     }
         // }
 
@@ -135,6 +181,43 @@ class V2VM
         return;
     }
     //----------------------------------------
+    public static Vector<Loop_pair> check_loops(VFunction func) {
+
+        Vector<Loop_pair> ret = new Vector<>();
+        VCodeLabel [] lbl = func.labels;
+        Vector<VCodeLabel> while_labels = new Vector<>();
+
+        for(int i = 0; i < lbl.length; i++) {
+            VCodeLabel l = lbl[i];
+            String lbl_string = l.ident.toString();
+            if(lbl_string.indexOf("while") != -1) {
+
+                while_labels.add(l);
+            }
+        }
+
+        for(int i = 0; i < while_labels.size(); i++) {
+            String substr = while_labels.get(i).ident.toString().substring(0, while_labels.get(i).ident.toString().indexOf("_"));
+            Loop_pair t1 = new Loop_pair(substr, while_labels.get(i).sourcePos.line);
+
+            for(int j = i + 1; j < while_labels.size(); j++) {
+                String substr2 = while_labels.get(j).ident.toString().substring(0, while_labels.get(j).ident.toString().indexOf("_"));
+                if(substr.equals(substr2) && i != j) {
+                    // System.out.println(substr);
+                    t1.loop_end_line = while_labels.get(j).sourcePos.line;
+                    while_labels.remove(j);
+                    break;
+                }
+            }
+            ret.add(t1);
+        }
+
+        for(Loop_pair tmp: ret) {
+            // System.out.println("While loop " + tmp.loop_name + " spans from line " + tmp.loop_start_line + " to " + tmp.loop_end_line);
+        }
+
+        return ret;
+    }
 
     public static Vector<Pair> build_intervals(Vector<GNode> g, Map<Integer, Vector<String>> d, Map<Integer, Vector<String>> u) {
 
@@ -153,7 +236,7 @@ class V2VM
 
                     if(intervals.containsKey(j)) {
                         Interval change = intervals.get(j);
-                        change.end = i.line;
+                        change.end = i.line.line;
                         Interval check = intervals.replace(j, change);
                         if(check == null) {
                             System.out.println("ERROR AT NODE " + j);
@@ -164,9 +247,9 @@ class V2VM
                         cont = 1;
                     }
                     else {
-                        Interval new_var = new Interval(j, i.line);;
+                        Interval new_var = new Interval(j, i.line.line);;
                         intervals.put(j, new_var);
-                        new_var.end = i.line;
+                        new_var.end = i.line.line;
                         // System.out.println("        ~ " + j + " " + new_var.start.line);
                         cont = 2;
                     }
@@ -183,7 +266,7 @@ class V2VM
 
                     if(intervals.containsKey(j)) {
                         Interval change = intervals.get(j);
-                        change.end = i.line;
+                        change.end = i.line.line;
                         Interval check = intervals.replace(j, change);
                         if(check == null) {
                             System.out.println("ERROR AT NODE " + j);
@@ -194,8 +277,8 @@ class V2VM
                         cont = 1;
                     }
                     else {
-                        Interval new_var = new Interval(j, i.line);
-                        new_var.end = i.line;
+                        Interval new_var = new Interval(j, i.line.line);
+                        new_var.end = i.line.line;
                         intervals.put(j, new_var);
                         // System.out.println("        ~ " + j + " " +new_var.start.line);
                         cont = 2;
@@ -231,7 +314,7 @@ class V2VM
         for(int i = 0; i < interval_vec.size() - 1; i++) {
             int min = i;
             for(int j = i + 1; j < interval_vec.size(); j++) {
-                if(interval_vec.get(j).value.start.line < interval_vec.get(min).value.start.line) {
+                if(interval_vec.get(j).value.start < interval_vec.get(min).value.start) {
                     min = j;
                 }
             }

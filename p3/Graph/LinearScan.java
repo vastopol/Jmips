@@ -156,7 +156,7 @@ public class LinearScan {
                 for(int k = 0; k < active.size() - 1; k++) {
                     int min = k;
                     for(int l = k + 1; l < active.size(); l++) {
-                        if(active.get(l).value.end.line < active.get(min).value.end.line) {
+                        if(active.get(l).value.end < active.get(min).value.end) {
                             min = l;
                         }
                     }
@@ -173,21 +173,21 @@ public class LinearScan {
             Vector<String> new_reg_list = new Vector<String>(register_list);
             Vector<String> new_local_list = new Vector<String>(local_list);
 
-            if(registers.containsKey(all_intervals.get(i).value.start.line)) {
-                registers.replace(all_intervals.get(i).value.start.line, new_reg_list);
+            if(registers.containsKey(all_intervals.get(i).value.start)) {
+                registers.replace(all_intervals.get(i).value.start, new_reg_list);
                 // System.out.println("1");
             }
             else {
-                registers.put(all_intervals.get(i).value.start.line, new_reg_list);
+                registers.put(all_intervals.get(i).value.start, new_reg_list);
                 // System.out.println("2");
             }
 
             if(local_list.size() > 0) {
-                if(locals.containsKey(all_intervals.get(i).value.start.line)) {
-                    locals.replace(all_intervals.get(i).value.start.line, new_local_list);
+                if(locals.containsKey(all_intervals.get(i).value.start)) {
+                    locals.replace(all_intervals.get(i).value.start, new_local_list);
                 }
                 else {
-                    locals.put(all_intervals.get(i).value.start.line, new_local_list);
+                    locals.put(all_intervals.get(i).value.start, new_local_list);
                 }
             }
         }
@@ -198,7 +198,7 @@ public class LinearScan {
         // System.out.println("    Expiring for " + i.key);
         for(int j = 0; j < active.size(); j++) {
 
-            if(active.get(j).value.end.line >= i.value.start.line) {
+            if(active.get(j).value.end >= i.value.start) {
             }
             else {
                 // System.out.println("        Expiring " + active.get(j).key + " which ends before " + i.key);
@@ -215,7 +215,7 @@ public class LinearScan {
     public void SpillAtInterval(Pair i) {
         // System.out.println("attempting to spill " + i.key);
         Pair spill = active.get(active.size() - 1);
-        if(spill.value.end.line > i.value.end.line) {
+        if(spill.value.end > i.value.end) {
 
             int free_reg = -1;
             for(int j = 0; j < register_list.size(); j++) {
@@ -233,7 +233,7 @@ public class LinearScan {
             for(int k = 0; k < active.size() - 1; k++) {
                 int min = k;
                 for(int l = k + 1; l < active.size(); l++) {
-                    if(active.get(l).value.end.line < active.get(min).value.end.line) {
+                    if(active.get(l).value.end < active.get(min).value.end) {
                         min = l;
                     }
                 }

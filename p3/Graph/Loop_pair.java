@@ -16,15 +16,14 @@ import cs132.vapor.parser.*;
 
 import java.io.*;
 
-public class Interval {
-    public String var;
-    public int start;
-    public int end;
+public class Loop_pair {
+    public int loop_start_line;
+    public int loop_end_line;
+    public String loop_name;
 
-    public Interval(String v, int s) {
-        var = v;
-        start = s;
-        end = -1;
+    public Loop_pair(String lname, int loop_start) {
+        loop_name = lname;
+        loop_start_line = loop_start;
     }
 
 }
