@@ -112,4 +112,10 @@ func Fac.ComputeFac(this num)
   ret num_aux
 
 
-  java -jar stuff/vapor.jar run -mips custom_logfile.txt
+//----------------------------------------
+
+java -jar stuff/vapor.jar run -mips custom_logfile.txt
+
+
+echo; for file in $(ls tests/Phase3Tester/Output/Tests/ | grep \.compiler\.out) ; do echo $file ; java -jar stuff/vapor.jar run -mips tests/Phase3Tester/Output/Tests/$file ; echo ; done
+

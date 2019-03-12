@@ -956,7 +956,7 @@ class V2VM
 
             if(!f.ident.toString().equals("Main")) {
                 int local_index = vdatav.all_mappings.local_list.size();
-    
+
                 System.out.println("  local[" + local_index + "] = $t0");
                 local_index++;
                 System.out.println("  local[" + local_index + "] = $t1");
@@ -985,7 +985,7 @@ class V2VM
                 local_index++;
             }
 
-            
+
 
             //CODE FOR ALLOCATING REGISTERS ALL AT THE TOP
             String last_reg = "";
@@ -1016,6 +1016,21 @@ class V2VM
 
             for (VInstr vi : bdy)   // visit the instructions && print labelas
             {
+
+                int t = vi.sourcePos.line-1;
+                // System.out.println("");
+                // for(String s : lmap.values())
+                // {
+                //     System.out.println(s);
+                // }
+                // System.out.println("");
+
+                while(lmap.containsKey(t))  // if the sourcePos + 1 = sourcePos of a label then print the label
+                {
+                    System.out.println(lmap.get(t)+":");
+                    t--;
+                }
+
                 String classy = vi.getClass().toString();
                 int current_line = vi.sourcePos.line;
 
@@ -1043,7 +1058,7 @@ class V2VM
 
                     if(!f.ident.toString().equals("Main")) {
                         int local_index = vdatav.all_mappings.local_list.size();
-            
+
                         System.out.println("  $t0 = local[" + local_index + "]");
                         local_index++;
                         System.out.println("  $t1 = local[" + local_index + "]");
@@ -1088,15 +1103,22 @@ class V2VM
                 }
 
 
-
                 go_visit(vdatav,vi);
-                int t = vi.sourcePos.line+1;
-                // System.out.println(i);
-                while(lmap.containsKey(t))  // if the sourcePos + 1 = sourcePos of a label then print the label
-                {
-                    System.out.println(lmap.get(t)+":");
-                    t++;
-                }
+
+
+                // t = vi.sourcePos.line+1;
+                // System.out.println("");
+                // for(String s : lmap.values())
+                // {
+                //     System.out.println(s);
+                // }
+                // System.out.println("");
+
+                // while(lmap.containsKey(t))  // if the sourcePos + 1 = sourcePos of a label then print the label
+                // {
+                //     System.out.println(lmap.get(t)+":");
+                //     t++;
+                // }
             }
 
             System.out.println("");
