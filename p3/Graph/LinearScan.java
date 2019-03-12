@@ -64,15 +64,17 @@ public class LinearScan {
         String ret = "_";
         boolean found = false;
 
-        if(local_list.size() > 0) {
-            for(int i = 0; i < local_list.size(); i++) {
-                if(local_list.get(i) == k) {
-                    ret = "local[" + i + "]";
-                    found = true;
-                    break;
-                }
-            }
-        }
+        // if(local_list.size() > 0) {
+        //     for(int i = 0; i < local_list.size(); i++) {
+        //         if(local_list.get(i) == k) {
+        //             ret = "local[" + i + "]";
+        //             found = true;
+
+        //             return ret;
+        //             // break;
+        //         }
+        //     }
+        // }
         
         if(start_line < end_line && !found) {
             // System.out.println("  " + k + " checks Map registers ");

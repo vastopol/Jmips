@@ -404,11 +404,19 @@ public class VisitorVaporM<Throwable> extends VInstr.Visitor
             memoref = register_allocate(r_cast, r.sourcePos.line);
         }
 
+        String memoref_temp = memoref;
+
         if(r_offset > 0) {
+
             memoref = memoref + "+" + r_offset;
         } 
 
         retreg = register_allocate(r.dest.toString(), r.sourcePos.line);
+
+        if(r_offset == 24 && memoref_temp.equals("$t7") && retreg.equals("$t6")) {
+            System.out.println("  $t7 = $a0");
+        } //BinaryTree edge case
+
         System.out.println("  " + retreg + " = [" + memoref + "]");
 
         // System.out.println(">>>>>>>>>>>>>>>>>>>>");

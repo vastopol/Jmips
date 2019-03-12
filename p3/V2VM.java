@@ -1134,6 +1134,10 @@ class V2VM
                                     retv = "$t" + n;
                                 }
                             }
+
+                            if(retv.equals(vr.value.toString())) {
+                                retv = vdatav.all_mappings.get_first_mapping(vr.value.toString(), func_start_line, func_end_line, vdatav.curr_vartoreg_mappings);
+                            }
                         }
                         // String retv = vdatav.vartoreg.get(vr.value.toString());
                         System.out.println( tab + "$v0 = " + retv );
