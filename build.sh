@@ -33,7 +33,8 @@ function main()
 {
     # do_p  1
     # do_p  2
-    do_p  3
+    # do_p  3
+    do_p  4
     p_wipe
 }
 
@@ -64,7 +65,7 @@ function do_p()
             p3_tester  p3  V2VM.java  hw3  tests/Phase3Tester
             ;;
         4)  #----------------------------------------
-            echo "phase4"
+            p4_builder
             ;;
         *)  #----------------------------------------
             echo "invalid option"
@@ -323,6 +324,84 @@ function p3_tester()
 
     cd ../..
 }
+
+
+#============================================================
+# PHASE 4 BUILD TESTER
+#============================================================
+
+function p4_builder()
+{
+    # to compile have to include .jar file because source is incomplete
+    # to run need the .jar file and location of the project folder for the .class files
+    CLASSPATH="$VAPOR_P:../p4"
+    VFILE="../tests/vtester.vaporm"
+
+    cd p4
+
+    echo; echo "compile phase4"; echo
+
+    javac -classpath ${CLASSPATH} VM2M.java
+
+    echo "output vaporm to mips"; echo
+
+    java -classpath ${CLASSPATH} VM2M < $VFILE > $LOG1
+
+    cat -n $LOG1
+
+    echo; echo "test run mips"; echo
+
+    java -jar $MARS nc $LOG1
+
+    echo
+
+    rm *.class > /dev/null 2>&1
+    rm cs132/vapor/ast/*.class > /dev/null 2>&1
+
+    cd ..
+}
+
+# TEST With Grading Script (different)
+# run the grading script with all the included test cases
+# it expects a tar file named "hw[1-4].tgz" to be used with the "run" script
+# args: $1 = code directory, $2 = main file, $3 = HomeworkName, $4 = testcases
+# function p4_tester()
+# {
+#     if [ -e $3 ] ; then
+#         echo "Deleteing old folder"
+#         rm -rf $3
+#     fi
+#
+#     if [ -e $3.tgz ] ; then
+#         echo "Deleteing old tarball"
+#         rm -rf $3.tgz
+#     fi
+#
+#     echo "Making new tar file for submission"; echo
+#
+#     mkdir $3
+#
+#     cp $1/$2  $3                            # <--- main file
+#
+#     mkdir $3/cs132
+#     mkdir $3/cs132/vapor
+#     mkdir $3/cs132/vapor/ast
+#
+#     cp $1/cs132/vapor/ast/*  $3/cs132/vapor/ast
+#
+#     tar zcvf $3.tgz $3 > /dev/null
+#
+#     echo "Running Tester Script"; echo
+#
+#     cd $4                                   # <--- test directory
+#
+#     source run SelfTestCases ../../$3.tgz
+#
+#     echo;
+#
+#     cd ../..
+# }
+
 
 #============================================================
 # DRIVER - Run the main driver routine for the harnesses
