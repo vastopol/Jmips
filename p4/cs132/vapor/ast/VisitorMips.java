@@ -107,21 +107,72 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
         String opname = "";
 
         if(c.op.name.equals("LtS")) {
-            opname = "slti";
+            String arg_class = c.args[1].getClass().toString();
+
+            if(arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+                opname = "slti";
+            }
+            else{
+                opname = "slt";
+            }
+        }
+        else if(c.op.name.equals("Lt")) {
+            String arg_class = c.args[1].getClass().toString();
+
+            if(arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+                opname = "slti";
+            }
+            else{
+                opname = "sltu";
+            }
         }
         else if(c.op.name.equals("Add")) {
+            String arg_class = c.args[1].getClass().toString();
+            if(arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+                arg_class = c.args[0].getClass().toString();
+                if(arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+                    int loader = Integer.parseInt(c.args[0].toString()) + Integer.parseInt(c.args[1].toString());
+                    System.out.println("  li " + c.dest.toString() + " " + loader);
+                    return;
+                }
+            }
             opname = "addu";
         }
         else if(c.op.name.equals("Sub")) {
+            String arg_class = c.args[1].getClass().toString();
+            if(arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+                arg_class = c.args[0].getClass().toString();
+                if(arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+                    int loader = Integer.parseInt(c.args[0].toString()) - Integer.parseInt(c.args[1].toString());
+                    System.out.println("  li " + c.dest.toString() + " " + loader);
+                    return;
+                }
+            }
             opname = "subu";
         }
         else if(c.op.name.equals("MulS")) {
+            String arg_class = c.args[1].getClass().toString();
+            if(arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+                arg_class = c.args[0].getClass().toString();
+                if(arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+                    int loader = Integer.parseInt(c.args[0].toString()) * Integer.parseInt(c.args[1].toString());
+                    System.out.println("  li " + c.dest.toString() + " " + loader);
+                    return;
+                }
+            }
             opname = "mul";
         }
         
         if(c.op.name.equals("Error")) //  handle the error function special case
         {
-            System.out.println("  la $a0 _str0");
+            String carg_tmp = c.args[0].toString();
+            if(carg_tmp.equals("\"array index out of bounds\"")) {
+                System.out.println("  la $a0 _str1");
+            }
+            else {
+                System.out.println("  la $a0 _str0");
+            }
+
             System.out.println("  j _error");
             return;
         }
@@ -129,8 +180,13 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
         if(c.op.name.equals("HeapAllocZ")) {
             String dst = c.dest.toString();
             String arg = c.args[0].toString();
-
-            System.out.println("  li $a0 " + arg);
+            String arg_class = c.args[0].getClass().toString();
+            if(arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+                System.out.println("  li $a0 " + arg);
+            }
+            else {
+                System.out.println("  move $a0 " + arg);
+            }
             System.out.println("  jal _heapAlloc");
             System.out.println("  move " + dst + " $v0");
 
@@ -139,7 +195,13 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
 
         if(c.op.name.equals("PrintIntS")) {
             String arg = c.args[0].toString();
-            System.out.println("  move $a0 " + arg);
+            String arg_class = c.args[0].getClass().toString();
+            if(arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+                System.out.println("  li $a0 " + arg);
+            }
+            else {
+                System.out.println("  move $a0 " + arg);
+            }
             System.out.println("  jal _print");
             return;
         }
@@ -152,6 +214,12 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
 
 
         // }
+        String arg_class = c.args[0].getClass().toString();
+        if(arg_class.equals("class cs132.vapor.ast.VLitInt")) {
+            System.out.println("  li $t9 " + c.args[0].toString());
+            System.out.println("  " + opname + " " + c.dest.toString() + " $t9 " + c.args[1].toString());
+            return;
+        }
         System.out.println("  " + opname + " " + c.dest.toString() + " " + c.args[0].toString() + " " + c.args[1].toString());
 
 
@@ -175,6 +243,13 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
         // {
         //     System.out.println(dubtab + "arg: " + oper);
         // }
+        String func_class = c.addr.getClass().toString();
+        if(func_class.equals("class cs132.vapor.ast.VAddr$Label")) {
+            String addr_temp = c.addr.toString();
+            addr_temp = addr_temp.substring(1);
+            System.out.println("  jal " + addr_temp);
+            return;
+        }
         String func_temp = c.addr.toString();
         System.out.println("  jalr " + func_temp);
 
@@ -280,9 +355,18 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
 
         if(source_temp.indexOf(":") != -1) {
             source_temp = source_temp.substring(1);
+            System.out.println("  la $t9 " + source_temp);
+            System.out.println("  sw $t9 " +w_offset+ "(" + w_cast + ")");
+            return;
         }
-        System.out.println("  la $t9 " + source_temp);
-        System.out.println("  sw $t9 " +w_offset+ "(" + w_cast + ")");
+        String source_class = w.source.getClass().toString();
+
+        if(source_class.equals("class cs132.vapor.ast.VLitInt")) {
+            System.out.println("  li $t9 " + w.source.toString());
+            System.out.println("  sw $t9 " + w_offset + "(" + w_cast + ")");
+            return;
+        }
+        System.out.println("  sw " + w.source.toString() + " " + w_offset + "(" + w_cast + ")");
     }
     //----------------------------------------
 
