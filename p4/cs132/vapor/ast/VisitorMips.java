@@ -107,7 +107,7 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
         String opname = "";
 
         if(c.op.name.equals("LtS")) {
-            opname = "slt";
+            opname = "slti";
         }
         else if(c.op.name.equals("Add")) {
             opname = "addu";
@@ -116,7 +116,7 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
             opname = "subu";
         }
         else if(c.op.name.equals("MulS")) {
-            opname = "mult";
+            opname = "mul";
         }
         
         if(c.op.name.equals("Error")) //  handle the error function special case
@@ -152,7 +152,7 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
 
 
         // }
-        System.out.println(opname + " " + c.dest.toString() + " " + c.args[0].toString() + " " + c.args[1].toString());
+        System.out.println("  " + opname + " " + c.dest.toString() + " " + c.args[0].toString() + " " + c.args[1].toString());
 
 
 
@@ -184,9 +184,12 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
     public void visit(VGoto g)
         throws java.lang.Throwable
     {
-        System.out.println("\tGoto");
-        System.out.println(dubtab +  "pos: "  + g.sourcePos );
-        System.out.println(dubtab +  "dst:  " + g.target.toString());
+        // System.out.println("\tGoto");
+        // System.out.println(dubtab +  "pos: "  + g.sourcePos );
+        // System.out.println(dubtab +  "dst:  " + g.target.toString());
+        String label_tmp = g.target.toString();
+        label_tmp = label_tmp.substring(1);
+        System.out.println("  j " + label_tmp);
     }
     //----------------------------------------
 
@@ -210,7 +213,13 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
         String dest_temp1 = r_cast;
         if(dest_temp1.indexOf("In") != -1) {
             int loc_num = r_offset * 4;
-            System.out.println("  lw $t9 " + loc_num + "($fp)");
+            System.out.println("  lw " + r.dest.toString() + " " + loc_num + "($fp)");
+            return;
+        }
+
+        if(dest_temp1.indexOf("Local") != -1) {
+            int loc_num = r_offset * 4;
+            System.out.println("  lw " + r.dest.toString() + " " + loc_num + "($sp)");
             return;
         }
 
@@ -257,6 +266,12 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
                 System.out.println("  li $t9 " + w.source.toString());
             }
             System.out.println("  sw $t9 " + loc_num + "($sp)");
+            return;
+        }
+
+        if(dest_temp1.indexOf("Local") != -1) {
+            int loc_num = w_offset * 4;
+            System.out.println("  sw " + w.source.toString() + " " + loc_num + "($sp)");
             return;
         }
     
