@@ -35,7 +35,7 @@ function main()
     # do_p  2
     # do_p  3
     do_p  4
-    # p_wipe
+    p_wipe
 }
 
 # STEPS OF do_p()
