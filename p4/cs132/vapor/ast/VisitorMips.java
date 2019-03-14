@@ -176,7 +176,7 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
         //     System.out.println(dubtab + "arg: " + oper);
         // }
         String func_temp = c.addr.toString();
-        System.out.println("jalr " + func_temp);
+        System.out.println("  jalr " + func_temp);
 
     }
     //----------------------------------------
