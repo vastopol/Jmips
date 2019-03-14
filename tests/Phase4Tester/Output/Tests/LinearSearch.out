@@ -1,0 +1,19 @@
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 60 column 12: "9999": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 110 column 16: "$t2": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 118 column 4: "$t3" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 148 column 16: "$t4": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 156 column 4: "$t5" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 165 column 16: "$t1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 169 column 16: "$t4": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 170 column 12: "1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 195 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 198 column 9: "AllocArray" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 200 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 207 column 16: "$t2": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 209 column 11: "2": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 217 column 4: "$t5" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 225 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 246 column 10: "$t1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinearSearch.compiler.out line 249 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+
+Processing terminated due to errors.

@@ -1,0 +1,53 @@
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 60 column 12: "9999": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 93 column 16: "$s1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 101 column 4: "$t3" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 124 column 4: "$t7" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 132 column 16: "$t3": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 133 column 12: "1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 152 column 4: "$t8" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 160 column 16: "$t7": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 161 column 12: "1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 176 column 4: "$t7" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 190 column 4: "$t5" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 203 column 4: "$t8" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 211 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 219 column 4: "$t5" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 226 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 229 column 16: "$t5": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 244 column 4: "$t3" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 257 column 4: "$t2" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 265 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 273 column 4: "$t3" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 286 column 4: "$t4" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 294 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 302 column 4: "$t3" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 309 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 346 column 16: "$t2": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 354 column 4: "$t3" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 381 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 384 column 9: "AllocArray" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 386 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 394 column 4: "$t1" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 399 column 11: "0": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 409 column 4: "$t0" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 414 column 11: "1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 424 column 4: "$t1" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 429 column 11: "2": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 439 column 4: "$t0" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 444 column 11: "3": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 454 column 4: "$t1" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 459 column 11: "4": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 469 column 4: "$t0" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 474 column 11: "5": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 484 column 4: "$t1" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 489 column 11: "6": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 499 column 4: "$t0" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 504 column 11: "7": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 514 column 4: "$t1" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 519 column 11: "8": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 529 column 4: "$t0" is not a recognized operator
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 534 column 11: "9": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 553 column 10: "$t1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/QuickSort.compiler.out line 556 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+
+Processing terminated due to errors.

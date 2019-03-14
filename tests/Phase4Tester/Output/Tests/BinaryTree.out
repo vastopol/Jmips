@@ -1,0 +1,19 @@
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 90 column 12: "100000000": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 274 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 293 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 308 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 362 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 403 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 418 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 434 column 16: "$t1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 439 column 16: "$t2": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 440 column 12: "1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 493 column 16: "$t0": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 622 column 16: "$t0": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 650 column 16: "$s1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 688 column 12: "1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 699 column 12: "1": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 1084 column 16: "$t0": operand is of incorrect type
+Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/BinaryTree.compiler.out line 1111 column 16: "$s0": operand is of incorrect type
+
+Processing terminated due to errors.

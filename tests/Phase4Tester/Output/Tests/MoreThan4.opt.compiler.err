@@ -1,0 +1,5 @@
+Exception in thread "main" java.lang.StringIndexOutOfBoundsException: begin -1, end 8, length 9
+	at java.base/java.lang.String.checkBoundsBeginEnd(String.java:3319)
+	at java.base/java.lang.String.substring(String.java:1874)
+	at VM2M.mips_grab(VM2M.java:47)
+	at VM2M.main(VM2M.java:25)

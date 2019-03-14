@@ -1,0 +1,58 @@
+--- SelfTestCases/LinkedList.out	2019-02-02 14:36:13.000000000 -0800
++++ ./Output/Tests/LinkedList.out	2019-03-13 22:31:50.000000000 -0700
+@@ -1,27 +1,29 @@
+-25
+-10000000
+-39
+-25
+-10000000
+-22
+-39
+-25
+-1
+-0
+-10000000
+-28
+-22
+-39
+-25
+-2220000
+--555
+--555
+-28
+-22
+-25
+-33300000
+-22
+-25
+-44440000
+-0
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 68 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 70 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 72 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 147 column 12: "1": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 169 column 12: "1": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 185 column 12: "1": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 227 column 16: "$t1": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 232 column 16: "$t2": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 233 column 12: "1": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 270 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 272 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 274 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 322 column 3: "la": Too few or incorrectly formatted operands. Expected: la $t1,($t2)
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 347 column 12: "0": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 353 column 12: "1": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 355 column 12: "1": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 386 column 12: "0": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 411 column 12: "0": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 418 column 12: "1": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 484 column 12: "1": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 591 column 12: "1": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 716 column 12: "10000000": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 754 column 12: "10000000": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 832 column 12: "10000000": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 869 column 12: "2220000": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 889 column 12: "33300000": operand is of incorrect type
++Error in /Users/krishna/Desktop/Computer Science/BS179/test_179e/tests/Phase4Tester/./Output/Tests/LinkedList.compiler.out line 909 column 12: "44440000": operand is of incorrect type
+ 
++Processing terminated due to errors.
