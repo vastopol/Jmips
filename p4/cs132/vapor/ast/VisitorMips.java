@@ -58,6 +58,12 @@ public class VisitorMips<Throwable> extends VInstr.Visitor
             return;
         }
 
+        if(source_temp.indexOf(":") != -1) {
+            String arg_temp = source_temp.substring(1);
+            System.out.println("  la $a0 " + arg_temp);
+            return;
+        }
+
         System.out.println("  move " + a.dest.toString() + " " + a.source.toString());
 
     }

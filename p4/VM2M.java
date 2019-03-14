@@ -44,7 +44,14 @@ class VM2M
           VOperand.Static[] vals = d.values;
           ArrayList<String> arlst = new ArrayList<String>();
           String vname = d.ident;
-          vname = vname.substring(vname.indexOf("vmt"), vname.length() - 1);
+          int v_index = vname.indexOf("vmt");
+          if(v_index != -1) {
+            vname = vname.substring(vname.indexOf("vmt"), vname.length() - 1);
+          }
+          v_index = vname.indexOf("const");
+          if(v_index != -1) {
+            vname = vname.substring(vname.indexOf("const"), vname.length() - 1);
+          }
           for(VOperand v : vals) // add to the map
           {
               arlst.add(v.toString());
